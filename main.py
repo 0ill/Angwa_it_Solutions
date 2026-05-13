@@ -125,36 +125,86 @@ st.markdown(brand_css, unsafe_allow_html=True)
 with st.sidebar:
     st.title("Navigation")
     st.write("Navigate to the different sections of the website.")
-    with st.expander("World"):
-        st.write("Navigate to the different sections of the website.")
-        with st.expander("Africa"):
-            st.write("Navigate to the different sections of the website.")
-            with st.expander("South Africa"):
-                st.write("Provinces:")
-                with st.expander("Gauteng"):
-                    st.write("")
-                with st.expander("North West"):
-                    st.write("Departments:")
-                    with st.expander("Arts,Culture, Sports & Recreation"):
+    with st.expander("1. SBIHME"):
+        with st.expander("1.1 SBIWLD"):
+            with st.expander("1.1.1 SBIOCN"):
+                st.write("Navigate to the different sections of the website.")
+            with st.expander("1.1.2 SBINAC"):
+                st.write("Navigate to the different sections of the website.")
+            with st.expander("1.1.3 SBIERP"):
+                st.write("Navigate to the different sections of the website.")
+            with st.expander("1.1.4 SBISAC"):
+                st.write("Navigate to the different sections of the website.")
+            with st.expander("1.1.5 SBIASA"):
+                st.write("Navigate to the different sections of the website.")
+            
+            with st.expander("1.1.6 SBIAFR"):
+                with st.expander("1.1.6.1 AFFRHME"):
+                    st.write("Navigate to the different sections of the website.")
+                with st.expander("1.1.6.2 AFRABT"): 
+                    st.write("Navigate to the different sections of the website.")
+                with st.expander("1.1.6.3 AFRSCT"):
+                    st.write("Navigate to the different sections of the website.")
+                
+                with st.expander("1.1.6.4 AFRRCRM"):
+                    with st.expander("1.1.6.4.1 AFRNAS"):
                         st.write("Navigate to the different sections of the website.")
-                    with st.expander("Cooperative Governance and Traditional Affairs"):
-                        st.write("Districts:")
-                        with st.expander("Bojanala Platinum District Municipality"):
-                            st.write("Departments:")
-                        with st.expander("Dr Kenneth Kaunda District Municipality"):
-                            st.write("Departments:")
-                        with st.expander("Dr Ruth Segomotsi Mompati District Municipality"):
-                            st.write("Departments:")      
-                        with st.expander("Ngaka Modiri Molema District Municipality "):
-                            st.write("Departments:")
-                    with st.expander("Public Works & Roads"):
+                    with st.expander("1.1.6.4.2 AFREAC"):
+                        st.write("Navigate to the different sections of the website.")
+                    with st.expander("1.1.6.4.3 AFRWAS"):
+                        st.write("Navigate to the different sections of the website.")
+                    with st.expander("1.1.6.4.4 AFRSAS"):
+                        with st.expander("1.1.6.4.4.1 AFRRSA"):
+                            with st.expander("1.1.6.4.4.1.1 RSAHME"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.2 RSADBD"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.3 RSAABT"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.4 RSASCT"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.5 RSACRM"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.6 RSAPMS"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.7 RSACSI"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.8 RSABLG"):
+                                st.write("Navigate to the different sections of the website.")
+                            with st.expander("1.1.6.4.4.1.9 RSACMC"):
+                                st.write("Navigate to the different sections of the website.")
+                        
+                    
+                    
+                    with st.expander("1.1.6.4.5 AFRCAS"):
                         st.write("Navigate to the different sections of the website.")
 
-            with st.expander("Botswana"):
-                st.write("")
-                                
-    with st.expander("More"):
+
+
+
+        with st.expander("1.2 SBIDBD"):
+            st.write("Navigate to the different sections of the website.")
+
+
+
+
+    with st.expander("2. SBIABT"):
         st.write("Navigate to the different sections of the website.")
+    with st.expander("3. SBISCT"):
+        st.write("Navigate to the different sections of the website.")
+    with st.expander("4. SBICRM"):
+        st.write("Navigate to the different sections of the website.")
+    with st.expander("5. SBIPMS"):
+        st.write("Navigate to the different sections of the website.")
+    with st.expander("6. SBICSI"):
+        st.write("Navigate to the different sections of the website.")
+    with st.expander("7. SBICRE"):
+        st.write("Navigate to the different sections of the website.")
+    with st.expander("8. SBIBLG"):
+        st.write("Navigate to the different sections of the website.")
+    with st.expander("9. SBICMS"):
+        st.write("Navigate to the different sections of the website.")
+
 
 st.markdown(f"""
     <div class="nav-container">
