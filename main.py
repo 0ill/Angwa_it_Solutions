@@ -1,4 +1,3 @@
-from tkinter import W
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -127,9 +126,9 @@ with st.sidebar:
     st.title("Navigation")
     st.write("Navigate to the different sections of the website.")
     with st.expander("World"):
-        #st.write("Navigate to the different sections of the website.")
+        st.write("Navigate to the different sections of the website.")
         with st.expander("Africa"):
-            #st.write("Navigate to the different sections of the website.")
+            st.write("Navigate to the different sections of the website.")
             with st.expander("South Africa"):
                 st.write("Provinces:")
                 with st.expander("Gauteng"):
