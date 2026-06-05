@@ -48,12 +48,7 @@ st.markdown("""
         [data-testid="stMain"] {
             padding: 0 !important;
         }
-        .st-emotion-cache-zy6yx3 {
-    width: 100%;
-    /* padding: 6rem 1rem 10rem; */
-    max-width: initial;
-    /* min-width: auto; */
-}
+        
     </style>
 """, unsafe_allow_html=True)
 
