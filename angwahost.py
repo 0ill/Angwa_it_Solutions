@@ -199,6 +199,243 @@ def inject_master_styles():
                 margin-top: 6rem !important;
             }
 
+            /* --- NEW SECTION: STATS COUNTERS --- */
+            .stats-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 4rem 2rem;
+                text-align: center;
+            }
+            .stat-card {
+                background: var(--theme-white);
+                padding: 2rem;
+                border-radius: 2rem;
+                text-align: center;
+                border: 1px solid var(--theme-gray-light);
+                transition: all 0.3s ease;
+            }
+            .stat-number {
+                font-family: 'Playfair Display', serif;
+                font-size: 3.5rem;
+                font-weight: 900;
+                color: var(--theme-gold);
+                display: block;
+                line-height: 1;
+            }
+            .stat-label {
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #6b7280;
+                margin-top: 0.5rem;
+                display: block;
+            }
+
+            /* --- NEW SECTION: TESTIMONIALS --- */
+            .testimonials-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 4rem 2rem;
+            }
+            .testimonial-card {
+                background: var(--theme-white);
+                padding: 2rem;
+                border-radius: 2rem;
+                border: 1px solid var(--theme-gray-light);
+                height: 100%;
+                transition: all 0.3s ease;
+            }
+            .testimonial-quote {
+                font-size: 1rem;
+                line-height: 1.6;
+                color: #4b5563;
+                font-style: italic;
+                margin-bottom: 1.5rem;
+                display: block;
+            }
+            .testimonial-author {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .testimonial-avatar {
+                width: 3rem;
+                height: 3rem;
+                background: linear-gradient(135deg, var(--theme-gold), var(--theme-green));
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: 700;
+            }
+            .testimonial-name {
+                font-weight: 800;
+                color: var(--theme-black);
+                display: block;
+            }
+            .testimonial-title {
+                font-size: 0.8rem;
+                color: #9ca3af;
+                display: block;
+            }
+
+            /* --- NEW SECTION: CASE STUDIES --- */
+            .case-card {
+                background: var(--theme-white);
+                border-radius: 2rem;
+                overflow: hidden;
+                border: 1px solid var(--theme-gray-light);
+                transition: all 0.3s ease;
+                height: 100%;
+            }
+            .case-image {
+                height: 180px;
+                background: linear-gradient(135deg, var(--theme-green), #0a5c48);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .case-content {
+                padding: 1.5rem;
+            }
+            .case-title {
+                font-weight: 800;
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+            .case-metric {
+                color: var(--theme-gold);
+                font-weight: 700;
+                font-size: 0.9rem;
+                margin-top: 0.5rem;
+                display: block;
+            }
+
+            /* --- NEW SECTION: TECHNOLOGY STACK --- */
+            .tech-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 4rem 2rem;
+                text-align: center;
+            }
+            .tech-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 2rem;
+                margin-top: 3rem;
+            }
+            .tech-item {
+                background: var(--theme-white);
+                padding: 1.5rem;
+                border-radius: 1.5rem;
+                border: 1px solid var(--theme-gray-light);
+                transition: all 0.3s ease;
+            }
+            .tech-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);
+            }
+
+            /* --- NEW SECTION: INTERACTIVE ROADMAP --- */
+            .roadmap-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 4rem 2rem;
+            }
+            .roadmap-badge {
+                display: inline-block;
+                padding: 4px 12px;
+                background: rgba(197, 160, 34, 0.1);
+                border: 1px solid rgba(197, 160, 34, 0.2);
+                border-radius: 9999px;
+                color: var(--theme-gold);
+                font-size: 10px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                margin-bottom: 1.5rem;
+            }
+            .roadmap-header {
+                font-family: 'Playfair Display', serif;
+                font-size: 4rem;
+                font-weight: 900;
+                color: var(--theme-black);
+                line-height: 1.1;
+                margin-bottom: 1rem;
+            }
+            .roadmap-subheader {
+                font-family: 'Inter', sans-serif;
+                color: #6b7280;
+                font-size: 1.1rem;
+                font-weight: 300;
+                max-width: 600px;
+                margin-bottom: 3rem;
+            }
+            .step-card {
+                background: white;
+                padding: 2.5rem;
+                border-radius: 2rem;
+                border: 1px solid #f3f4f6;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 0.5rem;
+            }
+            .step-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.1);
+            }
+            .step-number {
+                font-family: 'Playfair Display', serif;
+                font-size: 4rem;
+                color: var(--theme-gold);
+                opacity: 0.15;
+                display: block;
+                line-height: 1;
+                margin-bottom: -1rem;
+            }
+            .step-title {
+                font-family: 'Inter', sans-serif;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                font-size: 1.1rem;
+                color: var(--theme-black);
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+            .step-desc {
+                font-family: 'Inter', sans-serif;
+                font-size: 0.875rem;
+                color: #6b7280;
+                line-height: 1.6;
+                display: block;
+                margin-bottom: 0.5rem;
+                flex-grow: 1;
+            }
+            .roadmap-step .stButton button {
+                background-color: var(--theme-gold) !important;
+                color: white !important;
+                border: none !important;
+                border-radius: 12px !important;
+                padding: 0.5rem 1rem !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+                font-size: 0.7rem !important;
+                transition: transform 0.2s ease, background-color 0.2s ease !important;
+                width: 100% !important;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            .roadmap-step .stButton button:hover {
+                background-color: var(--theme-green) !important;
+                transform: translateY(-2px);
+            }
+
             /* --- CUSTOM SPAN STYLING BLOCKS (SPAN-ONLY METHODOLOGY) --- */
             .font-serif {
                 font-family: 'Playfair Display', serif !important;
@@ -511,7 +748,7 @@ def inject_master_styles():
             }
             @keyframes pulse-green-glow {
                 0%, 100% { box-shadow: 0 0 0 0 rgba(6, 78, 59, 0.4); }
-                50% { box-shadow: 0 0 0 8px rgba(6, 78, 59, 0); }
+                70% { box-shadow: 0 0 0 8px rgba(6, 78, 59, 0); }
             }
 
             /* Live Visual Mockup Viewport Container */
@@ -931,7 +1168,7 @@ def render_interactive_customizer():
         )
         
         # Output summary receipt styled inside dark onyx card
-        st.markdown(f"""
+        st.html(f"""
             <span style="background-color: #0a0a0a; border-radius: 2.5rem; padding: 3rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; border: 1px solid rgba(197, 160, 34, 0.2); position: relative;">
                 <span style="display: block;">
                     <span class="font-sans" style="font-size: 9px; font-weight: 900; color: #c5a022; letter-spacing: 0.25em; text-transform: uppercase; display: block; margin-bottom: 1.5rem;">Dynamic Estimation Summary</span>
@@ -973,7 +1210,7 @@ def render_interactive_customizer():
                     </span>
                 </span>
             </span>
-        """, unsafe_allow_html=True)
+        """)#, unsafe_allow_html=True)
         
         # Button alignment inside card container
         if st.button("Configure Setup Blueprint", key="checkout_integration"):
@@ -1034,7 +1271,7 @@ def render_mockup_sandbox():
         active_preset_class = style_preset_mapping[st.session_state.preview_theme]
         
         # Compile dynamically built visual layout preview within Simulated Browser Frame
-        st.markdown(f"""
+        st.html(f"""
             <span class="browser-chrome">
                 <span class="browser-navbar">
                     <span class="browser-dots">
@@ -1076,7 +1313,7 @@ def render_mockup_sandbox():
                     </span>
                 </span>
             </span>
-        """, unsafe_allow_html=True)
+        """)#, unsafe_allow_html=True)
 
 def render_pricing_grid():
     """Renders the visually matching three-column Pricing Configuration grid with custom spans and trigger blocks."""
@@ -1178,7 +1415,7 @@ def render_pledge_charter():
     with col_left:
         # Trigger placed inside structural column
         st.markdown('<span class="pledge-left-trigger" style="display:none;"></span>', unsafe_allow_html=True)
-        st.markdown("""
+        st.html("""
             <span class="badge-span" style="border: 1px solid rgba(255,255,255,0.2) !important; background-color: rgba(255,255,255,0.05) !important;">
                 The afrihost Standard
             </span>
@@ -1207,7 +1444,7 @@ def render_pledge_charter():
                     </span>
                 </span>
             </span>
-        """, unsafe_allow_html=True)
+        """)#, unsafe_allow_html=True)
 
     with col_right:
         # Trigger placed inside structural column
@@ -1227,6 +1464,162 @@ def render_pledge_charter():
         # Native interactive callout trigger
         if st.button("Join Prestige Registry", key="pledge_btn"):
             st.toast("🤝 Welcome to the Elite afrihost Care ecosystem.", icon="💎")
+
+# ==================== NEW SECTIONS ====================
+
+def render_stats():
+    """Animated stats counters."""
+    st.markdown('<div class="stats-container">', unsafe_allow_html=True)
+    cols = st.columns(3)
+    stats = [
+        {"value": 98, "label": "Client Retention", "suffix": "%"},
+        {"value": 247, "label": "Projects Deployed", "suffix": "+"},
+        {"value": 15000, "label": "Hours Saved", "suffix": "+"}
+    ]
+    for i, stat in enumerate(stats):
+        with cols[i]:
+            st.markdown(f"""
+                <div class="stat-card">
+                    <span class="stat-number"><span class="stat-number-value" data-final="{stat['value']}">0</span>{stat['suffix']}</span>
+                    <span class="stat-label">{stat['label']}</span>
+                </div>
+            """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # JavaScript for counter animation (run once)
+    if "counter_js_injected" not in st.session_state:
+        st.session_state.counter_js_injected = True
+        st.markdown("""
+            <script>
+                function animateCounter(element, start, end, duration) {
+                    let startTimestamp = null;
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        element.innerText = Math.floor(progress * (end - start) + start);
+                        if (progress < 1) {
+                            window.requestAnimationFrame(step);
+                        }
+                    };
+                    window.requestAnimationFrame(step);
+                }
+                
+                const observerCounters = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const final = parseInt(el.getAttribute('data-final'));
+                            animateCounter(el, 0, final, 1500);
+                            observerCounters.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.stat-number-value').forEach(el => observerCounters.observe(el));
+                }, 500);
+            </script>
+        """, unsafe_allow_html=True)
+
+def render_testimonials():
+    """Testimonials section with client quotes."""
+    st.markdown('<div class="testimonials-container">', unsafe_allow_html=True)
+    st.markdown('<span class="badge-span" style="margin: 0 auto 2rem auto;">Client Voices</span>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-header" style="text-align: center;">Trusted by <span style="color:#064e3b">Industry Leaders</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-subheader" style="text-align: center; margin: 0 auto 3rem auto;">What our clients say about the afrihost experience.</div>', unsafe_allow_html=True)
+    
+    testimonials = [
+        {"quote": "The 48-hour deployment is not a gimmick. Our site was live, optimized, and converting within two days. Unmatched service.", "name": "Sarah Nkosi", "title": "Founder, Luxe Haven", "initial": "S"},
+        {"quote": "Afrihost transformed our digital presence. The concierge support is genuinely responsive, and the quality is world-class.", "name": "James van der Merwe", "title": "CEO, Cape Analytics", "initial": "J"},
+        {"quote": "From strategy to launch, every step was seamless. The ongoing care takes all the stress out of running a business website.", "name": "Thabo Molefe", "title": "Creative Director, Studio M", "initial": "T"},
+        {"quote": "We've tried several agencies, but none offer the combination of design excellence and managed hosting like afrihost. Pure gold.", "name": "Priya Naidoo", "title": "Marketing Lead, Durban Digital", "initial": "P"}
+    ]
+    
+    cols = st.columns(2)
+    for i, test in enumerate(testimonials):
+        with cols[i % 2]:
+            st.markdown(f"""
+                <div class="testimonial-card">
+                    <span class="testimonial-quote">"{test['quote']}"</span>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">{test['initial']}</div>
+                        <div><span class="testimonial-name">{test['name']}</span><span class="testimonial-title">{test['title']}</span></div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def render_tech_stack():
+    """Technology stack grid."""
+    st.markdown('<div class="tech-container">', unsafe_allow_html=True)
+    st.markdown('<span class="badge-span" style="margin: 0 auto 2rem auto;">Enterprise-Grade Tech</span>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-header" style="text-align: center;">Powered by <span style="color:#064e3b">World-Class Infrastructure</span></div>', unsafe_allow_html=True)
+    
+    techs = ["WordPress", "Shopify", "WooCommerce", "Stripe", "Cloudflare", "Google Analytics"]
+    st.markdown('<div class="tech-grid">', unsafe_allow_html=True)
+    for tech in techs:
+        st.markdown(f'<div class="tech-item"><i data-lucide="check-circle" style="color: #c5a022; width: 2rem; height: 2rem; margin-bottom: 0.5rem;"></i><br><strong>{tech}</strong></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def render_case_studies():
+    """Case studies / portfolio showcase."""
+    st.markdown('<div class="testimonials-container">', unsafe_allow_html=True)
+    st.markdown('<span class="badge-span" style="margin: 0 auto 2rem auto;">Success Stories</span>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-header" style="text-align: center;">Real Results, <span style="color:#064e3b">Real Impact</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-subheader" style="text-align: center; margin: 0 auto 3rem auto;">See how we’ve helped brands achieve digital excellence.</div>', unsafe_allow_html=True)
+    
+    cases = [
+        {"title": "Luxe Haven", "desc": "E-commerce transformation for luxury boutique.", "metric": "+156% online revenue", "icon": "shopping-bag"},
+        {"title": "Cape Analytics", "desc": "B2B lead generation platform rebuild.", "metric": "+89% conversion rate", "icon": "bar-chart-3"},
+        {"title": "Studio M", "desc": "Creative portfolio with immersive interactions.", "metric": "Awwwards nominee", "icon": "award"}
+    ]
+    
+    cols = st.columns(3)
+    for i, case in enumerate(cases):
+        with cols[i]:
+            st.markdown(f"""
+                <div class="case-card">
+                    <div class="case-image"><i data-lucide="{case['icon']}" style="color: white; width: 3rem; height: 3rem;"></i></div>
+                    <div class="case-content">
+                        <span class="case-title">{case['title']}</span>
+                        <span class="step-desc" style="margin-bottom: 0.5rem;">{case['desc']}</span>
+                        <span class="case-metric">{case['metric']}</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def render_roadmap():
+    """Interactive 4-step roadmap."""
+    st.markdown('<div class="roadmap-container">', unsafe_allow_html=True)
+    st.markdown('<span class="roadmap-badge">Our Workflow</span>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-header">The Roadmap to <span style="color:#064e3b">Perfection</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="roadmap-subheader">A streamlined experience designed to respect your time while maximizing your digital impact. We architect digital legacies.</div>', unsafe_allow_html=True)
+
+    steps = [
+        {"id": "01", "title": "Curation", "desc": "We analyze your brand DNA and curate a bespoke aesthetic strategy tailored to your industry's elite tier.", "action": "View Strategy"},
+        {"id": "02", "title": "The Build", "desc": "Elite developers execute the blueprint on Afrihost managed technology, ensuring peak performance.", "action": "See Tech"},
+        {"id": "03", "title": "Deployment", "desc": "Your site goes live with seamless domain migration, SSL certification, and edge-server optimization.", "action": "Launch Plan"},
+        {"id": "04", "title": "Concierge", "desc": "Ongoing monthly refinements and priority updates ensure your brand stays at the absolute pinnacle.", "action": "Learn More"}
+    ]
+    cols = st.columns(4)
+    for i, step in enumerate(steps):
+        with cols[i]:
+            st.markdown(f"""
+                <div class="step-card">
+                    <span class="step-number">{step["id"]}</span>
+                    <span class="step-title">{step["title"]}</span>
+                    <span class="step-desc">{step["desc"]}</span>
+                </div>
+            """, unsafe_allow_html=True)
+            st.markdown('<div class="roadmap-step">', unsafe_allow_html=True)
+            if st.button(step["action"], key=f"roadmap_btn_{step['id']}"):
+                st.toast(f"Opening details for {step['title']}...")
+            st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ==================== END NEW SECTIONS ====================
 
 def render_consultation_form():
     """Renders the custom styled interactive Blueprint Consultation form utilizing modern spans and form triggers."""
@@ -1368,6 +1761,15 @@ def main():
     render_mockup_sandbox()
     render_pricing_grid()
     render_pledge_charter()
+    
+    # New sections added here
+    render_stats()
+    render_testimonials()
+    render_tech_stack()
+    render_case_studies()
+    render_roadmap()
+    
+    # Original sections continue
     render_consultation_form()
     render_faqs()
     render_footer_block()
