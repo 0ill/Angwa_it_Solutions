@@ -1927,8 +1927,7 @@ html_content = """
                     </div>
                     <h4 class="font-bold text-sm tracking-wide">ClientZone Connected</h4>
                     <p class="text-[11px] text-gray-400 leading-relaxed">Welcome back. Secure subscriber credentials authenticated successfully.</p>
-                    <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold 
-                    text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Launch Dashboard</button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Launch Dashboard</button>
                 </div>
             `;
             document.body.appendChild(welcomeBox);
