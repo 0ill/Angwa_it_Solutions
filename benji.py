@@ -32,7 +32,7 @@ st.markdown("""
             padding: -50px !important;
             max-width: 100% !important;
             max-height: 100% !important;
-            margin: -100px !important;
+            margin: -150px !important;
         }
         [data-testid="stAppViewContainer"] {
             padding: 0 !important;
