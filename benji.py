@@ -48,7 +48,19 @@ st.markdown("""
         [data-testid="stMain"] {
             padding: 0 !important;
         }
-        
+        [data-testid="stMainBlockContainer"] {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: none !important;
+            max-height: none !important;
+            width: 100% !important;
+        }
+        iframe {
+            border: none !important;
+            display: block;
+            width: 100% !important;
+            height: 100vh !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
