@@ -27,12 +27,17 @@ st.markdown("""
             margin: 0 !important;
             background-color: #000000 !important;
             overflow: hidden !important;
+            width: 100vw !important;
+            height: 100vh !important;
         }
         .main .block-container {
-            padding: -50px !important;
-            max-width: 100% !important;
-            max-height: 100% !important;
-            margin: -150px !important;
+            padding: 0 !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 !important;
         }
         [data-testid="stAppViewContainer"] {
             padding: 0 !important;
@@ -204,7 +209,7 @@ html_content = """
     </div>
 
     <header class="sticky top-0 z-40 bg-brand-slateBlack/90 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <!-- Dynamic Brand Logo / Badge -->
             <a href="#home-hero" class="flex items-center gap-2.5 group">
                 <div class="h-8 w-8 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-lg tracking-tight shadow-md transition-transform group-hover:rotate-6">
@@ -264,7 +269,7 @@ html_content = """
             <div class="absolute -bottom-20 right-10 w-[500px] h-[500px] bg-brand-green rounded-full filter blur-[150px]"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-12 gap-16 items-center">
                 
                 <!-- Left Content: High End Marketing Pitch -->
@@ -352,7 +357,7 @@ html_content = """
     </section>
 
     <section class="py-8 bg-brand-slateBlack border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h4 class="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-4">Official Infrastructure Carrier Integrations</h4>
             
             <div class="flex flex-wrap items-center justify-center gap-4 md:gap-10 opacity-90">
@@ -373,7 +378,7 @@ html_content = """
     </section>
 
     <section id="packages" class="py-20 bg-brand-lightBg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Grid Header Info -->
             <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -450,7 +455,7 @@ html_content = """
             <div class="absolute bottom-0 left-10 w-96 h-96 bg-brand-green rounded-full filter blur-[120px]"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
                 <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Website Architecture & Splicing</span>
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
@@ -629,7 +634,7 @@ html_content = """
             <div class="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-brand-gold rounded-full filter blur-[150px] animate-pulse"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-12 gap-12 items-center">
                 
                 <!-- Left Hand Details Column -->
@@ -711,7 +716,7 @@ html_content = """
     </section>
 
     <section id="why-angwa" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
                 <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">The ANGWA SLA</span>
@@ -779,7 +784,7 @@ html_content = """
     </section>
 
     <section id="faq" class="py-20 bg-brand-lightBg">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center mb-16 space-y-4">
                 <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Help & Support</span>
@@ -1104,7 +1109,7 @@ html_content = """
 
     <!-- Footer Section -->
     <footer class="bg-brand-black text-gray-500 py-16 border-t border-white/10 text-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
                 
                 <!-- Brand pitch -->
@@ -1987,4 +1992,4 @@ html_content = """
 </html>
 """
 
-components.html(html_content, height=1000, scrolling=True)
+components.html(html_content, height=2000, width=None, scrolling=True)
