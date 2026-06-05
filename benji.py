@@ -28,7 +28,12 @@ st.markdown("""
             background-color: #000000 !important;
             overflow: hidden !important;
         }
-        
+        .main .block-container {
+            padding: -50px !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            margin: -100px !important;
+        }
         [data-testid="stAppViewContainer"] {
             padding: 0 !important;
         }
