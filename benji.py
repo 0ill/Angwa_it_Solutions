@@ -64,14 +64,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# We define the complete HTML structure. The CSS and JS are cleanly streamlined inside.
+# Define the complete updated HTML with Cart, decoupled sidebar options and Polar payment hooks
 html_content = """
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth m-0 p-0">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANGWA | Uncapped Symmetrical Fibre</title>
+    <title>ANGWA | Symmetrical Pure Light Fibre</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -206,62 +206,235 @@ html_content = """
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(212, 175, 55, 0.6);
         }
+
+        /* Cart Bounce Keyframe */
+        @keyframes bounce-small {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .cart-bounce {
+            animation: bounce-small 0.4s ease-in-out;
+        }
     </style>
 </head>
-<body class="text-brand-slateBlack antialiased m-0 p-0 overflow-x-hidden">
+<body class="text-brand-slateBlack antialiased text-sm transition-all duration-300">
 
+    <!-- Sidebar Drawer Backdrop Overlay -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-brand-black/80 backdrop-blur-sm z-40 hidden transition-all duration-300 opacity-0" onclick="toggleSidebar()"></div>
+
+    <!-- Sliding Sidebar Drawer Menu (Decoupled Links) -->
+    <aside id="sidebar-drawer" class="fixed left-0 top-0 h-screen w-80 bg-brand-slateBlack border-r border-white/10 z-50 p-6 flex flex-col justify-between shadow-2xl transition-transform duration-300 transform -translate-x-full">
+        <div class="space-y-8">
+            <div class="flex items-center justify-between border-b border-white/5 pb-5">
+                <a href="#home-hero" class="flex items-center gap-2.5 group" onclick="toggleSidebar()">
+                    <div class="h-8 w-8 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-lg tracking-tight shadow-md transition-transform group-hover:rotate-6">
+                        A
+                    </div>
+                    <span class="text-sm font-bold tracking-tight text-white uppercase flex flex-col gap-0.5">
+                        ANGWA<span class="text-brand-gold">.</span>
+                    </span>
+                </a>
+                <!-- Close Button -->
+                <button onclick="toggleSidebar()" class="h-8 w-8 rounded-full border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-colors hover:border-brand-gold/40" aria-label="Close navigation options">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Decoupled Page Links (Client, Project, Corporate, Blogs, Contacts) -->
+            <nav class="flex flex-col gap-3 text-[11px] tracking-widest font-extrabold uppercase pt-2">
+                <a href="#why-angwa" class="sidebar-nav-link text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center gap-2.5" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-circle-info text-brand-gold text-xs w-4"></i> Who We Are
+                </a>
+                <button onclick="triggerLeadershipNotice(); toggleSidebar();" class="sidebar-nav-link text-left text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center gap-2.5">
+                    <i class="fa-solid fa-users text-brand-gold text-xs w-4"></i> Our Leadership
+                </button>
+                
+                <!-- Services Collapsible Dropdown -->
+                <div class="flex flex-col">
+                    <button onclick="toggleSidebarSubmenu('services-submenu')" class="sidebar-nav-link text-left text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center justify-between w-full">
+                        <span class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-network-wired text-brand-gold text-xs w-4"></i> Services
+                        </span>
+                        <i class="fa-solid fa-chevron-down text-[9px] text-gray-500 mr-3 transition-transform duration-200" id="services-submenu-arrow"></i>
+                    </button>
+                    <div id="services-submenu" class="hidden flex flex-col gap-2 pl-9 pt-1 pb-2 text-[10px] text-gray-400 font-bold lowercase tracking-normal">
+                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> build environment
+                        </a>
+                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> advisory & management
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Client Collapsible Dropdown -->
+                <div class="flex flex-col">
+                    <button onclick="toggleSidebarSubmenu('client-submenu')" class="sidebar-nav-link text-left text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center justify-between w-full">
+                        <span class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-user-gear text-brand-gold text-xs w-4"></i> Client
+                        </span>
+                        <i class="fa-solid fa-chevron-down text-[9px] text-gray-500 mr-3 transition-transform duration-200" id="client-submenu-arrow"></i>
+                    </button>
+                    <div id="client-submenu" class="hidden flex flex-col gap-2 pl-9 pt-1 pb-2 text-[10px] text-gray-400 font-bold lowercase tracking-normal">
+                        <button onclick="triggerClientPortal('commercial')" class="text-left hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2 w-full">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> commercial & industry
+                        </button>
+                        <button onclick="triggerClientPortal('government')" class="text-left hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2 w-full">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> government
+                        </button>
+                    </div>
+                </div>
+
+                <a href="#design-suite" class="sidebar-nav-link text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center gap-2.5" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-compass-drafting text-brand-gold text-xs w-4"></i> Project
+                </a>
+                <a href="#why-angwa" class="sidebar-nav-link text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center gap-2.5" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-building text-brand-gold text-xs w-4"></i> Corporate
+                </a>
+                <button onclick="triggerBlogsModal(); toggleSidebar();" class="sidebar-nav-link text-left text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center gap-2.5">
+                    <i class="fa-solid fa-newspaper text-brand-gold text-xs w-4"></i> Blogs
+                </button>
+                <a href="#faq" class="sidebar-nav-link text-gray-300 hover:text-brand-gold transition-all duration-300 py-3 border-l-2 border-transparent pl-3 flex items-center gap-2.5" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-address-book text-brand-gold text-xs w-4"></i> Contacts
+                </a>
+            </nav>
+        </div>
+
+        <!-- System Actions inside sidebar bottom -->
+        <div class="space-y-3.5 border-t border-white/5 pt-6">
+            <a href="#coverage" class="w-full text-center glossy-green text-white py-3.5 rounded-xl font-bold text-[10px] uppercase tracking-wider shadow-md flex items-center justify-center gap-2" onclick="toggleSidebar()">
+                <i class="fa-solid fa-compass"></i>
+                <span>Check Coverage</span>
+            </a>
+            <button onclick="triggerClientZone(); toggleSidebar();" class="w-full text-center glossy-gold text-brand-black py-3.5 rounded-xl font-bold text-[10px] uppercase tracking-wider shadow-md flex items-center justify-center gap-2">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>ClientZone</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Promo Bar -->
     <div class="bg-gradient-to-r from-brand-black via-[#1C1C1E] to-brand-black text-white py-2.5 px-4 text-center text-xs md:text-sm font-medium tracking-wide flex items-center justify-center gap-2.5 border-b border-brand-gold/20">
         <span class="bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[10px] px-2.5 py-0.5 rounded-full uppercase font-black tracking-wider shadow-sm animate-pulse">PROMO</span>
         <span class="text-slate-300">Zero Setup Fees, Free Premium Wi-Fi 6 Router & 30-Day Money-Back Guarantee!</span>
     </div>
 
+    <!-- Apple style Navigation Header -->
     <header class="sticky top-0 z-40 bg-brand-slateBlack/90 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <!-- Dynamic Brand Logo / Badge -->
-            <a href="#home-hero" class="flex items-center gap-2.5 group">
-                <div class="h-8 w-8 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-lg tracking-tight shadow-md transition-transform group-hover:rotate-6">
-                    A
-                </div>
-                <!-- Dynamic text updated via IntersectionObserver ScrollSpy -->
-                <span id="dynamic-nav-badge" class="text-lg font-bold tracking-tight text-white uppercase transition-all duration-300 min-w-[150px]">
-                    ANGWA<span class="text-brand-gold">.</span>
-                </span>
-            </a>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Left Side controls: Premium hamburger menu + Brand Dynamic ScrollSpy Badge -->
+            <div class="flex items-center gap-3">
+                <!-- Hamburger Trigger button -->
+                <button onclick="toggleSidebar()" class="text-white hover:text-brand-gold transition-colors focus:outline-none h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner" aria-label="Open Navigation Sidebar Menu">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
 
-            <!-- Menu Navigation Links -->
-            <nav class="hidden lg:flex items-center gap-6 text-[13px] tracking-wide text-gray-300 font-medium">
-                <a href="#home-hero" class="hover:text-brand-gold transition-colors">Home</a>
-                <a href="#packages" class="hover:text-brand-gold transition-colors">Host</a>
-                <a href="#design-suite" class="hover:text-brand-gold transition-colors">Design</a>
-                <a href="#cloud-filling" class="hover:text-brand-gold transition-colors">Cloud Filling</a>
-                <a href="#why-angwa" class="hover:text-brand-gold transition-colors">Why ANGWA</a>
-                <a href="#faq" class="hover:text-brand-gold transition-colors">Support FAQ</a>
+                <!-- Brand Logo / ScrollSpy Badge -->
+                <a href="#home-hero" class="flex items-center gap-2 group">
+                    <div class="h-8 w-8 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-lg tracking-tight shadow-md transition-transform group-hover:rotate-6 shrink-0">
+                        A
+                    </div>
+                    <!-- Dynamic text updated via IntersectionObserver ScrollSpy -->
+                    <span id="dynamic-nav-badge" class="text-xs sm:text-sm font-extrabold tracking-tight text-white uppercase transition-all duration-300 min-w-[130px] inline-block opacity-100 transform translate-y-0">
+                        ANGWA<span class="text-brand-gold">.</span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Central/Right Navigation Targets Header (Strictly mapped) -->
+            <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-xs text-white font-extrabold uppercase tracking-widest">
+                <a href="#home-hero" class="hover:text-brand-gold transition-colors py-2">Home</a>
+                <a href="#packages" class="hover:text-brand-gold transition-colors py-2">HOST</a>
+                <a href="#design-suite" class="hover:text-brand-gold transition-colors py-2">DESIGN</a>
                 
-                <!-- Cloud Filling Dropdown menu -->
+                <!-- Cloud Filling Dropdown Link -->
                 <div class="relative group">
-                    <button class="flex items-center gap-1.5 hover:text-brand-gold transition-colors focus:outline-none">
-                        <span>Sync Options</span>
+                    <a href="#cloud-filling" class="flex items-center gap-1 hover:text-brand-gold transition-colors py-2 uppercase">
+                        <span>Cloud Filling</span>
                         <i class="fa-solid fa-cloud text-[11px] text-brand-gold"></i>
                         <i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i>
-                    </button>
-                    <!-- Glossy Dropdown options -->
-                    <div class="absolute left-0 mt-2 w-48 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50">
-                        <button onclick="triggerCloudSync('dropbox')" class="w-full text-left px-4 py-2 text-xs text-white hover:bg-white/10 flex items-center gap-2 transition-all">
+                    </a>
+                    <!-- Dropdown Options -->
+                    <div class="absolute left-0 mt-1 w-44 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50">
+                        <button onclick="triggerCloudSync('dropbox')" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 flex items-center gap-2 transition-all">
                             <i class="fa-brands fa-dropbox text-blue-400"></i> Sync Dropbox
                         </button>
-                        <button onclick="triggerCloudSync('google')" class="w-full text-left px-4 py-2 text-xs text-white hover:bg-white/10 flex items-center gap-2 transition-all">
+                        <button onclick="triggerCloudSync('google')" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 flex items-center gap-2 transition-all">
                             <i class="fa-brands fa-google-drive text-green-400"></i> Sync Google Drive
                         </button>
                     </div>
                 </div>
+
+                <!-- More Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1 hover:text-brand-gold transition-colors focus:outline-none py-2 uppercase">
+                        <span>MORE</span>
+                        <i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i>
+                    </button>
+                    <!-- Dropdown Options -->
+                    <div class="absolute left-0 mt-1 w-64 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50 normal-case">
+                        <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Engineers</button>
+                        <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">architect</button>
+                        <button onclick="alertModal('Occupational health & safety safety logs and regulatory compliance checklists loaded.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">occupational health & safety</button>
+                        <button onclick="alertModal('Social facilitators outreach campaign metrics and community alignment matrix opened.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">social facilitators</button>
+                        <button onclick="alertModal('Quantity surveyors cost-estimation engine and project billing ledger updated.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">quantity surveyors</button>
+                        <button onclick="alertModal('Developer repository sync-state, cloud hosting cluster, and SLA logs active.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">developer</button>
+                    </div>
+                </div>
             </nav>
 
-            <!-- CTA Actions -->
-            <div class="flex items-center gap-4">
-                <a href="#coverage" class="hidden sm:inline-block text-xs font-semibold text-gray-300 hover:text-brand-gold transition-all">
-                    Check Coverage
-                </a>
-                <button onclick="triggerClientZone()" class="glossy-gold text-brand-black px-5 py-2 rounded-full font-bold text-xs shadow-md flex items-center gap-2">
+            <!-- Right side CTA actions -->
+            <div class="flex items-center gap-2">
+                
+                <!-- Notification Dropdown Toggle -->
+                <div class="relative">
+                    <button onclick="toggleNotificationDropdown(event)" class="text-white hover:text-brand-gold transition-colors h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner" aria-label="Notifications Panel">
+                        <i class="fa-solid fa-bell text-sm"></i>
+                        <span id="notify-pulse-dot" class="absolute top-2.5 right-2.5 h-2 w-2 bg-brand-green rounded-full shadow-[0_0_8px_#30D158] animate-pulse"></span>
+                    </button>
+                    <!-- Glassmorphic Notifications Panel -->
+                    <div id="notify-dropdown-panel" class="hidden absolute right-0 mt-3.5 w-76 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50">
+                        <h5 class="text-[10px] font-black text-brand-gold tracking-widest uppercase mb-3">Live Symmetrical Alerts</h5>
+                        <div class="space-y-2.5 text-[10px] text-gray-300">
+                            <div class="p-2.5 bg-white/5 rounded-xl border border-white/5 hover:border-brand-gold/20 transition-all flex items-start gap-2.5">
+                                <i class="fa-solid fa-gift text-brand-gold mt-0.5 shrink-0"></i>
+                                <div>
+                                    <span class="font-bold text-white block">Wi-Fi 6 Router Active!</span>
+                                    Free pre-configured hardware included in your package.
+                                </div>
+                            </div>
+                            <div class="p-2.5 bg-white/5 rounded-xl border border-white/5 hover:border-brand-gold/20 transition-all flex items-start gap-2.5">
+                                <i class="fa-solid fa-plug-circle-check text-brand-green mt-0.5 shrink-0"></i>
+                                <div>
+                                    <span class="font-bold text-white block">Local Grid Upgraded</span>
+                                    Symmetrical transmission rates optimized across network pools.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shopping Bag Dropdown Toggle -->
+                <div class="relative">
+                    <button id="cart-btn" onclick="toggleCartDropdown(event)" class="text-white hover:text-brand-gold transition-colors h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner" aria-label="Your Bag">
+                        <i class="fa-solid fa-bag-shopping text-sm"></i>
+                        <span id="header-cart-badge" class="absolute -top-1 -right-1 h-4.5 w-4.5 bg-brand-gold text-brand-black rounded-full text-[9px] font-black flex items-center justify-center hidden">0</span>
+                    </button>
+                    <!-- Glassmorphic Cart Panel -->
+                    <div id="cart-dropdown-panel" class="hidden absolute right-0 mt-3.5 w-80 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50 text-white">
+                        <h5 class="text-[10px] font-black text-brand-gold tracking-widest uppercase mb-3 flex items-center justify-between">
+                            <span>Your Configured Bag</span>
+                            <button onclick="clearCart()" class="text-gray-400 hover:text-red-400 text-[8px] tracking-normal font-bold">Clear All</button>
+                        </h5>
+                        <div id="cart-dropdown-content" class="text-[10px] text-gray-400 text-center py-4 space-y-3">
+                            <i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i>
+                            <span>No active package or web design selected.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="triggerClientZone()" class="glossy-gold text-brand-black px-4 lg:px-5 py-2 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0">
                     <i class="fa-solid fa-user-shield"></i>
                     <span>ClientZone</span>
                 </button>
@@ -269,6 +442,7 @@ html_content = """
         </div>
     </header>
 
+    <!-- Hero Content -->
     <section id="home-hero" class="relative bg-brand-black text-white overflow-hidden py-20 lg:py-28">
         <!-- Abstract background patterns -->
         <div class="absolute inset-0 pointer-events-none opacity-20">
@@ -276,7 +450,7 @@ html_content = """
             <div class="absolute -bottom-20 right-10 w-[500px] h-[500px] bg-brand-green rounded-full filter blur-[150px]"></div>
         </div>
 
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-12 gap-16 items-center">
                 
                 <!-- Left Content: High End Marketing Pitch -->
@@ -318,7 +492,7 @@ html_content = """
                 <!-- Right Content: Coverage Card -->
                 <div id="coverage" class="lg:col-span-5">
                     <div class="glass-dark p-8 rounded-3xl shadow-2xl relative gold-sheen-border overflow-hidden sheen-effect">
-                        <div class="absolute top-4 right-4 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-md z-20">
+                        <div class="absolute -top-3 -right-3 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-md">
                             Ultra Symmetrical
                         </div>
                         
@@ -363,8 +537,9 @@ html_content = """
         </div>
     </section>
 
+    <!-- Partners Logo Marquee -->
     <section class="py-8 bg-brand-slateBlack border-b border-white/10">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h4 class="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-4">Official Infrastructure Carrier Integrations</h4>
             
             <div class="flex flex-wrap items-center justify-center gap-4 md:gap-10 opacity-90">
@@ -384,349 +559,12 @@ html_content = """
         </div>
     </section>
 
-    <section id="packages" class="py-20 bg-brand-lightBg">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <!-- Grid Header Info -->
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Pure Bandwidth</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">
-                    Choose Your Light Grid Configuration
-                </h2>
-                <p class="text-gray-500 text-sm">
-                    Select by individual Network Provider, or segment speed tiers ideal for heavy streaming, cloud management, zero-ping online gaming, or massive smart home suites.
-                </p>
-            </div>
-
-            <!-- FNO Premium Tab Selection -->
-            <div class="flex flex-col items-center gap-6 mb-12">
-                <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-2xl">
-                    <button onclick="setFNO('all')" id="tab-all" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">
-                        All Networks
-                    </button>
-                    <button onclick="setFNO('vuma')" id="tab-vuma" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
-                        Vumatel
-                    </button>
-                    <button onclick="setFNO('open')" id="tab-open" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
-                        Openserve
-                    </button>
-                    <button onclick="setFNO('frog')" id="tab-frog" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
-                        Frogfoot
-                    </button>
-                </div>
-
-                <!-- Speed Filter Toggles -->
-                <div class="flex flex-wrap justify-center gap-2">
-                    <button onclick="filterSpeedRange('all')" id="btn-speed-all" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm">
-                        All Speeds
-                    </button>
-                    <button onclick="filterSpeedRange('budget')" id="btn-speed-budget" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
-                        Casual (30M - 50M)
-                    </button>
-                    <button onclick="filterSpeedRange('medium')" id="btn-speed-medium" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
-                        Active House (100M - 200M)
-                    </button>
-                    <button onclick="filterSpeedRange('pro')" id="btn-speed-pro" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
-                        Pro Tier (500M - 1G)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Dynamic Package Configuration Cards Grid -->
-            <div id="packages-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Populated dynamically by JS -->
-            </div>
-
-            <!-- Promotion banner footer -->
-            <div class="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden sheen-effect">
-                <div class="flex items-center gap-5 z-10">
-                    <div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl">
-                        <i class="fa-solid fa-globe"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-brand-black">Confused by different network setup terms?</h4>
-                        <p class="text-xs text-gray-500">Run a manual coverage analysis. We'll automatically identify the cheapest option for your home.</p>
-                    </div>
-                </div>
-                <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">
-                    Compare Network Prices
-                </a>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="design-suite" class="py-20 bg-brand-slateBlack text-white overflow-hidden relative border-t border-b border-white/10">
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-brand-gold rounded-full filter blur-[120px]"></div>
-            <div class="absolute bottom-0 left-10 w-96 h-96 bg-brand-green rounded-full filter blur-[120px]"></div>
-        </div>
-
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Website Architecture & Splicing</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
-                    Custom Web Design Packages
-                </h2>
-                <p class="text-gray-400 text-sm">
-                    Select different premium web aesthetics and pricing models below. Watch our interactive web builder mockup container change layouts, structural grids, color metrics, and typography instantly.
-                </p>
-            </div>
-
-            <div class="grid lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Left Column: Design Architecture Cards -->
-                <div class="lg:col-span-5 space-y-4">
-                    <h3 class="text-xl font-bold text-white mb-2">Select Design Tier</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-6">Every plan is completely hand-coded, SEO optimized, integrated with ultra-fast light hosting, and customizable to your exact requirements.</p>
-
-                    <!-- Design Card 1 -->
-                    <div id="card-design-luxe" onclick="selectWebDesign('luxe')" 
-                         class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/60 border-brand-gold/40 shadow-lg hover:border-brand-gold transition-all duration-300 relative overflow-hidden">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-brand-gold tracking-widest uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-gem"></i> Luxe Obsidian
-                            </span>
-                            <span class="text-[9px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded font-bold uppercase tracking-wider">Most Popular</span>
-                        </div>
-                        <p class="text-xs text-gray-400 leading-relaxed mb-3">A spectacular ultra-premium dark theme featuring warm golden highlights, glassmorphism layers, and cinematic depth.</p>
-                        
-                        <!-- Pricing Details -->
-                        <div class="border-t border-white/5 pt-3 mt-3 flex items-center justify-between">
-                            <div>
-                                <span class="text-xl font-extrabold text-white">R8,999</span>
-                                <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span>
-                            </div>
-                            <button onclick="openDesignSignupModal('luxe')" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1">
-                                <span>Order Build</span> <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
-                            <span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 10 Pages</span>
-                            <span><i class="fa-solid fa-gauge-high text-brand-green mr-1"></i> 99 Speed Index</span>
-                        </div>
-                    </div>
-
-                    <!-- Design Card 2 -->
-                    <div id="card-design-emerald" onclick="selectWebDesign('emerald')" 
-                         class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-green/50 transition-all duration-300 relative overflow-hidden">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-brand-green tracking-widest uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-bolt"></i> Emerald Neo
-                            </span>
-                            <span class="text-[9px] bg-brand-green/10 text-brand-green px-2 py-0.5 rounded font-bold uppercase tracking-wider">High Tech</span>
-                        </div>
-                        <p class="text-xs text-gray-400 leading-relaxed mb-3">Bright neon green highlights paired with deep carbon structures. Tailored for software, gaming networks, and modern tech brands.</p>
-                        
-                        <!-- Pricing Details -->
-                        <div class="border-t border-white/5 pt-3 mt-3 flex items-center justify-between">
-                            <div>
-                                <span class="text-xl font-extrabold text-white">R5,499</span>
-                                <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span>
-                            </div>
-                            <button onclick="openDesignSignupModal('emerald')" class="glossy-green text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1">
-                                <span>Order Build</span> <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                            </button>
-                        </div>
-
-                        <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
-                            <span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 5 Pages</span>
-                            <span><i class="fa-solid fa-code text-brand-green mr-1"></i> Clean Code</span>
-                        </div>
-                    </div>
-
-                    <!-- Design Card 3 -->
-                    <div id="card-design-minimal" onclick="selectWebDesign('minimal')" 
-                         class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-seedling"></i> Minimal Alabaster
-                            </span>
-                            <span class="text-[9px] bg-white/10 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Clean Minimal</span>
-                        </div>
-                        <p class="text-xs text-gray-400 leading-relaxed mb-3">Ultra-clean, crisp white typography structured over soft gray backdrops. Excellent layout clarity for e-commerce or blogs.</p>
-                        
-                        <!-- Pricing Details -->
-                        <div class="border-t border-white/5 pt-3 mt-3 flex items-center justify-between">
-                            <div>
-                                <span class="text-xl font-extrabold text-white">R3,999</span>
-                                <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span>
-                            </div>
-                            <button onclick="openDesignSignupModal('minimal')" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1">
-                                <span>Order Build</span> <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                            </button>
-                        </div>
-
-                        <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
-                            <span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 3 Pages</span>
-                            <span><i class="fa-solid fa-mobile text-white mr-1"></i> Fluid Grid</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column: Interactive Mockup Live Device Viewport -->
-                <div class="lg:col-span-7">
-                    <div class="bg-brand-darkGray p-3 rounded-3xl border border-white/10 shadow-2xl relative">
-                        
-                        <!-- Top browser bar controls -->
-                        <div class="flex items-center justify-between px-4 py-2 border-b border-white/5 text-xs text-gray-500">
-                            <div class="flex items-center gap-1.5">
-                                <span class="h-2.5 w-2.5 rounded-full bg-red-500/80 block"></span>
-                                <span class="h-2.5 w-2.5 rounded-full bg-yellow-500/80 block"></span>
-                                <span class="h-2.5 w-2.5 rounded-full bg-green-500/80 block"></span>
-                            </div>
-                            <div class="bg-black/40 px-6 py-1 rounded-full text-[10px] tracking-wide text-gray-400 flex items-center gap-1.5 font-mono select-none">
-                                <i class="fa-solid fa-lock text-[9px] text-brand-green"></i> https://preview.angwa.design
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <button onclick="simulateReload()" class="hover:text-white transition-colors"><i class="fa-solid fa-rotate-right"></i></button>
-                                <span class="text-[9px] font-bold text-brand-green">Live Sandbox</span>
-                            </div>
-                        </div>
-
-                        <!-- Inner Live Preview Web Container -->
-                        <div id="live-web-viewport" class="bg-black text-white p-6 sm:p-10 rounded-2xl min-h-[420px] flex flex-col justify-between transition-all duration-500 relative overflow-hidden">
-                            <!-- Overlay Sheen sweeping effect -->
-                            <div class="absolute inset-0 pointer-events-none sheen-effect opacity-10"></div>
-                            
-                            <!-- Header Element of the Mini site -->
-                            <div class="flex justify-between items-center relative z-10">
-                                <span id="mockup-logo" class="text-xs font-black tracking-tight flex items-center gap-1.5 text-brand-gold">
-                                    <span class="h-5 w-5 bg-gradient-to-r from-brand-gold to-brand-goldDark rounded-md flex items-center justify-center text-brand-black text-[10px]">L</span> 
-                                    <span>OBSIDIAN.</span>
-                                </span>
-                                <div class="flex gap-3 text-[9px] font-bold uppercase tracking-wider text-gray-400">
-                                    <span>Products</span>
-                                    <span>Pricing</span>
-                                    <span>SLA</span>
-                                </div>
-                            </div>
-
-                            <!-- Mid Content Section -->
-                            <div class="my-auto space-y-4 py-8 relative z-10 text-center sm:text-left">
-                                <div id="mockup-badge" class="inline-block text-[8px] tracking-widest font-bold uppercase px-2.5 py-1 bg-brand-gold/10 text-brand-gold border border-brand-gold/20 rounded-full">
-                                    Cinematic Luxury Layout
-                                </div>
-                                <h4 id="mockup-title" class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-                                    Slick. Cinematic.<br>
-                                    <span class="text-brand-gold">Gold Obsidian Accent.</span>
-                                </h4>
-                                <p id="mockup-desc" class="text-[11px] text-gray-400 max-w-sm leading-relaxed mx-auto sm:mx-0">
-                                    Designed with luxury aesthetics. Highly interactive bento architecture mapped for corporate powerbrands and creatives.
-                                </p>
-                            </div>
-
-                            <!-- Footer/Actions Panel of Mini site -->
-                            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-5 relative z-10">
-                                <div class="text-center sm:text-left">
-                                    <span class="text-[8px] uppercase tracking-wider text-gray-500 block font-bold">Standard Project Timeline</span>
-                                    <span id="mockup-time" class="text-xs font-bold text-white">4-6 Business Days Delivery</span>
-                                </div>
-                                <button id="mockup-btn" class="glossy-gold text-brand-black text-[10px] font-black tracking-wider uppercase px-5 py-2.5 rounded-full shadow-md flex items-center gap-1.5">
-                                    <span>Explore Blueprint</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section id="cloud-filling" class="py-20 bg-brand-black text-white relative border-b border-white/10">
-        <div class="absolute inset-0 pointer-events-none opacity-20">
-            <div class="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-brand-gold rounded-full filter blur-[150px] animate-pulse"></div>
-        </div>
-
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Left Hand Details Column -->
-                <div class="lg:col-span-5 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-brand-gold text-xs font-medium tracking-widest uppercase">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Dynamic Upstream Mapping
-                    </div>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                        Upstream Spliced <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark">Cloud-Filling Grid.</span>
-                    </h2>
-                    <p class="text-sm text-gray-400 leading-relaxed">
-                        Say goodbye to sluggish cloud sync delays. With ANGWA's symmetrical fiber lines, uploads run at identical speeds to your downloads. Instantly map, sync, and deploy media directories directly to external storage platforms.
-                    </p>
-                    <div class="space-y-3.5 text-xs text-gray-300">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-brands fa-dropbox text-blue-400 text-lg"></i>
-                            <span>Dropbox Integration: Automated multi-thread background uploads.</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i class="fa-brands fa-google-drive text-green-400 text-lg"></i>
-                            <span>Google Drive Integration: Smooth file splicing and real-time handshakes.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Hand Visual Sandbox Terminal -->
-                <div class="lg:col-span-7">
-                    <div class="glass-dark rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden shadow-2xl">
-                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
-                            <div>
-                                <h4 class="font-bold text-sm">Direct-To-Cloud Filling Terminal</h4>
-                                <p class="text-[10px] text-gray-500">Live test connection speed metrics</p>
-                            </div>
-                            <span class="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider">
-                                <i class="fa-solid fa-link animate-pulse"></i> Symmetrical Active
-                            </span>
-                        </div>
-
-                        <!-- On page active synclines emulator card -->
-                        <div class="bg-black/40 rounded-2xl p-6 border border-white/5 space-y-5">
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="text-gray-400">Target Server Connection</span>
-                                <div class="flex gap-2">
-                                    <button onclick="triggerCloudSync('dropbox')" class="bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white transition-all text-[10px] font-bold tracking-wide px-3 py-1.5 rounded-lg flex items-center gap-1">
-                                        <i class="fa-brands fa-dropbox"></i> Dropbox
-                                    </button>
-                                    <button onclick="triggerCloudSync('google')" class="bg-green-500/20 hover:bg-green-500 text-green-400 hover:text-white transition-all text-[10px] font-bold tracking-wide px-3 py-1.5 rounded-lg flex items-center gap-1">
-                                        <i class="fa-brands fa-google-drive"></i> Google Drive
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Simulator Progress Line -->
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-[10px] font-mono text-gray-500 uppercase">
-                                    <span>Sync Transmission Rate:</span>
-                                    <span class="text-brand-green font-bold" id="panel-sync-rate">0 Mbps</span>
-                                </div>
-                                <div class="w-full bg-brand-slateBlack h-2.5 rounded-full overflow-hidden border border-white/5 relative">
-                                    <div id="panel-progress-bar" class="bg-gradient-to-r from-brand-gold to-brand-green h-full rounded-full transition-all duration-300" style="width: 0%"></div>
-                                </div>
-                                <div class="flex justify-between text-[9px] text-gray-500">
-                                    <span id="panel-sync-status">Inactive - Select pipeline platform to initiate sync</span>
-                                    <span id="panel-sync-timer"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-5 text-center text-[10px] text-gray-500 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-network-wired text-brand-gold"></i>
-                            <span>Bypasses local ISP throttling locks completely.</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section id="why-angwa" class="py-24 bg-white">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- "Who We Are" Core Promise Section -->
+    <section id="why-angwa" class="py-24 bg-white border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">The ANGWA SLA</span>
+                <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Who We Are</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-black">
                     Premium Quality. Month-to-Month Freedom.
                 </h2>
@@ -735,7 +573,7 @@ html_content = """
                 </p>
             </div>
 
-            <!-- Custom Bento-Style feature grids -->
+            <!-- Custom Bento-Style feature grids mapping to primary solutions -->
             <div class="grid md:grid-cols-3 gap-8">
                 
                 <!-- Benefit card 1: Hosting -->
@@ -749,9 +587,9 @@ html_content = """
                             Blazing-fast cloud hosting infrastructure optimized for instant page loading, robust security, and deep integration with our ultra-low-latency light grid network.
                         </p>
                     </div>
-                    <div class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-goldDark">
+                    <a href="#packages" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-goldDark">
                         Explore Hosting Tech <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </div>
+                    </a>
                 </div>
 
                 <!-- Benefit card 2: Designing -->
@@ -765,9 +603,9 @@ html_content = """
                             Tailor-made, pixel-perfect user interfaces engineered for speed, conversion, and fluid grid layouts. Watch your concepts turn into high-score SEO assets seamlessly.
                         </p>
                     </div>
-                    <div class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-greenDark">
+                    <a href="#design-suite" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-greenDark">
                         Start Design Blueprint <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </div>
+                    </a>
                 </div>
 
                 <!-- Benefit card 3: Cloud-Filling -->
@@ -781,17 +619,384 @@ html_content = """
                             Instant direct-to-cloud backups. Map, sync, and deploy massive asset databases directly into your custom storage space on Dropbox or Google Drive in seconds.
                         </p>
                     </div>
-                    <div class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-black">
+                    <a href="#cloud-filling" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-black">
                         Sync Cloud Media <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </div>
+                    </a>
                 </div>
 
             </div>
         </div>
     </section>
 
+    <!-- Unified Services Wrapper Container -->
+    <div id="services">
+        
+        <!-- Hosting / Packages Section -->
+        <section id="packages" class="py-20 bg-brand-lightBg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Grid Header Info -->
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Service 01: Symmetrical Hosting</span>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">
+                        Choose Your Symmetrical Connection
+                    </h2>
+                    <p class="text-gray-500 text-sm">
+                        Select by individual Network Provider, or segment speed tiers ideal for heavy streaming, cloud management, zero-ping online gaming, or massive smart home suites.
+                    </p>
+                </div>
+
+                <!-- FNO Premium Tab Selection -->
+                <div class="flex flex-col items-center gap-6 mb-12">
+                    <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-2xl">
+                        <button onclick="setFNO('all')" id="tab-all" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">
+                            All Networks
+                        </button>
+                        <button onclick="setFNO('vuma')" id="tab-vuma" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
+                            Vumatel
+                        </button>
+                        <button onclick="setFNO('open')" id="tab-open" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
+                            Openserve
+                        </button>
+                        <button onclick="setFNO('frog')" id="tab-frog" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
+                            Frogfoot
+                        </button>
+                    </div>
+
+                    <!-- Speed Filter Toggles -->
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <button onclick="filterSpeedRange('all')" id="btn-speed-all" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm">
+                            All Speeds
+                        </button>
+                        <button onclick="filterSpeedRange('budget')" id="btn-speed-budget" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
+                            Casual (30M - 50M)
+                        </button>
+                        <button onclick="filterSpeedRange('medium')" id="btn-speed-medium" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
+                            Active House (100M - 200M)
+                        </button>
+                        <button onclick="filterSpeedRange('pro')" id="btn-speed-pro" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
+                            Pro Tier (500M - 1G)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Package Configuration Cards Grid -->
+                <div id="packages-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Populated dynamically by JS -->
+                </div>
+
+                <!-- Promotion banner footer -->
+                <div class="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden sheen-effect">
+                    <div class="flex items-center gap-5 z-10">
+                        <div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-brand-black">Confused by different network setup terms?</h4>
+                            <p class="text-xs text-gray-500">Run a manual coverage analysis. We'll automatically identify the cheapest option for your home.</p>
+                        </div>
+                    </div>
+                    <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">
+                        Compare Network Prices
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Custom Design Sandbox Suite Section -->
+        <section id="design-suite" class="py-20 bg-brand-slateBlack text-white overflow-hidden relative border-t border-b border-white/10">
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-brand-gold rounded-full filter blur-[120px]"></div>
+                <div class="absolute bottom-0 left-10 w-96 h-96 bg-brand-green rounded-full filter blur-[120px]"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Service 02: Responsive Web Designing</span>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+                        Custom Web Design Packages
+                    </h2>
+                    <p class="text-gray-400 text-sm">
+                        Select different premium web aesthetics and pricing models below. Watch our interactive web builder mockup container change layouts, structural grids, color metrics, and typography instantly.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Column: Design Architecture Cards -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <h3 class="text-xl font-bold text-white mb-2">Select Design Tier</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-6">Every plan is completely hand-coded, SEO optimized, integrated with ultra-fast light hosting, and customizable to your exact requirements.</p>
+
+                        <!-- Design Card 1 -->
+                        <div id="card-design-luxe" onclick="selectWebDesign('luxe')" 
+                             class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/60 border-brand-gold/40 shadow-lg hover:border-brand-gold transition-all duration-300 relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-brand-gold tracking-widest uppercase flex items-center gap-2">
+                                    <i class="fa-solid fa-gem"></i> Luxe Obsidian
+                                </span>
+                                <span class="text-[9px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded font-bold uppercase tracking-wider">Most Popular</span>
+                            </div>
+                            <p class="text-xs text-gray-400 leading-relaxed mb-3">A spectacular ultra-premium dark theme featuring warm golden highlights, glassmorphism layers, and cinematic depth.</p>
+                            
+                            <!-- Pricing Details with Double Action Paths -->
+                            <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-white">R8,999</span>
+                                        <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 mt-1">
+                                    <button onclick="directBuy('design', 'luxe'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5">
+                                        <span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i>
+                                    </button>
+                                    <button onclick="addToCart('design', 'luxe'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold">
+                                        <span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
+                                <span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 10 Pages</span>
+                                <span><i class="fa-solid fa-gauge-high text-brand-green mr-1"></i> 99 Speed Index</span>
+                            </div>
+                        </div>
+
+                        <!-- Design Card 2 -->
+                        <div id="card-design-emerald" onclick="selectWebDesign('emerald')" 
+                             class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-green/50 transition-all duration-300 relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-brand-green tracking-widest uppercase flex items-center gap-2">
+                                    <i class="fa-solid fa-bolt"></i> Emerald Neo
+                                </span>
+                                <span class="text-[9px] bg-brand-green/10 text-brand-green px-2 py-0.5 rounded font-bold uppercase tracking-wider">High Tech</span>
+                            </div>
+                            <p class="text-xs text-gray-400 leading-relaxed mb-3">Bright neon green highlights paired with deep carbon structures. Tailored for software, gaming networks, and modern tech brands.</p>
+                            
+                            <!-- Pricing Details with Double Action Paths -->
+                            <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-white">R5,499</span>
+                                        <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 mt-1">
+                                    <button onclick="directBuy('design', 'emerald'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5">
+                                        <span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i>
+                                    </button>
+                                    <button onclick="addToCart('design', 'emerald'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold">
+                                        <span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
+                                <span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 5 Pages</span>
+                                <span><i class="fa-solid fa-code text-brand-green mr-1"></i> Clean Code</span>
+                            </div>
+                        </div>
+
+                        <!-- Design Card 3 -->
+                        <div id="card-design-minimal" onclick="selectWebDesign('minimal')" 
+                             class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                                    <i class="fa-solid fa-seedling"></i> Minimal Alabaster
+                                </span>
+                                <span class="text-[9px] bg-white/10 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Clean Minimal</span>
+                            </div>
+                            <p class="text-xs text-gray-400 leading-relaxed mb-3">Ultra-clean, crisp white typography structured over soft gray backdrops. Excellent layout clarity for e-commerce or blogs.</p>
+                            
+                            <!-- Pricing Details with Double Action Paths -->
+                            <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-white">R3,999</span>
+                                        <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 mt-1">
+                                    <button onclick="directBuy('design', 'minimal'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5">
+                                        <span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i>
+                                    </button>
+                                    <button onclick="addToCart('design', 'minimal'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold">
+                                        <span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
+                                <span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 3 Pages</span>
+                                <span><i class="fa-solid fa-mobile text-white mr-1"></i> Fluid Grid</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Mockup Live Device Viewport -->
+                    <div class="lg:col-span-7">
+                        <div class="bg-brand-darkGray p-3 rounded-3xl border border-white/10 shadow-2xl relative">
+                            
+                            <!-- Top browser bar controls -->
+                            <div class="flex items-center justify-between px-4 py-2 border-b border-white/5 text-xs text-gray-500">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="h-2.5 w-2.5 rounded-full bg-red-500/80 block"></span>
+                                    <span class="h-2.5 w-2.5 rounded-full bg-yellow-500/80 block"></span>
+                                    <span class="h-2.5 w-2.5 rounded-full bg-green-500/80 block"></span>
+                                </div>
+                                <div class="bg-black/40 px-6 py-1 rounded-full text-[10px] tracking-wide text-gray-400 flex items-center gap-1.5 font-mono select-none">
+                                    <i class="fa-solid fa-lock text-[9px] text-brand-green"></i> https://preview.angwa.design
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <button onclick="simulateReload()" class="hover:text-white transition-colors"><i class="fa-solid fa-rotate-right"></i></button>
+                                    <span class="text-[9px] font-bold text-brand-green">Live Sandbox</span>
+                                </div>
+                            </div>
+
+                            <!-- Inner Live Preview Web Container -->
+                            <div id="live-web-viewport" class="bg-black text-white p-6 sm:p-10 rounded-2xl min-h-[420px] flex flex-col justify-between transition-all duration-500 relative overflow-hidden">
+                                <!-- Overlay Sheen sweeping effect -->
+                                <div class="absolute inset-0 pointer-events-none sheen-effect opacity-10"></div>
+                                
+                                <!-- Header Element of the Mini site -->
+                                <div class="flex justify-between items-center relative z-10">
+                                    <span id="mockup-logo" class="text-xs font-black tracking-tight flex items-center gap-1.5 text-brand-gold">
+                                        <span class="h-5 w-5 bg-gradient-to-r from-brand-gold to-brand-goldDark rounded-md flex items-center justify-center text-brand-black text-[10px]">L</span> 
+                                        <span>OBSIDIAN.</span>
+                                    </span>
+                                    <div class="flex gap-3 text-[9px] font-bold uppercase tracking-wider text-gray-400">
+                                        <span>Products</span>
+                                        <span>Pricing</span>
+                                        <span>SLA</span>
+                                    </div>
+                                </div>
+
+                                <!-- Mid Content Section -->
+                                <div class="my-auto space-y-4 py-8 relative z-10 text-center sm:text-left">
+                                    <div id="mockup-badge" class="inline-block text-[8px] tracking-widest font-bold uppercase px-2.5 py-1 bg-brand-gold/10 text-brand-gold border border-brand-gold/20 rounded-full">
+                                        Cinematic Luxury Layout
+                                    </div>
+                                    <h4 id="mockup-title" class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+                                        Slick. Cinematic.<br>
+                                        <span class="text-brand-gold">Gold Obsidian Accent.</span>
+                                    </h4>
+                                    <p id="mockup-desc" class="text-[11px] text-gray-400 max-w-sm leading-relaxed mx-auto sm:mx-0">
+                                        Designed with luxury aesthetics. Highly interactive bento architecture mapped for corporate powerbrands and creatives.
+                                    </p>
+                                </div>
+
+                                <!-- Footer/Actions Panel of Mini site -->
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-5 relative z-10">
+                                    <div class="text-center sm:text-left">
+                                        <span class="text-[8px] uppercase tracking-wider text-gray-500 block font-bold">Standard Project Timeline</span>
+                                        <span id="mockup-time" class="text-xs font-bold text-white">4-6 Business Days Delivery</span>
+                                    </div>
+                                    <button id="mockup-btn" class="glossy-gold text-brand-black text-[10px] font-black tracking-wider uppercase px-5 py-2.5 rounded-full shadow-md flex items-center gap-1.5">
+                                        <span>Explore Blueprint</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Cloud Filling Interactive Pipeline -->
+        <section id="cloud-filling" class="py-20 bg-brand-black text-white relative border-b border-white/10">
+            <div class="absolute inset-0 pointer-events-none opacity-20">
+                <div class="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-brand-gold rounded-full filter blur-[150px] animate-pulse"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Hand Details Column -->
+                    <div class="lg:col-span-5 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-brand-gold text-xs font-medium tracking-widest uppercase">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Service 03: Cloud Filling
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                            Upstream Spliced <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark">Cloud-Filling Grid.</span>
+                        </h2>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Say goodbye to sluggish cloud sync delays. With ANGWA's symmetrical fiber lines, uploads run at identical speeds to your downloads. Instantly map, sync, and deploy media directories directly to external storage platforms.
+                        </p>
+                        <div class="space-y-3.5 text-xs text-gray-300">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-brands fa-dropbox text-blue-400 text-lg"></i>
+                                <span>Dropbox Integration: Automated multi-thread background uploads.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-brands fa-google-drive text-green-400 text-lg"></i>
+                                <span>Google Drive Integration: Smooth file splicing and real-time handshakes.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Hand Visual Sandbox Terminal -->
+                    <div class="lg:col-span-7">
+                        <div class="glass-dark rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden shadow-2xl">
+                            <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                                <div>
+                                    <h4 class="font-bold text-sm">Direct-To-Cloud Filling Terminal</h4>
+                                    <p class="text-[10px] text-gray-500">Live test connection speed metrics</p>
+                                </div>
+                                <span class="text-[10px] bg-brand-green/10 text-brand-green border border-brand-green/20 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider">
+                                    <i class="fa-solid fa-link animate-pulse"></i> Symmetrical Active
+                                </span>
+                            </div>
+
+                            <!-- On page active synclines emulator card -->
+                            <div class="bg-black/40 rounded-2xl p-6 border border-white/5 space-y-5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-gray-400">Target Server Connection</span>
+                                    <div class="flex gap-2">
+                                        <button onclick="triggerCloudSync('dropbox')" class="bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white transition-all text-[10px] font-bold tracking-wide px-3 py-1.5 rounded-lg flex items-center gap-1">
+                                            <i class="fa-brands fa-dropbox"></i> Dropbox
+                                        </button>
+                                        <button onclick="triggerCloudSync('google')" class="bg-green-500/20 hover:bg-green-500 text-green-400 hover:text-white transition-all text-[10px] font-bold tracking-wide px-3 py-1.5 rounded-lg flex items-center gap-1">
+                                            <i class="fa-brands fa-google-drive"></i> Google Drive
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Simulator Progress Line -->
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-[10px] font-mono text-gray-500 uppercase">
+                                        <span>Sync Transmission Rate:</span>
+                                        <span class="text-brand-green font-bold" id="panel-sync-rate">0 Mbps</span>
+                                    </div>
+                                    <div class="w-full bg-brand-slateBlack h-2.5 rounded-full overflow-hidden border border-white/5 relative">
+                                        <div id="panel-progress-bar" class="bg-gradient-to-r from-brand-gold to-brand-green h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-[9px] text-gray-500">
+                                        <span id="panel-sync-status">Inactive - Select pipeline platform to initiate sync</span>
+                                        <span id="panel-sync-timer"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 text-center text-[10px] text-gray-500 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-network-wired text-brand-gold"></i>
+                                <span>Bypasses local ISP throttling locks completely.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Support & FAQs Section -->
     <section id="faq" class="py-20 bg-brand-lightBg">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center mb-16 space-y-4">
                 <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Help & Support</span>
@@ -850,6 +1055,7 @@ html_content = """
         </div>
     </section>
 
+    <!-- Sign Up Modal -->
     <div id="signup-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- Blur Backdrop Overlay -->
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -863,8 +1069,8 @@ html_content = """
                 <!-- Modal Head -->
                 <div class="bg-brand-darkGray px-6 py-5 flex items-center justify-between border-b border-white/5">
                     <div>
-                        <span class="text-[10px] uppercase tracking-widest text-brand-gold font-bold block">Configure Connection</span>
-                        <h3 class="text-md font-bold">Fast-Track Fibre Order</h3>
+                        <span class="text-[10px] uppercase tracking-widest text-brand-gold font-bold block">Checkout Process</span>
+                        <h3 class="text-md font-bold">Fast-Track Secure Order</h3>
                     </div>
                     <button onclick="closeModal()" class="text-gray-400 hover:text-white transition-colors text-xl">
                         <i class="fa-solid fa-circle-xmark"></i>
@@ -873,62 +1079,19 @@ html_content = """
 
                 <!-- Multi-Step indicators -->
                 <div class="bg-black/40 px-6 py-3 flex items-center justify-between text-[10px] font-bold text-gray-500 uppercase tracking-wider">
-                    <span id="step-indicator-1" class="text-brand-gold flex items-center gap-1.5">
-                        <span class="h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black">1</span> Options
-                    </span>
-                    <span id="step-indicator-2" class="flex items-center gap-1.5">
-                        <span class="h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px] font-black">2</span> Setup Info
+                    <span id="step-indicator-2" class="text-brand-gold flex items-center gap-1.5">
+                        <span class="h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black">1</span> Delivery Details
                     </span>
                     <span id="step-indicator-3" class="flex items-center gap-1.5">
-                        <span class="h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px] font-black">3</span> Summary
+                        <span class="h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px] font-black">2</span> Order Verification
                     </span>
                 </div>
 
                 <div class="p-6">
-                    
-                    <!-- STEP 1: Addons -->
-                    <div id="modal-step-1" class="space-y-6">
-                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-center justify-between">
-                            <div>
-                                <h4 class="font-bold text-sm text-white" id="modal-package-name">Openserve 50/50 Mbps</h4>
-                                <p class="text-[10px] text-gray-400" id="modal-package-subtitle">Monthly Symmetrical Fibre Premium</p>
-                            </div>
-                            <span class="text-base font-bold text-brand-gold" id="modal-package-price">R499.00</span>
-                        </div>
-
-                        <!-- Options grid -->
-                        <div class="space-y-3">
-                            <h5 class="text-[10px] font-bold uppercase tracking-wider text-gray-500" id="modal-upgrade-header">Upgrade Hardware & Configuration</h5>
-                            
-                            <!-- Checkbox 1: Wi-Fi 6 -->
-                            <label id="addon-router-container" class="flex items-center justify-between p-4 border border-white/5 bg-brand-darkGray/40 rounded-2xl cursor-pointer hover:bg-brand-darkGray transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <input type="checkbox" id="addon-router" onchange="calculateModalTotal()" class="h-4.5 w-4.5 text-brand-gold bg-brand-black border-white/10 rounded focus:ring-brand-gold">
-                                    <div>
-                                        <span class="font-bold text-xs block text-white" id="addon-router-title">Upgrade to Wi-Fi 6 Pro System</span>
-                                        <span class="text-[10px] text-gray-400" id="addon-router-desc">Enhance transmission rates across concrete walls.</span>
-                                    </div>
-                                </div>
-                                <span class="text-xs font-bold text-brand-gold" id="addon-router-price">+R99/pm</span>
-                            </label>
-
-                            <!-- Checkbox 2: Static IP -->
-                            <label id="addon-ip-container" class="flex items-center justify-between p-4 border border-white/5 bg-brand-darkGray/40 rounded-2xl cursor-pointer hover:bg-brand-darkGray transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <input type="checkbox" id="addon-ip" onchange="calculateModalTotal()" class="h-4.5 w-4.5 text-brand-gold bg-brand-black border-white/10 rounded focus:ring-brand-gold">
-                                    <div>
-                                        <span class="font-bold text-xs block text-white" id="addon-ip-title">Fixed Dedicated Static IP</span>
-                                        <span class="text-[10px] text-gray-400" id="addon-ip-desc">Ideal for running servers, secure logins or smart systems.</span>
-                                    </div>
-                                </div>
-                                <span class="text-xs font-bold text-brand-gold" id="addon-ip-price">+R49/pm</span>
-                            </label>
-                        </div>
-                    </div>
 
                     <!-- STEP 2: Address Detail Configuration -->
-                    <div id="modal-step-2" class="space-y-4 hidden">
-                        <h4 class="font-bold text-xs text-white uppercase tracking-wider">Installation Destination Info</h4>
+                    <div id="modal-step-2" class="space-y-4">
+                        <h4 class="font-bold text-xs text-white uppercase tracking-wider">Subscriber Connection Information</h4>
                         
                         <div class="space-y-3 text-xs">
                             <div>
@@ -940,7 +1103,7 @@ html_content = """
                                 <input type="email" id="cust-email" placeholder="e.g. lerato@domain.co.za" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold focus:outline-none">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1" id="modal-address-label">Premises Address</label>
+                                <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Setup / Installation Address</label>
                                 <input type="text" id="cust-address" placeholder="e.g. Unit 5, Sandhurst Ridge Complex" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold focus:outline-none">
                             </div>
                         </div>
@@ -952,26 +1115,18 @@ html_content = """
                             <div class="h-14 w-14 bg-brand-green/10 text-brand-green rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
                                 <i class="fa-regular fa-circle-check"></i>
                             </div>
-                            <h4 class="font-black text-base text-white" id="modal-success-title">System Configuration Confirmed</h4>
-                            <p class="text-[11px] text-gray-400 max-w-sm mx-auto" id="modal-success-desc">No upfront charges are required. Payment logic only starts when physical line activation is confirmed.</p>
+                            <h4 class="font-black text-base text-white">Setup Configurations Verified</h4>
+                            <p class="text-[11px] text-gray-400 max-w-sm mx-auto">No upfront setup charges are required. Launch your checkout via Polar.sh below to register monthly allocations.</p>
                         </div>
 
                         <!-- Bill Review -->
-                        <div class="bg-brand-darkGray/60 p-4 rounded-2xl border border-white/5 space-y-2 text-xs text-gray-300">
-                            <div class="flex justify-between">
-                                <span class="text-gray-500" id="summary-base-label">Standard Base Fee:</span>
-                                <span class="font-bold text-white" id="summary-pkg-price">R0.00</span>
+                        <div class="bg-brand-darkGray/60 p-4 rounded-2xl border border-white/5 space-y-2.5 text-xs text-gray-300">
+                            <div class="font-bold text-[10px] uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">Active Cart Items</div>
+                            <div id="modal-verification-summary" class="space-y-2">
+                                <!-- Populated dynamically based on checkout total -->
                             </div>
-                            <div id="summary-addon-router-row" class="flex justify-between hidden">
-                                <span class="text-gray-500" id="summary-addon-router-label">Wi-Fi 6 Pro Upgrade:</span>
-                                <span class="font-bold text-white" id="summary-addon-router-price-val">+R99.00</span>
-                            </div>
-                            <div id="summary-addon-ip-row" class="flex justify-between hidden">
-                                <span class="text-gray-500" id="summary-addon-ip-label">Fixed Static IP allocation:</span>
-                                <span class="font-bold text-white" id="summary-addon-ip-price-val">+R49.00</span>
-                            </div>
-                            <div class="flex justify-between border-t border-white/10 pt-2 text-sm font-bold">
-                                <span class="text-white" id="summary-total-label">Active Monthly Subtotal:</span>
+                            <div class="flex justify-between border-t border-white/10 pt-2.5 text-sm font-bold">
+                                <span class="text-white">Active Checkout Subtotal:</span>
                                 <span class="text-brand-gold" id="summary-total-price">R0.00</span>
                             </div>
                         </div>
@@ -984,8 +1139,8 @@ html_content = """
                     <button id="modal-back-btn" onclick="prevStep()" class="text-xs font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-colors hidden">
                         <i class="fa-solid fa-chevron-left mr-1"></i> Back
                     </button>
-                    <span id="modal-step-pricing" class="text-xs font-bold text-white">
-                        <span id="modal-pricing-label">Monthly Cost:</span> <span class="text-brand-gold font-black" id="modal-footer-price">R0.00</span>
+                    <span class="text-xs font-bold text-white">
+                        Checkout Total: <span class="text-brand-gold font-black" id="modal-footer-price">R0.00</span>
                     </span>
                     <div id="modal-next-btn-container">
                         <button id="modal-next-btn" onclick="nextStep()" class="glossy-gold text-brand-black px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md">
@@ -998,7 +1153,7 @@ html_content = """
         </div>
     </div>
 
-    <!-- Cloud Filling Progress Sync Modal -->
+    <!-- Cloud Sync Dialog -->
     <div id="cloud-sync-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="fixed inset-0 bg-brand-black/80 backdrop-blur-md transition-opacity" onclick="closeCloudModal()"></div>
@@ -1035,7 +1190,7 @@ html_content = """
         </div>
     </div>
 
-    <!-- ClientZone Login Modal -->
+    <!-- ClientZone Login Modal / Client Portal -->
     <div id="clientzone-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="fixed inset-0 bg-brand-black/80 backdrop-blur-md transition-opacity" onclick="closeClientZone()"></div>
@@ -1063,7 +1218,38 @@ html_content = """
         </div>
     </div>
 
-    <!-- Order Notification Confirmation Toast Box -->
+    <!-- Blogs Simulated Modal -->
+    <div id="blogs-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-brand-black/80 backdrop-blur-md transition-opacity" onclick="closeBlogsModal()"></div>
+            <div class="bg-brand-slateBlack text-white p-8 rounded-3xl max-w-lg w-full space-y-6 border border-white/10 relative z-10 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center border-b border-white/5 pb-4">
+                    <h4 class="font-bold text-lg text-brand-gold">ANGWA Symmetrical Blogs</h4>
+                    <button onclick="closeBlogsModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="space-y-6 text-xs text-gray-300">
+                    <div class="space-y-2">
+                        <span class="text-[9px] bg-brand-gold/20 text-brand-gold font-bold px-2 py-0.5 rounded uppercase">Networking</span>
+                        <h5 class="text-white font-bold text-sm">Why Symmetrical Speeds Matter for Hybrid Workspace Architecture</h5>
+                        <p class="leading-relaxed text-gray-400">Discover how identical upstream outputs boost video conferencing protocols and render standard copper DSL obsolete.</p>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <span class="text-[9px] bg-brand-green/20 text-brand-green font-bold px-2 py-0.5 rounded uppercase">Web Infrastructure</span>
+                        <h5 class="text-white font-bold text-sm">Responsive Splicing: How Hand-Coded Portfolios Dominate Search Engines</h5>
+                        <p class="leading-relaxed text-gray-400">A guide on optimizing website structures to achieve a 99/99 performance score on Google Lighthouse.</p>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <span class="text-[9px] bg-brand-gold/20 text-brand-gold font-bold px-2 py-0.5 rounded uppercase">Cloud Sync</span>
+                        <h5 class="text-white font-bold text-sm">Maximizing Backups: Integrating Dropbox & Google Drive directly into Optical Grids</h5>
+                        <p class="leading-relaxed text-gray-400">Bypassing ISP throttles to sync immense database structures under single second thresholds.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
     <div id="order-toast" class="fixed bottom-6 right-6 z-50 bg-brand-slateBlack text-white px-6 py-4 rounded-2xl shadow-2xl border border-brand-gold/30 flex items-center gap-4 hidden max-w-sm">
         <div class="h-10 w-10 bg-brand-gold/15 text-brand-gold rounded-xl flex items-center justify-center text-xl shrink-0">
             <i class="fa-solid fa-paper-plane"></i>
@@ -1077,7 +1263,7 @@ html_content = """
         </button>
     </div>
 
-    <!-- Floating Support Button and Chat Box -->
+    <!-- Float Support Panel -->
     <div class="fixed bottom-6 left-6 z-40">
         <button onclick="toggleLiveChat()" class="h-12 w-12 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark text-brand-black rounded-full flex items-center justify-center text-xl shadow-xl hover:scale-105 transition-all relative">
             <i class="fa-solid fa-headset"></i>
@@ -1114,9 +1300,9 @@ html_content = """
         </div>
     </div>
 
-    <!-- Footer Section -->
+    <!-- Footer System -->
     <footer class="bg-brand-black text-gray-500 py-16 border-t border-white/10 text-xs">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
                 
                 <!-- Brand pitch -->
@@ -1253,14 +1439,247 @@ html_content = """
             }
         };
 
-        /* --- App State --- */
+        /* --- Dynamic Cart State --- */
+        let cart = [];
         let currentFNO = 'all';
         let currentSpeedRange = 'all';
-        let selectedPackage = null;
-        let selectedDesign = null;
-        let currentModalStep = 1;
-        let activeAddons = { router: false, ip: false };
-        let checkoutType = 'host'; /* 'host' or 'design' */
+        let currentModalStep = 2; // Direct address capture setup
+
+        /* Dropdown togglers for Cart and Notifications */
+        function toggleNotificationDropdown(event) {
+            event.stopPropagation();
+            const panel = document.getElementById('notify-dropdown-panel');
+            const cartPanel = document.getElementById('cart-dropdown-panel');
+            
+            panel.classList.toggle('hidden');
+            cartPanel.classList.add('hidden');
+            
+            // Remove pulse indicator dot when checked
+            const pulse = document.getElementById('notify-pulse-dot');
+            if (pulse) pulse.remove();
+        }
+
+        function toggleCartDropdown(event) {
+            event.stopPropagation();
+            const panel = document.getElementById('cart-dropdown-panel');
+            const notifyPanel = document.getElementById('notify-dropdown-panel');
+            
+            panel.classList.toggle('hidden');
+            notifyPanel.classList.add('hidden');
+        }
+
+        /* Close dropdown panels if clicking elsewhere */
+        document.addEventListener('click', (event) => {
+            const notifyPanel = document.getElementById('notify-dropdown-panel');
+            const cartPanel = document.getElementById('cart-dropdown-panel');
+            
+            if (notifyPanel && !notifyPanel.contains(event.target)) {
+                notifyPanel.classList.add('hidden');
+            }
+            if (cartPanel && !cartPanel.contains(event.target)) {
+                cartPanel.classList.add('hidden');
+            }
+        });
+
+        /* --- Decoupled Dynamic Shopping Cart Core Engine --- */
+        function addToCart(type, itemId) {
+            let itemObject = null;
+
+            if (type === 'host') {
+                const pkg = packageData.find(p => p.id === itemId);
+                if (pkg) {
+                    itemObject = {
+                        cartId: 'host-' + itemId + '-' + Date.now(),
+                        type: 'host',
+                        id: pkg.id,
+                        name: pkg.name,
+                        price: pkg.price,
+                        provider: pkg.provider,
+                        addons: { router: false, ip: false }
+                    };
+                }
+            } else if (type === 'design') {
+                const design = designData[itemId];
+                if (design) {
+                    itemObject = {
+                        cartId: 'design-' + itemId + '-' + Date.now(),
+                        type: 'design',
+                        id: itemId,
+                        name: "Design Layout: " + design.logoText.replace('.', ''),
+                        price: design.price,
+                        addons: { router: false, ip: false } // Represents: Hosting (+199) and Domain (+250)
+                    };
+                }
+            }
+
+            if (itemObject) {
+                cart.push(itemObject);
+                updateCartUI();
+                animateCartIcon();
+                showPreorderToast(itemObject.name + " Added to Cart!");
+            }
+        }
+
+        function directBuy(type, itemId) {
+            // Straight purchase logic: isolates this single selected package instantly
+            cart = []; // clear the cart queue
+            addToCart(type, itemId); // add item
+            openCheckoutModal(); // launch payment modal
+        }
+
+        function removeFromCart(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+        }
+
+        function toggleCartAddon(cartId, addonKey, checked) {
+            const item = cart.find(i => i.cartId === cartId);
+            if (item) {
+                item.addons[addonKey] = checked;
+                updateCartUI();
+            }
+        }
+
+        function animateCartIcon() {
+            const btn = document.getElementById('cart-btn');
+            if (btn) {
+                btn.classList.add('cart-bounce', 'border-brand-gold');
+                setTimeout(() => {
+                    btn.classList.remove('cart-bounce');
+                }, 400);
+            }
+        }
+
+        function showPreorderToast(message) {
+            const toast = document.getElementById('order-toast');
+            const toastText = toast.querySelector('p');
+            const toastHeader = toast.querySelector('h5');
+            
+            toastHeader.innerText = "Shopping Bag Updated";
+            toastText.innerText = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5000);
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('header-cart-badge');
+            const content = document.getElementById('cart-dropdown-content');
+
+            if (cart.length === 0) {
+                badge.classList.add('hidden');
+                badge.innerText = '0';
+                content.className = "text-[10px] text-gray-400 text-center py-4 space-y-3";
+                content.innerHTML = `
+                    <i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i>
+                    <span>No active package or web design selected.</span>
+                `;
+                return;
+            }
+
+            badge.classList.remove('hidden');
+            badge.innerText = cart.length;
+
+            let html = `<div class="max-h-76 overflow-y-auto space-y-3.5 pr-1.5 scrollbar-thin">`;
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                let itemTotal = item.price;
+                let addoneSection = '';
+
+                if (item.type === 'host') {
+                    if (item.addons.router) itemTotal += 99;
+                    if (item.addons.ip) itemTotal += 49;
+
+                    addoneSection = `
+                        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400">
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'router', this.checked)" ${item.addons.router ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
+                                <span>Wi-Fi 6 (+R99)</span>
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'ip', this.checked)" ${item.addons.ip ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
+                                <span>Static IP (+R49)</span>
+                            </label>
+                        </div>
+                    `;
+                } else {
+                    if (item.addons.router) itemTotal += 199; // Router represents hosting
+                    if (item.addons.ip) itemTotal += 250;    // IP represents Domain Acquisition
+
+                    addoneSection = `
+                        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400">
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'router', this.checked)" ${item.addons.router ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
+                                <span>Hosting (+R199)</span>
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'ip', this.checked)" ${item.addons.ip ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
+                                <span>Domain (+R250)</span>
+                            </label>
+                        </div>
+                    `;
+                }
+
+                subtotal += itemTotal;
+
+                html += `
+                    <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between">
+                        <div class="flex justify-between items-start gap-2">
+                            <div class="text-left">
+                                <span class="font-bold text-white block truncate max-w-[150px]">${item.name}</span>
+                                <span class="text-[8px] text-gray-500 uppercase block tracking-wider">${item.type === 'host' ? 'Fibre Line' : 'Web Custom Design'}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-brand-gold shrink-0">R${itemTotal}</span>
+                                <button onclick="removeFromCart('${item.cartId}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                        ${addoneSection}
+                    </div>
+                `;
+            });
+
+            html += `</div>`; // Close scrolling items panel
+
+            // Footer Subtotal Display
+            html += `
+                <div class="border-t border-white/10 pt-3 mt-3 space-y-3.5">
+                    <div class="flex justify-between text-xs font-bold">
+                        <span>Cart Subtotal:</span>
+                        <span class="text-brand-gold text-sm font-black">R${subtotal}.00</span>
+                    </div>
+                    <button onclick="openCheckoutModal()" class="w-full text-center glossy-gold text-brand-black py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider shadow-md">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            `;
+
+            content.className = "text-[10px] text-gray-300 text-left";
+            content.innerHTML = html;
+        }
+
+        /* --- Sidebar & Scrollspy logic --- */
+        function toggleSidebar() {
+            const drawer = document.getElementById('sidebar-drawer');
+            const backdrop = document.getElementById('sidebar-backdrop');
+
+            if (drawer.classList.contains('-translate-x-full')) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                setTimeout(() => backdrop.classList.add('opacity-100'), 50);
+            } else {
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100');
+                setTimeout(() => backdrop.classList.add('hidden'), 300);
+            }
+        }
 
         /* IntersectionObserver for tracking active sections in the viewport */
         window.addEventListener('DOMContentLoaded', () => {
@@ -1282,20 +1701,36 @@ html_content = """
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const id = entry.target.id;
+                        let htmlContent = '';
+                        
                         if (id === 'home-hero') {
-                            badgeEl.innerHTML = `ANGWA<span class="text-brand-gold">.</span>`;
+                            htmlContent = `ANGWA<span class="text-brand-gold">.</span>`;
                         } else if (id === 'packages') {
-                            badgeEl.innerHTML = `ANGWA <span class="text-brand-gold text-xs tracking-widest font-black ml-1.5 px-2 py-0.5 border border-brand-gold/30 rounded-full bg-brand-gold/10">HOST</span>`;
+                            htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`;
                         } else if (id === 'design-suite') {
-                            badgeEl.innerHTML = `ANGWA <span class="text-brand-gold text-xs tracking-widest font-black ml-1.5 px-2 py-0.5 border border-brand-gold/30 rounded-full bg-brand-gold/10">DESIGN</span>`;
+                            htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`;
                         } else if (id === 'cloud-filling') {
-                            badgeEl.innerHTML = `ANGWA <span class="text-brand-gold text-xs tracking-widest font-black ml-1.5 px-2 py-0.5 border border-brand-gold/30 rounded-full bg-brand-gold/10">CLOUD</span>`;
+                            htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`;
+                        }
+
+                        if (badgeEl) {
+                            badgeEl.style.opacity = '0';
+                            badgeEl.style.transform = 'translateY(-4px)';
+                            
+                            setTimeout(() => {
+                                if (htmlContent) {
+                                    badgeEl.innerHTML = htmlContent;
+                                }
+                                badgeEl.style.opacity = '1';
+                                badgeEl.style.transform = 'translateY(0)';
+                            }, 150);
                         }
                     }
                 });
             }, observerOptions);
 
-            document.querySelectorAll('section[id]').forEach(section => {
+            /* Direct ScrollSpy mapping to the targeted sections strictly */
+            document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => {
                 observer.observe(section);
             });
         }
@@ -1349,7 +1784,6 @@ html_content = """
             }, 300);
         }
 
-        /* --- Render Symmetrical Fibre Packages --- */
         function renderPackages() {
             const container = document.getElementById('packages-container');
             container.innerHTML = '';
@@ -1434,15 +1868,22 @@ html_content = """
                             </div>
                         </div>
 
-                        <div class="mt-8 pt-5 border-t border-black/5 flex items-center justify-between">
-                            <div>
-                                <span class="text-2xl font-black text-brand-black tracking-tight">R${pkg.price}</span>
-                                <span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span>
+                        <!-- Price and Hybrid CTA Options Grid -->
+                        <div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-2xl font-black text-brand-black tracking-tight">R${pkg.price}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span>
+                                </div>
                             </div>
-                            <button onclick="openSignupModal(${pkg.id})" class="glossy-black text-white px-5 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md flex items-center gap-2">
-                                <span>Sign Up Free</span>
-                                <i class="fa-solid fa-arrow-right-long text-brand-gold"></i>
-                            </button>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <button onclick="directBuy('host', ${pkg.id})" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5">
+                                    <span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i>
+                                </button>
+                                <button onclick="addToCart('host', ${pkg.id})" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold">
+                                    <span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1621,149 +2062,81 @@ html_content = """
             document.getElementById('packages').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function openSignupModal(packageId) {
-            checkoutType = 'host';
-            selectedPackage = packageData.find(p => p.id === packageId);
-            if (!selectedPackage) return;
-
-            currentModalStep = 1;
-            activeAddons = { router: false, ip: false };
-            document.getElementById('addon-router').checked = false;
-            document.getElementById('addon-ip').checked = false;
-
-            document.getElementById('modal-package-name').innerText = selectedPackage.name;
-            document.getElementById('modal-package-price').innerText = `R${selectedPackage.price}.00`;
-            document.getElementById('modal-package-subtitle').innerText = "Monthly Symmetrical Fibre Premium";
-            document.getElementById('modal-upgrade-header').innerText = "Upgrade Hardware & Configuration";
-            
-            document.getElementById('addon-router-title').innerText = "Upgrade to Wi-Fi 6 Pro System";
-            document.getElementById('addon-router-desc').innerText = "Enhance transmission rates across concrete walls.";
-            document.getElementById('addon-router-price').innerText = "+R99/pm";
-            
-            document.getElementById('addon-ip-title').innerText = "Fixed Dedicated Static IP";
-            document.getElementById('addon-ip-desc').innerText = "Ideal for running servers, secure logins or smart systems.";
-            document.getElementById('addon-ip-price').innerText = "+R49/pm";
-
-            document.getElementById('modal-address-label').innerText = "Premises Address";
-            document.getElementById('cust-address').placeholder = "Unit 5, Sandhurst Ridge Complex";
-
-            document.getElementById('modal-success-title').innerText = "System Configuration Confirmed";
-            document.getElementById('modal-success-desc').innerText = "No upfront charges are required. Payment logic only starts when physical line activation is confirmed.";
-
-            document.getElementById('summary-base-label').innerText = "Standard Base Fee:";
-            document.getElementById('summary-addon-router-label').innerText = "Wi-Fi 6 Pro Upgrade:";
-            document.getElementById('summary-addon-router-price-val').innerText = "+R99.00";
-            document.getElementById('summary-addon-ip-label').innerText = "Fixed Static IP allocation:";
-            document.getElementById('summary-addon-ip-price-val').innerText = "+R49.00";
-            document.getElementById('summary-total-label').innerText = "Active Monthly Subtotal:";
-            document.getElementById('modal-pricing-label').innerText = "Monthly Cost:";
-
-            updateModalStepsUI();
-            calculateModalTotal();
-
-            document.getElementById('signup-modal').classList.remove('hidden');
-        }
-
-        function openDesignSignupModal(themeKey) {
-            checkoutType = 'design';
-            selectedDesign = designData[themeKey];
-            if (!selectedDesign) return;
-
-            currentModalStep = 1;
-            activeAddons = { router: false, ip: false };
-            document.getElementById('addon-router').checked = false;
-            document.getElementById('addon-ip').checked = false;
-
-            document.getElementById('modal-package-name').innerText = "Design Portfolio: " + selectedDesign.logoText.replace('.', '');
-            document.getElementById('modal-package-price').innerText = `R${selectedDesign.price}.00`;
-            document.getElementById('modal-package-subtitle').innerText = selectedDesign.badgeText + " Setup";
-            document.getElementById('modal-upgrade-header').innerText = "Configure Digital Deliverables & Core Hosting";
-
-            document.getElementById('addon-router-title').innerText = "Premium High-Performance Light Hosting";
-            document.getElementById('addon-router-desc').innerText = "Spliced directly onto premium server nodes with weekly cloud back-ups.";
-            document.getElementById('addon-router-price').innerText = "+R199/pm";
-            
-            document.getElementById('addon-ip-title').innerText = "Custom Domain Acquisition (.co.za / .com)";
-            document.getElementById('addon-ip-desc').innerText = "Secure registered names matching your direct portfolio aesthetics.";
-            document.getElementById('addon-ip-price').innerText = "+R250 once-off";
-
-            document.getElementById('modal-address-label').innerText = "Requested Domain Name";
-            document.getElementById('cust-address').placeholder = "e.g. yourcompanyname.co.za";
-
-            document.getElementById('modal-success-title').innerText = "Creative Design Blueprint Registered";
-            document.getElementById('modal-success-desc').innerText = "Our creative directors will contact you to plan layout modules and responsive frameworks within 24 hours.";
-
-            document.getElementById('summary-base-label').innerText = "Creative Layout Design Fee:";
-            document.getElementById('summary-addon-router-label').innerText = "High-Performance Cloud Hosting:";
-            document.getElementById('summary-addon-router-price-val').innerText = "+R199/pm";
-            document.getElementById('summary-addon-ip-label').innerText = "Custom Domain Registration:";
-            document.getElementById('summary-addon-ip-price-val').innerText = "+R250.00";
-            document.getElementById('summary-total-label').innerText = "Total Architecture Subtotal:";
-            document.getElementById('modal-pricing-label').innerText = "Estimated Total:";
-
-            updateModalStepsUI();
-            calculateModalTotal();
-
-            document.getElementById('signup-modal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('signup-modal').classList.add('hidden');
-        }
-
-        function calculateModalTotal() {
-            activeAddons.router = document.getElementById('addon-router').checked;
-            activeAddons.ip = document.getElementById('addon-ip').checked;
-
-            let basePrice = checkoutType === 'host' ? selectedPackage.price : selectedDesign.price;
-            let totalVal = basePrice;
-            
-            if (checkoutType === 'host') {
-                if (activeAddons.router) totalVal += 99;
-                if (activeAddons.ip) totalVal += 49;
-            } else {
-                if (activeAddons.router) totalVal += 199;
-                if (activeAddons.ip) totalVal += 250;
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!");
+                return;
             }
+
+            currentModalStep = 2; // Capture Address
+            updateModalStepsUI();
+
+            // Populate summary view calculations
+            let totalVal = 0;
+            const summaryContainer = document.getElementById('modal-verification-summary');
+            summaryContainer.innerHTML = '';
+
+            cart.forEach(item => {
+                let itemTotal = item.price;
+                let addonTexts = [];
+
+                if (item.type === 'host') {
+                    if (item.addons.router) { itemTotal += 99; addonTexts.push("Wi-Fi 6 Router Upgrade (+R99)"); }
+                    if (item.addons.ip) { itemTotal += 49; addonTexts.push("Static IP Allocation (+R49)"); }
+                } else {
+                    if (item.addons.router) { itemTotal += 199; addonTexts.push("High-Performance Hosting (+R199)"); }
+                    if (item.addons.ip) { itemTotal += 250; addonTexts.push("Custom Domain Acquisition (+R250)"); }
+                }
+
+                totalVal += itemTotal;
+
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-start text-xs border-b border-white/5 pb-2 last:border-b-0";
+                row.innerHTML = `
+                    <div>
+                        <span class="font-bold text-white block">${item.name}</span>
+                        <span class="text-[8px] text-gray-500">${addonTexts.join(' / ') || 'No Addons Selected'}</span>
+                    </div>
+                    <span class="font-extrabold text-brand-gold shrink-0">R${itemTotal}.00</span>
+                `;
+                summaryContainer.appendChild(row);
+            });
 
             document.getElementById('modal-footer-price').innerText = `R${totalVal}.00`;
             document.getElementById('summary-total-price').innerText = `R${totalVal}.00`;
-            document.getElementById('summary-pkg-price').innerText = `R${basePrice}.00`;
 
-            if (activeAddons.router) {
-                document.getElementById('summary-addon-router-row').classList.remove('hidden');
-            } else {
-                document.getElementById('summary-addon-router-row').classList.add('hidden');
-            }
-
-            if (activeAddons.ip) {
-                document.getElementById('summary-addon-ip-row').classList.remove('hidden');
-            } else {
-                document.getElementById('summary-addon-ip-row').classList.add('hidden');
-            }
+            document.getElementById('signup-modal').classList.remove('hidden');
         }
 
         function updateModalStepsUI() {
-            document.getElementById('modal-step-1').classList.add('hidden');
             document.getElementById('modal-step-2').classList.add('hidden');
             document.getElementById('modal-step-3').classList.add('hidden');
 
             document.getElementById(`modal-step-${currentModalStep}`).classList.remove('hidden');
 
             const backBtn = document.getElementById('modal-back-btn');
-            if (currentModalStep === 1) {
+            if (currentModalStep === 2) {
                 backBtn.classList.add('hidden');
             } else {
                 backBtn.classList.remove('hidden');
             }
 
+            // Subtotal computation
+            let totalVal = 0;
+            cart.forEach(item => {
+                let itemTotal = item.price;
+                if (item.type === 'host') {
+                    if (item.addons.router) itemTotal += 99;
+                    if (item.addons.ip) itemTotal += 49;
+                } else {
+                    if (item.addons.router) itemTotal += 199;
+                    if (item.addons.ip) itemTotal += 250;
+                }
+                totalVal += itemTotal;
+            });
+
             /* Dynamic Polar.sh Sandbox Link formulation based on checkout options */
-            let checkoutLink = "https://sandbox.polar.sh/checkout/new?org=angwa";
-            if (checkoutType === 'host' && selectedPackage) {
-                checkoutLink = `https://sandbox.polar.sh/checkout/new?product=host-${selectedPackage.id}&amount=${selectedPackage.price}`;
-            } else if (checkoutType === 'design' && selectedDesign) {
-                checkoutLink = `https://sandbox.polar.sh/checkout/new?product=${selectedDesign.id}&amount=${selectedDesign.price}`;
-            }
+            let checkoutLink = `https://sandbox.polar.sh/checkout/new?org=angwa&amount=${totalVal}`;
 
             const nextBtnContainer = document.getElementById('modal-next-btn-container');
             if (currentModalStep === 3) {
@@ -1785,26 +2158,29 @@ html_content = """
                 `;
             }
 
-            for (let i = 1; i <= 3; i++) {
-                const indicator = document.getElementById(`step-indicator-${i}`);
-                if (i === currentModalStep) {
-                    indicator.className = "text-brand-gold flex items-center gap-1.5";
-                    indicator.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black";
-                } else if (i < currentModalStep) {
-                    indicator.className = "text-brand-green flex items-center gap-1.5";
-                    indicator.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center text-[9px] font-black";
-                } else {
-                    indicator.className = "text-gray-500 flex items-center gap-1.5";
-                    indicator.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px]";
-                }
+            // Adjust indicators
+            const ind2 = document.getElementById('step-indicator-2');
+            const ind3 = document.getElementById('step-indicator-3');
+
+            if (currentModalStep === 2) {
+                ind2.className = "text-brand-gold flex items-center gap-1.5";
+                ind2.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black";
+                ind3.className = "text-gray-500 flex items-center gap-1.5";
+                ind3.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px]";
+            } else {
+                ind2.className = "text-brand-green flex items-center gap-1.5";
+                ind2.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center text-[9px] font-black";
+                ind3.className = "text-brand-gold flex items-center gap-1.5";
+                ind3.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black";
             }
         }
 
+        function closeModal() {
+            document.getElementById('signup-modal').classList.add('hidden');
+        }
+
         function nextStep() {
-            if (currentModalStep === 1) {
-                currentModalStep = 2;
-                updateModalStepsUI();
-            } else if (currentModalStep === 2) {
+            if (currentModalStep === 2) {
                 const nameInput = document.getElementById('cust-name').value.trim();
                 const emailInput = document.getElementById('cust-email').value.trim();
                 const addrInput = document.getElementById('cust-address').value.trim();
@@ -1819,11 +2195,12 @@ html_content = """
             } else if (currentModalStep === 3) {
                 closeModal();
                 showOrderToast();
+                clearCart();
             }
         }
 
         function prevStep() {
-            if (currentModalStep > 1) {
+            if (currentModalStep > 2) {
                 currentModalStep--;
                 updateModalStepsUI();
             }
@@ -1837,12 +2214,28 @@ html_content = """
                     <div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
-                    <h4 class="font-bold text-sm tracking-wide">Incomplete Configuration</h4>
+                    <h4 class="font-bold text-sm tracking-wide">Action Required</h4>
                     <p class="text-[11px] text-gray-400 leading-relaxed">${msg}</p>
                     <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button>
                 </div>
             `;
             document.body.appendChild(alertBox);
+        }
+
+        function triggerLeadershipNotice() {
+            const noticeBox = document.createElement('div');
+            noticeBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
+            noticeBox.innerHTML = `
+                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl">
+                    <div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h4 class="font-bold text-sm tracking-wide">ANGWA Executive Board</h4>
+                    <p class="text-[11px] text-gray-400 leading-relaxed">Our comprehensive Board bios & investor portfolio records are securely archived on page. Reach out to our direct support desk to get a copy.</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button>
+                </div>
+            `;
+            document.body.appendChild(noticeBox);
         }
 
         function showOrderToast() {
@@ -1934,13 +2327,69 @@ html_content = """
             const welcomeBox = document.createElement('div');
             welcomeBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
             welcomeBox.innerHTML = `
-                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl">
-                    <div class="h-12 w-12 bg-brand-green/15 text-brand-green rounded-full flex items-center justify-center text-xl mx-auto shadow-inner">
-                        <i class="fa-solid fa-circle-check"></i>
+                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-md w-full space-y-4 border border-white/10 text-white shadow-2xl">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                        <h5 class="font-bold text-brand-gold text-sm">ANGWA Active Client Portal</h5>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white text-xs">Close</button>
                     </div>
-                    <h4 class="font-bold text-sm tracking-wide">ClientZone Connected</h4>
-                    <p class="text-[11px] text-gray-400 leading-relaxed">Welcome back. Secure subscriber credentials authenticated successfully.</p>
-                    <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Launch Dashboard</button>
+                    <div class="space-y-3.5 text-xs">
+                        <div class="flex justify-between items-center p-3 bg-black/40 rounded-xl border border-white/5">
+                            <div>
+                                <span class="text-gray-400 block text-[9px] uppercase font-bold">Active Subscribed Line</span>
+                                <span class="font-bold text-white text-xs">Vumatel 500/500 Mbps</span>
+                            </div>
+                            <span class="text-[9px] bg-brand-green/20 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Online</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div class="p-3 bg-black/40 rounded-xl border border-white/5">
+                                <span class="text-gray-400 block text-[9px] uppercase">Data Transferred</span>
+                                <span class="font-extrabold text-white">4.12 TB (Uncapped)</span>
+                            </div>
+                            <div class="p-3 bg-black/40 rounded-xl border border-white/5">
+                                <span class="text-gray-400 block text-[9px] uppercase">Next Billing Cycle</span>
+                                <span class="font-extrabold text-brand-gold">July 1, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(welcomeBox);
+        }
+
+        /* --- Blogs Dialog handlers --- */
+        function triggerBlogsModal() {
+            document.getElementById('blogs-modal').classList.remove('hidden');
+        }
+
+        function closeBlogsModal() {
+            document.getElementById('blogs-modal').classList.add('hidden');
+        }
+
+        /* --- Collapsible Submenu Controls for Sidebar --- */
+        function toggleSidebarSubmenu(id) {
+            const el = document.getElementById(id);
+            const arrow = document.getElementById(id + '-arrow');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                if (arrow) arrow.classList.add('rotate-180');
+            } else {
+                el.classList.add('hidden');
+                if (arrow) arrow.classList.remove('rotate-180');
+            }
+        }
+
+        function triggerClientPortal(type) {
+            toggleSidebar();
+            const welcomeBox = document.createElement('div');
+            welcomeBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
+            welcomeBox.innerHTML = `
+                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl">
+                    <div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <h4 class="font-bold text-sm tracking-wide capitalize">${type} Client Portal</h4>
+                    <p class="text-[11px] text-gray-400 leading-relaxed">Secure gateway gateway authentication is active for authorized ${type} networks. Please authenticate within the ClientZone.</p>
+                    <button onclick="this.parentElement.parentElement.remove(); triggerClientZone();" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Access ClientZone</button>
                 </div>
             `;
             document.body.appendChild(welcomeBox);
@@ -1956,8 +2405,8 @@ html_content = """
             }
         }
 
-        function handleChatSubmit(e) {
-            if (e.key === 'Enter') {
+        function handleChatSubmit(event) {
+            if (event.key === 'Enter') {
                 sendChatMessage();
             }
         }
@@ -1999,4 +2448,5 @@ html_content = """
 </html>
 """
 
-components.html(html_content, height=2000, width=None, scrolling=True)
+# Render the single-page responsive template with a custom viewport height
+components.html(html_content, height=2200, width=None, scrolling=True)
