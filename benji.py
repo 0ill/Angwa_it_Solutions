@@ -261,9 +261,40 @@ html_content = """
                         <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
                             <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> build environment
                         </a>
-                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
-                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> advisory & management
-                        </a>
+                        <!-- Advisory & Management nested dropdown -->
+                        <div class="flex flex-col">
+                            <button onclick="toggleSidebarSubmenu('advisory-submenu')" class="text-left hover:text-brand-gold transition-colors py-1.5 flex items-center justify-between w-full">
+                                <span class="flex items-center gap-2">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> advisory & management
+                                </span>
+                                <i class="fa-solid fa-chevron-down text-[8px] text-gray-500 mr-1 transition-transform duration-200" id="advisory-submenu-arrow"></i>
+                            </button>
+                            <div id="advisory-submenu" class="hidden flex flex-col gap-1 pl-5 pt-1 pb-1 text-[9px] text-gray-500 font-bold lowercase tracking-normal border-l border-brand-gold/20 ml-1">
+                                <!-- Information Technology nested dropdown -->
+                                <div class="flex flex-col">
+                                    <button onclick="toggleSidebarSubmenu('it-submenu')" class="text-left hover:text-brand-gold transition-colors py-1.5 flex items-center justify-between w-full">
+                                        <span class="flex items-center gap-2">
+                                            <i class="fa-solid fa-microchip text-brand-gold/70 text-[8px] w-3"></i> information technology
+                                        </span>
+                                        <i class="fa-solid fa-chevron-down text-[7px] text-gray-600 mr-1 transition-transform duration-200" id="it-submenu-arrow"></i>
+                                    </button>
+                                    <div id="it-submenu" class="hidden flex flex-col gap-1 pl-4 pt-1 pb-1 text-[9px] text-gray-600 font-bold lowercase tracking-normal border-l border-brand-gold/15 ml-1.5">
+                                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                            <i class="fa-solid fa-server text-brand-gold/50 text-[7px] w-3"></i> host
+                                        </a>
+                                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                            <i class="fa-solid fa-pen-nib text-brand-gold/50 text-[7px] w-3"></i> web design
+                                        </a>
+                                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                            <i class="fa-solid fa-cloud text-brand-gold/50 text-[7px] w-3"></i> cloud
+                                        </a>
+                                    </div>
+                                </div>
+                                <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-building text-brand-gold/70 text-[8px] w-3"></i> properties
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
