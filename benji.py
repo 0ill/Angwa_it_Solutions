@@ -279,13 +279,13 @@ html_content = """
                                         <i class="fa-solid fa-chevron-down text-[7px] text-gray-600 mr-1 transition-transform duration-200" id="it-submenu-arrow"></i>
                                     </button>
                                     <div id="it-submenu" class="hidden flex flex-col gap-1 pl-4 pt-1 pb-1 text-[9px] text-gray-600 font-bold lowercase tracking-normal border-l border-brand-gold/15 ml-1.5">
-                                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                        <a href="#" onclick="showPage('host'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
                                             <i class="fa-solid fa-server text-brand-gold/50 text-[7px] w-3"></i> host
                                         </a>
-                                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                        <a href="#" onclick="showPage('design'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
                                             <i class="fa-solid fa-pen-nib text-brand-gold/50 text-[7px] w-3"></i> web design
                                         </a>
-                                        <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
+                                        <a href="#" onclick="showPage('cloud'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2">
                                             <i class="fa-solid fa-cloud text-brand-gold/50 text-[7px] w-3"></i> cloud
                                         </a>
                                     </div>
@@ -375,27 +375,15 @@ html_content = """
 
             <!-- Central/Right Navigation Targets Header (Strictly mapped) -->
             <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-xs text-white font-extrabold uppercase tracking-widest">
-                <a href="#home-hero" class="hover:text-brand-gold transition-colors py-2">Home</a>
-                <a href="#packages" class="hover:text-brand-gold transition-colors py-2">HOST</a>
-                <a href="#design-suite" class="hover:text-brand-gold transition-colors py-2">DESIGN</a>
+                <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2">Home</button>
+                <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2">HOST</button>
+                <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2">DESIGN</button>
                 
-                <!-- Cloud Filling Dropdown Link -->
-                <div class="relative group">
-                    <a href="#cloud-filling" class="flex items-center gap-1 hover:text-brand-gold transition-colors py-2 uppercase">
-                        <span>Cloud Filling</span>
-                        <i class="fa-solid fa-cloud text-[11px] text-brand-gold"></i>
-                        <i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i>
-                    </a>
-                    <!-- Dropdown Options -->
-                    <div class="absolute left-0 mt-1 w-44 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50">
-                        <button onclick="triggerCloudSync('dropbox')" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 flex items-center gap-2 transition-all">
-                            <i class="fa-brands fa-dropbox text-blue-400"></i> Sync Dropbox
-                        </button>
-                        <button onclick="triggerCloudSync('google')" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 flex items-center gap-2 transition-all">
-                            <i class="fa-brands fa-google-drive text-green-400"></i> Sync Google Drive
-                        </button>
-                    </div>
-                </div>
+                <!-- Cloud Page Link -->
+                <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 uppercase flex items-center gap-1">
+                    <span>Cloud</span>
+                    <i class="fa-solid fa-cloud text-[11px] text-brand-gold"></i>
+                </button>
 
                 <!-- More Dropdown -->
                 <div class="relative group">
@@ -472,6 +460,9 @@ html_content = """
             </div>
         </div>
     </header>
+
+    <!-- ==================== PAGE: HOME ==================== -->
+    <div id="page-home" class="page-view">
 
     <!-- Hero Content -->
     <section id="home-hero" class="relative bg-brand-black text-white overflow-hidden py-20 lg:py-28">
@@ -618,9 +609,9 @@ html_content = """
                             Blazing-fast cloud hosting infrastructure optimized for instant page loading, robust security, and deep integration with our ultra-low-latency light grid network.
                         </p>
                     </div>
-                    <a href="#packages" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-goldDark">
+                    <button onclick="showPage('host')" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-goldDark text-left">
                         Explore Hosting Tech <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </a>
+                    </button>
                 </div>
 
                 <!-- Benefit card 2: Designing -->
@@ -634,104 +625,289 @@ html_content = """
                             Tailor-made, pixel-perfect user interfaces engineered for speed, conversion, and fluid grid layouts. Watch your concepts turn into high-score SEO assets seamlessly.
                         </p>
                     </div>
-                    <a href="#design-suite" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-greenDark">
+                    <button onclick="showPage('design')" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-greenDark text-left">
                         Start Design Blueprint <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </a>
+                    </button>
                 </div>
 
-                <!-- Benefit card 3: Cloud-Filling -->
+                <!-- Benefit card 3: Cloud -->
                 <div class="bg-brand-lightBg p-8 rounded-3xl hover:-translate-y-1 transition-all duration-300 border border-black/5 flex flex-col justify-between">
                     <div class="space-y-4">
                         <div class="h-12 w-12 bg-black/5 text-brand-black rounded-2xl flex items-center justify-center text-xl shadow-inner">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-brand-black tracking-tight">Seamless Cloud-Filling Synclines</h3>
+                        <h3 class="text-lg font-bold text-brand-black tracking-tight">Secure ANGWA Cloud Storage</h3>
                         <p class="text-xs text-gray-500 leading-relaxed">
-                            Instant direct-to-cloud backups. Map, sync, and deploy massive asset databases directly into your custom storage space on Dropbox or Google Drive in seconds.
+                            Military-grade encrypted cloud storage powered by our fibre infrastructure. Sync, back up, and access everything at gigabit speeds from SA-based servers.
                         </p>
                     </div>
-                    <a href="#cloud-filling" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-black">
-                        Sync Cloud Media <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </a>
+                    <button onclick="showPage('cloud')" class="pt-6 text-[10px] font-black uppercase tracking-wider text-brand-black text-left">
+                        View Cloud Plans <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Unified Services Wrapper Container -->
-    <div id="services">
-        
-        <!-- Hosting / Packages Section -->
-        <section id="packages" class="py-20 bg-brand-lightBg">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <!-- Grid Header Info -->
-                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                    <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Service 01: Symmetrical Hosting</span>
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">
-                        Choose Your Symmetrical Connection
+    <!-- ==================== HOME: SERVICE SUMMARY SECTIONS ==================== -->
+
+    <!-- HOST Summary -->
+    <section class="py-20 bg-white border-t border-black/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6">
+                    <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full inline-block">Service 01 — Host</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-black">
+                        Symmetrical Fibre Packages
                     </h2>
-                    <p class="text-gray-500 text-sm">
-                        Select by individual Network Provider, or segment speed tiers ideal for heavy streaming, cloud management, zero-ping online gaming, or massive smart home suites.
-                    </p>
-                </div>
-
-                <!-- FNO Premium Tab Selection -->
-                <div class="flex flex-col items-center gap-6 mb-12">
-                    <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-2xl">
-                        <button onclick="setFNO('all')" id="tab-all" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">
-                            All Networks
-                        </button>
-                        <button onclick="setFNO('vuma')" id="tab-vuma" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
-                            Vumatel
-                        </button>
-                        <button onclick="setFNO('open')" id="tab-open" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
-                            Openserve
-                        </button>
-                        <button onclick="setFNO('frog')" id="tab-frog" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
-                            Frogfoot
-                        </button>
-                    </div>
-
-                    <!-- Speed Filter Toggles -->
-                    <div class="flex flex-wrap justify-center gap-2">
-                        <button onclick="filterSpeedRange('all')" id="btn-speed-all" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm">
-                            All Speeds
-                        </button>
-                        <button onclick="filterSpeedRange('budget')" id="btn-speed-budget" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
-                            Casual (30M - 50M)
-                        </button>
-                        <button onclick="filterSpeedRange('medium')" id="btn-speed-medium" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
-                            Active House (100M - 200M)
-                        </button>
-                        <button onclick="filterSpeedRange('pro')" id="btn-speed-pro" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
-                            Pro Tier (500M - 1G)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Dynamic Package Configuration Cards Grid -->
-                <div id="packages-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Populated dynamically by JS -->
-                </div>
-
-                <!-- Promotion banner footer -->
-                <div class="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden sheen-effect">
-                    <div class="flex items-center gap-5 z-10">
-                        <div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl">
-                            <i class="fa-solid fa-globe"></i>
+                    <p class="text-gray-500 text-sm leading-relaxed">Month-to-month uncapped symmetrical fibre on Vumatel, Openserve, and Frogfoot. No contracts, free Wi-Fi 6 router, and free installation.</p>
+                    <div class="grid grid-cols-3 gap-4 py-2">
+                        <div class="bg-brand-lightBg p-4 rounded-2xl border border-black/5 text-center">
+                            <div class="text-xl font-black text-brand-black">R499</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider mt-1">From /pm</div>
+                            <div class="text-[10px] text-gray-500 mt-1">50 Mbps</div>
                         </div>
+                        <div class="bg-brand-lightBg p-4 rounded-2xl border gold-sheen-border text-center relative">
+                            <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-gold text-brand-black text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">Popular</div>
+                            <div class="text-xl font-black text-brand-black">R749</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider mt-1">/pm</div>
+                            <div class="text-[10px] text-gray-500 mt-1">100 Mbps</div>
+                        </div>
+                        <div class="bg-brand-lightBg p-4 rounded-2xl border border-black/5 text-center">
+                            <div class="text-xl font-black text-brand-black">R1,299</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider mt-1">/pm</div>
+                            <div class="text-[10px] text-gray-500 mt-1">1 Gbps</div>
+                        </div>
+                    </div>
+                    <button onclick="showPage('host')" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-2">
+                        Browse All Packages <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="bg-brand-slateBlack rounded-3xl p-8 border border-white/10 text-white space-y-5 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-48 h-48 bg-brand-gold/10 rounded-full filter blur-[80px]"></div>
+                    <h4 class="font-bold text-sm uppercase tracking-widest text-brand-gold">All Packages Include</h4>
+                    <ul class="space-y-3 text-xs text-gray-300 relative z-10">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-brand-green"></i> Uncapped & unshaped pure symmetrical bandwidth</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-brand-green"></i> Free Wi-Fi 6 pre-configured router included</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-brand-green"></i> Free professional installation & SLA coverage</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-brand-green"></i> 30-day double money-back guarantee</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-brand-green"></i> Zero contracts — cancel any month</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-brand-green"></i> 99.99% uptime SLA commitment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGN Summary -->
+    <section class="py-20 bg-brand-slateBlack text-white border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 grid grid-cols-1 gap-4">
+                    <div class="bg-brand-darkGray/60 border border-brand-gold/20 p-5 rounded-2xl flex items-start gap-4">
+                        <div class="h-10 w-10 bg-brand-gold/15 rounded-xl flex items-center justify-center text-brand-gold shrink-0"><i class="fa-solid fa-gem"></i></div>
                         <div>
-                            <h4 class="text-lg font-bold text-brand-black">Confused by different network setup terms?</h4>
-                            <p class="text-xs text-gray-500">Run a manual coverage analysis. We'll automatically identify the cheapest option for your home.</p>
+                            <div class="font-bold text-sm text-white">Luxe Obsidian</div>
+                            <div class="text-xs text-gray-400 mt-1">Ultra-premium dark luxury theme. 10 pages, 99 Speed Index.</div>
+                            <div class="text-brand-gold font-black text-sm mt-2">R8,999 <span class="text-gray-500 font-normal text-[10px]">once-off</span></div>
                         </div>
                     </div>
-                    <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">
-                        Compare Network Prices
-                    </a>
+                    <div class="bg-brand-darkGray/60 border border-brand-green/20 p-5 rounded-2xl flex items-start gap-4">
+                        <div class="h-10 w-10 bg-brand-green/15 rounded-xl flex items-center justify-center text-brand-green shrink-0"><i class="fa-solid fa-bolt"></i></div>
+                        <div>
+                            <div class="font-bold text-sm text-white">Emerald Neo</div>
+                            <div class="text-xs text-gray-400 mt-1">High-tech neon layout. 5 pages, clean coded.</div>
+                            <div class="text-brand-green font-black text-sm mt-2">R5,499 <span class="text-gray-500 font-normal text-[10px]">once-off</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-darkGray/60 border border-white/10 p-5 rounded-2xl flex items-start gap-4">
+                        <div class="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-seedling"></i></div>
+                        <div>
+                            <div class="font-bold text-sm text-white">Minimal Alabaster</div>
+                            <div class="text-xs text-gray-400 mt-1">Ultra-clean light theme. 3 pages, fluid grid.</div>
+                            <div class="text-white font-black text-sm mt-2">R3,999 <span class="text-gray-500 font-normal text-[10px]">once-off</span></div>
+                        </div>
+                    </div>
                 </div>
+                <div class="order-1 lg:order-2 space-y-6">
+                    <span class="text-brand-green uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-green/10 rounded-full inline-block">Service 02 — Design</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                        Custom Web Design Packages
+                    </h2>
+                    <p class="text-gray-400 text-sm leading-relaxed">Hand-coded, pixel-perfect websites with 99/100 performance scores. From luxury dark themes to clean minimal layouts — every design is SEO-optimized and mobile-first.</p>
+                    <button onclick="showPage('design')" class="glossy-green text-white px-7 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-2">
+                        Explore Design Suite <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- CLOUD Summary -->
+    <section class="py-20 bg-brand-lightBg border-t border-black/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6">
+                    <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full inline-block">Service 03 — Cloud</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-black">
+                        ANGWA Cloud Vault Storage
+                    </h2>
+                    <p class="text-gray-500 text-sm leading-relaxed">Military-grade AES-256 encrypted cloud storage, hosted on South African servers and powered by our symmetrical fibre backbone. Sync at full gigabit speed with zero throttling.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-black/5 shadow-sm">
+                            <i class="fa-solid fa-cloud-arrow-up text-brand-gold mb-2"></i>
+                            <div class="font-black text-brand-black text-base">100 GB</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold">Starter — R79/pm</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl gold-sheen-border shadow-sm relative">
+                            <div class="absolute -top-2 left-3 bg-brand-gold text-brand-black text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Popular</div>
+                            <i class="fa-solid fa-cloud-bolt text-brand-gold mb-2"></i>
+                            <div class="font-black text-brand-black text-base">500 GB</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold">Pro — R199/pm</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-black/5 shadow-sm">
+                            <i class="fa-solid fa-database text-brand-gold mb-2"></i>
+                            <div class="font-black text-brand-black text-base">2 TB</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold">Business — R449/pm</div>
+                        </div>
+                        <div class="bg-brand-slateBlack p-4 rounded-2xl border border-white/10 shadow-sm">
+                            <i class="fa-solid fa-server text-brand-gold mb-2"></i>
+                            <div class="font-black text-white text-base">10 TB</div>
+                            <div class="text-[9px] text-gray-400 uppercase font-bold">Ultra — R999/pm</div>
+                        </div>
+                    </div>
+                    <button onclick="showPage('cloud')" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-2">
+                        View Cloud Plans <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="bg-brand-slateBlack rounded-3xl p-8 border border-white/10 text-white space-y-5 relative overflow-hidden">
+                    <div class="absolute bottom-0 right-0 w-48 h-48 bg-brand-gold/10 rounded-full filter blur-[80px]"></div>
+                    <h4 class="font-bold text-sm uppercase tracking-widest text-brand-gold">Every Vault Includes</h4>
+                    <ul class="space-y-3 text-xs text-gray-300 relative z-10">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-brand-green"></i> AES-256 military-grade encryption</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-bolt text-brand-green"></i> Full gigabit upload/download speeds</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-rotate text-brand-green"></i> Automatic background backup</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-server text-brand-green"></i> SA-based server infrastructure</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-mobile-screen text-brand-green"></i> Cross-device sync (desktop, mobile, tablet)</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-brand-green"></i> Version history & file recovery</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </div><!-- END page-home -->
+
+    <!-- ==================== PAGE: HOST ==================== -->
+    <div id="page-host" class="page-view hidden">
+
+        <!-- Host Hero Section -->
+        <section class="relative bg-gradient-to-br from-brand-slateBlack to-brand-black text-white overflow-hidden py-20 border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-brand-gold text-xs font-medium tracking-widest uppercase mb-6">Symmetrical Fibre Hosting</div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Ultra-Fast, <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldLight">Symmetrical Speeds</span></h1>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Choose from leading network providers, uncapped, month-to-month, with free Wi-Fi 6 router and installation. No contracts, no hidden fees.</p>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <a href="#packages" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Browse Packages</a>
+                    <a href="#coverage" class="glossy-black text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Check Coverage</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Unified Services Wrapper Container -->
+        <div id="services">
+            
+            <!-- Hosting / Packages Section -->
+            <section id="packages" class="py-20 bg-brand-lightBg">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    <!-- Grid Header Info -->
+                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                        <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Service 01: Symmetrical Hosting</span>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">
+                            Choose Your Symmetrical Connection
+                        </h2>
+                        <p class="text-gray-500 text-sm">
+                            Select by individual Network Provider, or segment speed tiers ideal for heavy streaming, cloud management, zero-ping online gaming, or massive smart home suites.
+                        </p>
+                    </div>
+
+                    <!-- FNO Premium Tab Selection -->
+                    <div class="flex flex-col items-center gap-6 mb-12">
+                        <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-2xl">
+                            <button onclick="setFNO('all')" id="tab-all" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">
+                                All Networks
+                            </button>
+                            <button onclick="setFNO('vuma')" id="tab-vuma" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
+                                Vumatel
+                            </button>
+                            <button onclick="setFNO('open')" id="tab-open" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
+                                Openserve
+                            </button>
+                            <button onclick="setFNO('frog')" id="tab-frog" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">
+                                Frogfoot
+                            </button>
+                        </div>
+
+                        <!-- Speed Filter Toggles -->
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button onclick="filterSpeedRange('all')" id="btn-speed-all" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm">
+                                All Speeds
+                            </button>
+                            <button onclick="filterSpeedRange('budget')" id="btn-speed-budget" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
+                                Casual (30M - 50M)
+                            </button>
+                            <button onclick="filterSpeedRange('medium')" id="btn-speed-medium" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
+                                Active House (100M - 200M)
+                            </button>
+                            <button onclick="filterSpeedRange('pro')" id="btn-speed-pro" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">
+                                Pro Tier (500M - 1G)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Package Configuration Cards Grid -->
+                    <div id="packages-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Populated dynamically by JS -->
+                    </div>
+
+                    <!-- Promotion banner footer -->
+                    <div class="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden sheen-effect">
+                        <div class="flex items-center gap-5 z-10">
+                            <div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-black">Confused by different network setup terms?</h4>
+                                <p class="text-xs text-gray-500">Run a manual coverage analysis. We'll automatically identify the cheapest option for your home.</p>
+                            </div>
+                        </div>
+                        <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">
+                            Compare Network Prices
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+        </div><!-- END page-host -->
+
+    </div>
+
+    <!-- ==================== PAGE: DESIGN ==================== -->
+    <div id="page-design" class="page-view hidden">
+
+        <!-- Design Hero Section -->
+        <section class="relative bg-brand-lightBg text-brand-black overflow-hidden py-20 border-b border-black/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="inline-flex items-center gap-2 bg-brand-gold/10 border border-brand-gold/20 px-4 py-2 rounded-full text-brand-goldDark text-xs font-medium tracking-widest uppercase mb-6">Premium Web Design</div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Bespoke Digital <span class="text-brand-goldDark">Experiences</span></h1>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Hand-coded, performance-optimized websites tailored to your brand. Choose from luxury dark themes, neon tech designs, or clean minimal layouts. Each package includes SEO, responsive fluid grids, and rapid delivery.</p>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <a href="#design-suite" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Explore Templates</a>
+                    <a href="#why-angwa" class="glossy-black text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Learn More</a>
+                </div>
             </div>
         </section>
 
@@ -937,6 +1113,39 @@ html_content = """
             </div>
         </section>
 
+        <!-- Design Process Section -->
+        <section class="py-20 bg-brand-lightBg border-t border-black/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-brand-gold uppercase font-black tracking-widest text-xs bg-brand-gold/10 px-3 py-1 rounded-full">Our Workflow</span>
+                    <h2 class="text-2xl font-bold mt-2">From Concept to Launch in Days</h2>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div><i class="fa-solid fa-pen-ruler text-3xl text-brand-gold mb-3"></i><h3 class="font-bold">Wireframe & Design</h3><p class="text-xs text-gray-500">Collaborative mockups & style tiles.</p></div>
+                    <div><i class="fa-solid fa-code text-3xl text-brand-gold mb-3"></i><h3 class="font-bold">Hand-Coded Development</h3><p class="text-xs text-gray-500">Pixel-perfect, SEO-optimized frontend.</p></div>
+                    <div><i class="fa-solid fa-rocket text-3xl text-brand-gold mb-3"></i><h3 class="font-bold">Launch & Support</h3><p class="text-xs text-gray-500">Deployed on high-speed servers plus training.</p></div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- END page-design -->
+
+    <!-- ==================== PAGE: CLOUD ==================== -->
+    <div id="page-cloud" class="page-view hidden">
+
+        <!-- Cloud Hero Section -->
+        <section class="relative bg-gradient-to-br from-brand-black via-brand-slateBlack to-brand-black text-white overflow-hidden py-20 border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-brand-gold text-xs font-medium tracking-widest uppercase mb-6">ANGWA Cloud Vault</div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Symmetrical <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldLight">Cloud-Filling</span></h1>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Military-grade encrypted storage with identical upload/download speeds via our fibre backbone. Sync massive datasets, collaborate in real-time, and keep your data safe on South African servers.</p>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <a href="#cloud-storage" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">View Storage Plans</a>
+                    <a href="#cloud-filling" class="glossy-green text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Test Sync Pipeline</a>
+                </div>
+            </div>
+        </section>
+
         <!-- Cloud Filling Interactive Pipeline -->
         <section id="cloud-filling" class="py-20 bg-brand-black text-white relative border-b border-white/10">
             <div class="absolute inset-0 pointer-events-none opacity-20">
@@ -1023,68 +1232,220 @@ html_content = """
                 </div>
             </div>
         </section>
-    </div>
 
-    <!-- Support & FAQs Section -->
-    <section id="faq" class="py-20 bg-brand-lightBg">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="text-center mb-16 space-y-4">
-                <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Help & Support</span>
-                <h2 class="text-3xl font-bold tracking-tight text-brand-black">Fibre FAQ Knowledge-Base</h2>
-                <p class="text-gray-500 text-xs">Everything you need to know about setting up ANGWA Fibre.</p>
+        <!-- Cloud Storage Vault Plans -->
+        <section id="cloud-storage" class="py-20 bg-brand-lightBg relative overflow-hidden border-t border-black/5">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full filter blur-[160px] pointer-events-none"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full inline-block">ANGWA Secure Cloud Storage</span>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-brand-black">
+                        ANGWA Cloud Vault Plans
+                    </h2>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Military-grade encrypted storage powered by our symmetrical fibre backbone. Upload, sync, and access at full gigabit speeds — all data hosted on South African servers.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-3 pt-2">
+                        <span class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-white border border-black/5 px-3.5 py-1.5 rounded-full shadow-sm"><i class="fa-solid fa-shield-halved text-brand-gold"></i> AES-256 Encrypted</span>
+                        <span class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-white border border-black/5 px-3.5 py-1.5 rounded-full shadow-sm"><i class="fa-solid fa-bolt text-brand-gold"></i> Fibre-Speed Sync</span>
+                        <span class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-white border border-black/5 px-3.5 py-1.5 rounded-full shadow-sm"><i class="fa-solid fa-rotate text-brand-gold"></i> Auto Backup</span>
+                        <span class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-white border border-black/5 px-3.5 py-1.5 rounded-full shadow-sm"><i class="fa-solid fa-server text-brand-gold"></i> SA-Based Servers</span>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    <!-- Starter Vault -->
+                    <div class="bg-white rounded-3xl p-7 border border-black/5 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between relative">
+                        <div class="space-y-4">
+                            <div class="h-12 w-12 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-xl"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-brand-black">Starter Vault</h3>
+                                <div class="flex items-baseline gap-1 mt-1"><span class="text-4xl font-black text-brand-black">100</span><span class="text-sm font-bold text-gray-400 uppercase">GB</span></div>
+                            </div>
+                            <p class="text-xs text-gray-500 leading-relaxed">Perfect for individuals and small home offices. Secure encrypted storage with instant fibre-speed sync across all devices.</p>
+                            <ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 100 GB Encrypted Storage</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Cross-Device Sync</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 30-Day Version History</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Fibre-Speed Upload</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-5 border-t border-black/5 space-y-3">
+                            <div><span class="text-2xl font-black text-brand-black">R79</span><span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="directBuy('cloud','cs1')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span><i class="fa-solid fa-bolt text-[9px]"></i></button>
+                                <button onclick="addToCart('cloud','cs1')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span><i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pro Vault (Popular) -->
+                    <div class="bg-white rounded-3xl p-7 gold-sheen-border shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between relative">
+                        <div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">Most Popular</div>
+                        <div class="space-y-4">
+                            <div class="h-12 w-12 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-xl"><i class="fa-solid fa-cloud-bolt"></i></div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-brand-black">Pro Vault</h3>
+                                <div class="flex items-baseline gap-1 mt-1"><span class="text-4xl font-black text-brand-black">500</span><span class="text-sm font-bold text-gray-400 uppercase">GB</span></div>
+                            </div>
+                            <p class="text-xs text-gray-500 leading-relaxed">Ideal for creative professionals and SMEs. Share folders, collaborate in real-time and back up large media libraries instantly.</p>
+                            <ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 500 GB Encrypted Storage</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Team Folder Sharing</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 90-Day Version History</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Priority Sync Queue</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-5 border-t border-black/5 space-y-3">
+                            <div><span class="text-2xl font-black text-brand-black">R199</span><span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="directBuy('cloud','cs2')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span><i class="fa-solid fa-bolt text-[9px]"></i></button>
+                                <button onclick="addToCart('cloud','cs2')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span><i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business Vault -->
+                    <div class="bg-white rounded-3xl p-7 border border-black/5 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between relative">
+                        <div class="space-y-4">
+                            <div class="h-12 w-12 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-xl"><i class="fa-solid fa-database"></i></div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-brand-black">Business Vault</h3>
+                                <div class="flex items-baseline gap-1 mt-1"><span class="text-4xl font-black text-brand-black">2</span><span class="text-sm font-bold text-gray-400 uppercase">TB</span></div>
+                            </div>
+                            <p class="text-xs text-gray-500 leading-relaxed">Enterprise-grade cloud infrastructure. Full redundancy, dedicated throughput lanes, and advanced access control for growing teams.</p>
+                            <ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 2 TB Encrypted Storage</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Admin Access Controls</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 1-Year Version History</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Dedicated Sync Lane</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-5 border-t border-black/5 space-y-3">
+                            <div><span class="text-2xl font-black text-brand-black">R449</span><span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="directBuy('cloud','cs3')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span><i class="fa-solid fa-bolt text-[9px]"></i></button>
+                                <button onclick="addToCart('cloud','cs3')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span><i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ultra Vault -->
+                    <div class="bg-brand-slateBlack rounded-3xl p-7 border border-white/10 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full filter blur-[60px] pointer-events-none"></div>
+                        <div class="space-y-4 relative z-10">
+                            <div class="h-12 w-12 bg-brand-gold/15 rounded-2xl flex items-center justify-center text-brand-gold text-xl border border-brand-gold/20"><i class="fa-solid fa-server"></i></div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-white">Ultra Vault</h3>
+                                <div class="flex items-baseline gap-1 mt-1"><span class="text-4xl font-black text-white">10</span><span class="text-sm font-bold text-brand-gold uppercase">TB</span></div>
+                            </div>
+                            <p class="text-xs text-gray-400 leading-relaxed">Maximum capacity for large enterprises. Immutable backups, 24/7 SLA monitoring, and multi-region redundancy.</p>
+                            <ul class="space-y-2 text-xs text-gray-300 border-t border-white/5 pt-4">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 10 TB Encrypted Storage</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Multi-Region Redundancy</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> Immutable Backup Snapshots</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-green text-[10px]"></i> 24/7 SLA Monitoring</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-5 border-t border-white/5 space-y-3 relative z-10">
+                            <div><span class="text-2xl font-black text-white">R999</span><span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="directBuy('cloud','cs4')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span><i class="fa-solid fa-bolt text-[9px]"></i></button>
+                                <button onclick="addToCart('cloud','cs4')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span><i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+        </section>
 
-            <!-- Expandable Accordion Panel Elements -->
-            <div class="space-y-4">
+        <!-- Cloud Integrations & Security -->
+        <section class="py-20 bg-brand-slateBlack text-white border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-2xl font-extrabold">Integrated with Leading Platforms</h2>
+                        <p class="text-sm text-gray-400 mt-2">Seamlessly sync your Dropbox, Google Drive, and custom S3 buckets with our symmetrical backbone. No throttling, instant file availability.</p>
+                        <ul class="mt-4 space-y-2 text-xs">
+                            <li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green"></i> Real-time file versioning & restore</li>
+                            <li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green"></i> Zero-knowledge encryption optional</li>
+                            <li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green"></i> 24/7 dedicated cloud support</li>
+                        </ul>
+                    </div>
+                    <div class="glass-dark p-6 rounded-2xl">
+                        <div class="text-brand-gold text-5xl mb-4"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h3 class="font-bold text-white">SOC 2 Type II Compliant</h3>
+                        <p class="text-xs text-gray-400 mt-1">All data encrypted at rest and in transit. Hosted in ISO 27001 certified data centers within South Africa.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support & FAQs Section (Cloud Page) -->
+        <section id="faq" class="py-20 bg-brand-lightBg">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 
-                <!-- FAQ Block 1 -->
-                <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
-                    <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
-                        <span>How long is the typical installation cycle?</span>
-                        <i class="fa-solid fa-chevron-down transition-transform"></i>
-                    </button>
-                    <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
-                        After ordering, the designated carrier infrastructure partner (Openserve, Vumatel, Frogfoot, etc.) will schedule your installation date. Connection takes 2-5 working days depending on setup dynamics.
-                    </div>
+                <div class="text-center mb-16 space-y-4">
+                    <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Help & Support</span>
+                    <h2 class="text-3xl font-bold tracking-tight text-brand-black">Fibre FAQ Knowledge-Base</h2>
+                    <p class="text-gray-500 text-xs">Everything you need to know about setting up ANGWA Fibre.</p>
                 </div>
 
-                <!-- FAQ Block 2 -->
-                <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
-                    <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
-                        <span>Are there hidden administration fees?</span>
-                        <i class="fa-solid fa-chevron-down transition-transform"></i>
-                    </button>
-                    <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
-                        Absolutely zero. All connection logistics, fiber equipment setup fees, and baseline Wi-Fi 6 hardware distribution options are completely pre-paid by us.
+                <!-- Expandable Accordion Panel Elements -->
+                <div class="space-y-4">
+                    
+                    <!-- FAQ Block 1 -->
+                    <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+                        <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
+                            <span>How long is the typical installation cycle?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
+                            After ordering, the designated carrier infrastructure partner (Openserve, Vumatel, Frogfoot, etc.) will schedule your installation date. Connection takes 2-5 working days depending on setup dynamics.
+                        </div>
                     </div>
-                </div>
 
-                <!-- FAQ Block 3 -->
-                <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
-                    <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
-                        <span>How does the double money-back guarantee work?</span>
-                        <i class="fa-solid fa-chevron-down transition-transform"></i>
-                    </button>
-                    <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
-                        If you are unsatisfied with connection speeds, drop rates, or support queues within the initial 30 days of setup, notify us. We'll terminate the line and issue a complete premium refund, doubled.
+                    <!-- FAQ Block 2 -->
+                    <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+                        <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
+                            <span>Are there hidden administration fees?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
+                            Absolutely zero. All connection logistics, fiber equipment setup fees, and baseline Wi-Fi 6 hardware distribution options are completely pre-paid by us.
+                        </div>
                     </div>
-                </div>
 
-                <!-- FAQ Block 4 -->
-                <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
-                    <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
-                        <span>What termination terms are applicable?</span>
-                        <i class="fa-solid fa-chevron-down transition-transform"></i>
-                    </button>
-                    <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
-                        Our packages are based on calendar-month schedules. Simply submit a cancellation notice 30 days prior. Hardware must be returned within 14 business days of line termination.
+                    <!-- FAQ Block 3 -->
+                    <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+                        <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
+                            <span>How does the double money-back guarantee work?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
+                            If you are unsatisfied with connection speeds, drop rates, or support queues within the initial 30 days of setup, notify us. We'll terminate the line and issue a complete premium refund, doubled.
+                        </div>
                     </div>
-                </div>
 
+                    <!-- FAQ Block 4 -->
+                    <div class="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+                        <button class="w-full px-6 py-4.5 text-left font-bold text-sm flex items-center justify-between text-brand-black hover:text-brand-goldDark transition-colors" onclick="toggleFaq(this)">
+                            <span>What termination terms are applicable?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="px-6 pb-5 text-xs text-gray-500 hidden leading-relaxed border-t border-black/5 pt-4">
+                            Our packages are based on calendar-month schedules. Simply submit a cancellation notice 30 days prior. Hardware must be returned within 14 business days of line termination.
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+    </div><!-- END page-cloud -->
 
     <!-- Sign Up Modal -->
     <div id="signup-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -1397,11 +1758,30 @@ html_content = """
         </div>
     </footer>
 
-
-    <!-- ==================== CORE SCRIPT ENGINE ==================== -->
     <script>
-        
-        /* Areas for coverage search checks */
+        /* ==================== SPA PAGE ROUTER ==================== */
+        const PAGES = ['home', 'host', 'design', 'cloud'];
+
+        function showPage(pageName) {
+            PAGES.forEach(p => {
+                const el = document.getElementById('page-' + p);
+                if (el) el.classList.add('hidden');
+                const btn = document.getElementById('nav-' + p);
+                if (btn) btn.classList.remove('text-brand-gold');
+            });
+            const target = document.getElementById('page-' + pageName);
+            if (target) target.classList.remove('hidden');
+            const activeBtn = document.getElementById('nav-' + pageName);
+            if (activeBtn) activeBtn.classList.add('text-brand-gold');
+            window.scrollTo(0, 0);
+            if (pageName === 'host') renderPackages();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            renderPackages();
+            setupSearchAutocomplete();
+        });
         const mockAreas = [
             { name: "Sandton", state: "available", provider: "Vumatel", speed: "1000 Mbps" },
             { name: "Sea Point", state: "available", provider: "Openserve", speed: "500 Mbps" },
@@ -1414,7 +1794,6 @@ html_content = """
             { name: "Rondebosch", state: "available", provider: "Openserve", speed: "500 Mbps" }
         ];
 
-        /* Symmetrical Fibre packages list */
         const packageData = [
             { id: 1, provider: "open", name: "Openserve Light Symmetrical", down: 50, up: 50, price: 499, description: "Stable high-speed optical fiber. Perfect for reliable daily workflows and smooth 4K streaming.", isPopular: false },
             { id: 2, provider: "open", name: "Openserve Active Power", down: 100, up: 100, price: 699, description: "Our most popular package. Designed for modern multi-device households, heavy streaming and gaming.", isPopular: true },
@@ -1427,7 +1806,13 @@ html_content = """
             { id: 9, provider: "frog", name: "Frogfoot Heavy Symmetrical", down: 500, up: 500, price: 1049, description: "Blazing fast throughput constructed for instant cloud syncs, large media backups, and extreme usage.", isPopular: false }
         ];
 
-        /* Web Design Archetype Layout data mapping */
+        const cloudStorageData = [
+            { id: 'cs1', name: 'ANGWA Starter Vault', storage: '100 GB', price: 79 },
+            { id: 'cs2', name: 'ANGWA Pro Vault', storage: '500 GB', price: 199 },
+            { id: 'cs3', name: 'ANGWA Business Vault', storage: '2 TB', price: 449 },
+            { id: 'cs4', name: 'ANGWA Ultra Vault', storage: '10 TB', price: 999 }
+        ];
+
         const designData = {
             luxe: {
                 id: 'design-luxe',
@@ -1470,22 +1855,17 @@ html_content = """
             }
         };
 
-        /* --- Dynamic Cart State --- */
         let cart = [];
         let currentFNO = 'all';
         let currentSpeedRange = 'all';
-        let currentModalStep = 2; // Direct address capture setup
+        let currentModalStep = 2;
 
-        /* Dropdown togglers for Cart and Notifications */
         function toggleNotificationDropdown(event) {
             event.stopPropagation();
             const panel = document.getElementById('notify-dropdown-panel');
             const cartPanel = document.getElementById('cart-dropdown-panel');
-            
             panel.classList.toggle('hidden');
             cartPanel.classList.add('hidden');
-            
-            // Remove pulse indicator dot when checked
             const pulse = document.getElementById('notify-pulse-dot');
             if (pulse) pulse.remove();
         }
@@ -1494,55 +1874,35 @@ html_content = """
             event.stopPropagation();
             const panel = document.getElementById('cart-dropdown-panel');
             const notifyPanel = document.getElementById('notify-dropdown-panel');
-            
             panel.classList.toggle('hidden');
             notifyPanel.classList.add('hidden');
         }
 
-        /* Close dropdown panels if clicking elsewhere */
         document.addEventListener('click', (event) => {
             const notifyPanel = document.getElementById('notify-dropdown-panel');
             const cartPanel = document.getElementById('cart-dropdown-panel');
-            
-            if (notifyPanel && !notifyPanel.contains(event.target)) {
-                notifyPanel.classList.add('hidden');
-            }
-            if (cartPanel && !cartPanel.contains(event.target)) {
-                cartPanel.classList.add('hidden');
-            }
+            if (notifyPanel && !notifyPanel.contains(event.target)) notifyPanel.classList.add('hidden');
+            if (cartPanel && !cartPanel.contains(event.target)) cartPanel.classList.add('hidden');
         });
 
-        /* --- Decoupled Dynamic Shopping Cart Core Engine --- */
         function addToCart(type, itemId) {
             let itemObject = null;
-
             if (type === 'host') {
                 const pkg = packageData.find(p => p.id === itemId);
                 if (pkg) {
-                    itemObject = {
-                        cartId: 'host-' + itemId + '-' + Date.now(),
-                        type: 'host',
-                        id: pkg.id,
-                        name: pkg.name,
-                        price: pkg.price,
-                        provider: pkg.provider,
-                        addons: { router: false, ip: false }
-                    };
+                    itemObject = { cartId: 'host-' + itemId + '-' + Date.now(), type: 'host', id: pkg.id, name: pkg.name, price: pkg.price, provider: pkg.provider, addons: { router: false, ip: false } };
                 }
             } else if (type === 'design') {
                 const design = designData[itemId];
                 if (design) {
-                    itemObject = {
-                        cartId: 'design-' + itemId + '-' + Date.now(),
-                        type: 'design',
-                        id: itemId,
-                        name: "Design Layout: " + design.logoText.replace('.', ''),
-                        price: design.price,
-                        addons: { router: false, ip: false } // Represents: Hosting (+199) and Domain (+250)
-                    };
+                    itemObject = { cartId: 'design-' + itemId + '-' + Date.now(), type: 'design', id: itemId, name: "Design Layout: " + design.logoText.replace('.', ''), price: design.price, addons: { router: false, ip: false } };
+                }
+            } else if (type === 'cloud') {
+                const plan = cloudStorageData.find(p => p.id === itemId);
+                if (plan) {
+                    itemObject = { cartId: 'cloud-' + itemId + '-' + Date.now(), type: 'cloud', id: plan.id, name: plan.name + ' (' + plan.storage + ')', price: plan.price, addons: { router: false, ip: false } };
                 }
             }
-
             if (itemObject) {
                 cart.push(itemObject);
                 updateCartUI();
@@ -1552,10 +1912,9 @@ html_content = """
         }
 
         function directBuy(type, itemId) {
-            // Straight purchase logic: isolates this single selected package instantly
-            cart = []; // clear the cart queue
-            addToCart(type, itemId); // add item
-            openCheckoutModal(); // launch payment modal
+            cart = [];
+            addToCart(type, itemId);
+            openCheckoutModal();
         }
 
         function removeFromCart(cartId) {
@@ -1580,9 +1939,7 @@ html_content = """
             const btn = document.getElementById('cart-btn');
             if (btn) {
                 btn.classList.add('cart-bounce', 'border-brand-gold');
-                setTimeout(() => {
-                    btn.classList.remove('cart-bounce');
-                }, 400);
+                setTimeout(() => btn.classList.remove('cart-bounce'), 400);
             }
         }
 
@@ -1590,117 +1947,49 @@ html_content = """
             const toast = document.getElementById('order-toast');
             const toastText = toast.querySelector('p');
             const toastHeader = toast.querySelector('h5');
-            
             toastHeader.innerText = "Shopping Bag Updated";
             toastText.innerText = message;
             toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 5000);
+            setTimeout(() => toast.classList.add('hidden'), 5000);
         }
 
         function updateCartUI() {
             const badge = document.getElementById('header-cart-badge');
             const content = document.getElementById('cart-dropdown-content');
-
             if (cart.length === 0) {
                 badge.classList.add('hidden');
                 badge.innerText = '0';
                 content.className = "text-[10px] text-gray-400 text-center py-4 space-y-3";
-                content.innerHTML = `
-                    <i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i>
-                    <span>No active package or web design selected.</span>
-                `;
+                content.innerHTML = `<i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span>`;
                 return;
             }
-
             badge.classList.remove('hidden');
             badge.innerText = cart.length;
-
             let html = `<div class="max-h-76 overflow-y-auto space-y-3.5 pr-1.5 scrollbar-thin">`;
             let subtotal = 0;
-
             cart.forEach(item => {
                 let itemTotal = item.price;
                 let addoneSection = '';
-
                 if (item.type === 'host') {
                     if (item.addons.router) itemTotal += 99;
                     if (item.addons.ip) itemTotal += 49;
-
-                    addoneSection = `
-                        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400">
-                            <label class="flex items-center gap-1 cursor-pointer">
-                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'router', this.checked)" ${item.addons.router ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
-                                <span>Wi-Fi 6 (+R99)</span>
-                            </label>
-                            <label class="flex items-center gap-1 cursor-pointer">
-                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'ip', this.checked)" ${item.addons.ip ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
-                                <span>Static IP (+R49)</span>
-                            </label>
-                        </div>
-                    `;
+                    addoneSection = `<div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400"><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'router', this.checked)" ${item.addons.router ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Wi-Fi 6 (+R99)</span></label><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'ip', this.checked)" ${item.addons.ip ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Static IP (+R49)</span></label></div>`;
                 } else {
-                    if (item.addons.router) itemTotal += 199; // Router represents hosting
-                    if (item.addons.ip) itemTotal += 250;    // IP represents Domain Acquisition
-
-                    addoneSection = `
-                        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400">
-                            <label class="flex items-center gap-1 cursor-pointer">
-                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'router', this.checked)" ${item.addons.router ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
-                                <span>Hosting (+R199)</span>
-                            </label>
-                            <label class="flex items-center gap-1 cursor-pointer">
-                                <input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'ip', this.checked)" ${item.addons.ip ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black">
-                                <span>Domain (+R250)</span>
-                            </label>
-                        </div>
-                    `;
+                    if (item.addons.router) itemTotal += 199;
+                    if (item.addons.ip) itemTotal += 250;
+                    addoneSection = `<div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400"><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'router', this.checked)" ${item.addons.router ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Hosting (+R199)</span></label><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${item.cartId}', 'ip', this.checked)" ${item.addons.ip ? 'checked' : ''} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Domain (+R250)</span></label></div>`;
                 }
-
                 subtotal += itemTotal;
-
-                html += `
-                    <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between">
-                        <div class="flex justify-between items-start gap-2">
-                            <div class="text-left">
-                                <span class="font-bold text-white block truncate max-w-[150px]">${item.name}</span>
-                                <span class="text-[8px] text-gray-500 uppercase block tracking-wider">${item.type === 'host' ? 'Fibre Line' : 'Web Custom Design'}</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="font-extrabold text-brand-gold shrink-0">R${itemTotal}</span>
-                                <button onclick="removeFromCart('${item.cartId}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
-                        </div>
-                        ${addoneSection}
-                    </div>
-                `;
+                html += `<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between"><div class="flex justify-between items-start gap-2"><div class="text-left"><span class="font-bold text-white block truncate max-w-[150px]">${item.name}</span><span class="text-[8px] text-gray-500 uppercase block tracking-wider">${item.type === 'host' ? 'Fibre Line' : 'Web Custom Design'}</span></div><div class="flex items-center gap-2"><span class="font-extrabold text-brand-gold shrink-0">R${itemTotal}</span><button onclick="removeFromCart('${item.cartId}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button></div></div>${addoneSection}</div>`;
             });
-
-            html += `</div>`; // Close scrolling items panel
-
-            // Footer Subtotal Display
-            html += `
-                <div class="border-t border-white/10 pt-3 mt-3 space-y-3.5">
-                    <div class="flex justify-between text-xs font-bold">
-                        <span>Cart Subtotal:</span>
-                        <span class="text-brand-gold text-sm font-black">R${subtotal}.00</span>
-                    </div>
-                    <button onclick="openCheckoutModal()" class="w-full text-center glossy-gold text-brand-black py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider shadow-md">
-                        Proceed to Checkout
-                    </button>
-                </div>
-            `;
-
+            html += `</div><div class="border-t border-white/10 pt-3 mt-3 space-y-3.5"><div class="flex justify-between text-xs font-bold"><span>Cart Subtotal:</span><span class="text-brand-gold text-sm font-black">R${subtotal}.00</span></div><button onclick="openCheckoutModal()" class="w-full text-center glossy-gold text-brand-black py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider shadow-md">Proceed to Checkout</button></div>`;
             content.className = "text-[10px] text-gray-300 text-left";
             content.innerHTML = html;
         }
 
-        /* --- Sidebar & Scrollspy logic --- */
         function toggleSidebar() {
             const drawer = document.getElementById('sidebar-drawer');
             const backdrop = document.getElementById('sidebar-backdrop');
-
             if (drawer.classList.contains('-translate-x-full')) {
                 drawer.classList.remove('-translate-x-full');
                 backdrop.classList.remove('hidden');
@@ -1712,7 +2001,6 @@ html_content = """
             }
         }
 
-        /* IntersectionObserver for tracking active sections in the viewport */
         window.addEventListener('DOMContentLoaded', () => {
             renderPackages();
             setupSearchAutocomplete();
@@ -1721,37 +2009,21 @@ html_content = """
 
         function setupScrollSpy() {
             const badgeEl = document.getElementById('dynamic-nav-badge');
-            
-            const observerOptions = {
-                root: null,
-                rootMargin: '-35% 0px -45% 0px',
-                threshold: 0
-            };
-
+            const observerOptions = { root: null, rootMargin: '-35% 0px -45% 0px', threshold: 0 };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const id = entry.target.id;
                         let htmlContent = '';
-                        
-                        if (id === 'home-hero') {
-                            htmlContent = `ANGWA<span class="text-brand-gold">.</span>`;
-                        } else if (id === 'packages') {
-                            htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`;
-                        } else if (id === 'design-suite') {
-                            htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`;
-                        } else if (id === 'cloud-filling') {
-                            htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`;
-                        }
-
+                        if (id === 'home-hero') htmlContent = `ANGWA<span class="text-brand-gold">.</span>`;
+                        else if (id === 'packages') htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`;
+                        else if (id === 'design-suite') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`;
+                        else if (id === 'cloud-filling') htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`;
                         if (badgeEl) {
                             badgeEl.style.opacity = '0';
                             badgeEl.style.transform = 'translateY(-4px)';
-                            
                             setTimeout(() => {
-                                if (htmlContent) {
-                                    badgeEl.innerHTML = htmlContent;
-                                }
+                                if (htmlContent) badgeEl.innerHTML = htmlContent;
                                 badgeEl.style.opacity = '1';
                                 badgeEl.style.transform = 'translateY(0)';
                             }, 150);
@@ -1759,56 +2031,39 @@ html_content = """
                     }
                 });
             }, observerOptions);
-
-            /* Direct ScrollSpy mapping to the targeted sections strictly */
-            document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => {
-                observer.observe(section);
-            });
+            document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => observer.observe(section));
         }
 
-        /* Select Web Design from architecture grid */
         function selectWebDesign(themeKey) {
             const data = designData[themeKey];
             if (!data) return;
-
             document.querySelectorAll('.design-selector-card').forEach(card => {
                 card.className = "design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden";
             });
-
             const activeCard = document.getElementById(`card-design-${themeKey}`);
             if (activeCard) {
                 const borderClass = themeKey === 'luxe' ? 'border-brand-gold/40' : (themeKey === 'emerald' ? 'border-brand-green/40' : 'border-white/30');
                 activeCard.className = `design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/60 ${borderClass} shadow-lg transition-all duration-300 relative overflow-hidden`;
             }
-
             const viewport = document.getElementById('live-web-viewport');
             viewport.className = `${data.viewportBg} p-6 sm:p-10 rounded-2xl min-h-[420px] flex flex-col justify-between transition-all duration-500 relative overflow-hidden`;
-
             const logoEl = document.getElementById('mockup-logo');
             logoEl.className = `text-xs font-black tracking-tight flex items-center gap-1.5 ${data.logoClass}`;
-            logoEl.innerHTML = `
-                <span class="h-5 w-5 bg-gradient-to-r ${themeKey === 'luxe' ? 'from-brand-gold to-brand-goldDark text-brand-black' : (themeKey === 'emerald' ? 'from-brand-green to-brand-greenDark text-white' : 'from-white to-gray-400 text-brand-black')} rounded-md flex items-center justify-center text-[10px] font-black">${themeKey.substring(0,1).toUpperCase()}</span> 
-                <span>${data.logoText}</span>
-            `;
-
+            logoEl.innerHTML = `<span class="h-5 w-5 bg-gradient-to-r ${themeKey === 'luxe' ? 'from-brand-gold to-brand-goldDark text-brand-black' : (themeKey === 'emerald' ? 'from-brand-green to-brand-greenDark text-white' : 'from-white to-gray-400 text-brand-black')} rounded-md flex items-center justify-center text-[10px] font-black">${themeKey.substring(0,1).toUpperCase()}</span> <span>${data.logoText}</span>`;
             const badgeEl = document.getElementById('mockup-badge');
             badgeEl.innerText = data.badgeText;
             badgeEl.className = `inline-block text-[8px] tracking-widest font-bold uppercase px-2.5 py-1 rounded-full ${data.badgeClass}`;
-
             document.getElementById('mockup-title').innerHTML = data.title;
             document.getElementById('mockup-desc').innerText = data.desc;
             document.getElementById('mockup-time').innerText = data.timeText;
-
             const btnEl = document.getElementById('mockup-btn');
             btnEl.className = `${data.btnClass} text-[10px] font-black tracking-wider uppercase px-5 py-2.5 rounded-full shadow-md flex items-center gap-1.5`;
         }
 
-        /* Simulate page reload inside sandbox browser container */
         function simulateReload() {
             const viewport = document.getElementById('live-web-viewport');
             viewport.style.opacity = '0.1';
             viewport.style.transform = 'scale(0.98)';
-            
             setTimeout(() => {
                 viewport.style.opacity = '1';
                 viewport.style.transform = 'scale(1)';
@@ -1818,144 +2073,47 @@ html_content = """
         function renderPackages() {
             const container = document.getElementById('packages-container');
             container.innerHTML = '';
-
             let filtered = packageData;
-
-            if (currentFNO !== 'all') {
-                filtered = filtered.filter(p => p.provider === currentFNO);
-            }
-
+            if (currentFNO !== 'all') filtered = filtered.filter(p => p.provider === currentFNO);
             if (currentSpeedRange !== 'all') {
-                if (currentSpeedRange === 'budget') {
-                    filtered = filtered.filter(p => p.down >= 30 && p.down <= 50);
-                } else if (currentSpeedRange === 'medium') {
-                    filtered = filtered.filter(p => p.down >= 100 && p.down <= 200);
-                } else if (currentSpeedRange === 'pro') {
-                    filtered = filtered.filter(p => p.down >= 500);
-                }
+                if (currentSpeedRange === 'budget') filtered = filtered.filter(p => p.down >= 30 && p.down <= 50);
+                else if (currentSpeedRange === 'medium') filtered = filtered.filter(p => p.down >= 100 && p.down <= 200);
+                else if (currentSpeedRange === 'pro') filtered = filtered.filter(p => p.down >= 500);
             }
-
             if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner">
-                        <i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i>
-                        <p class="font-bold text-brand-black text-sm">No Symmetrical Packages Found.</p>
-                        <p class="text-xs text-gray-400 mt-1">Try resetting the carrier selection tab.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner"><i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i><p class="font-bold text-brand-black text-sm">No Symmetrical Packages Found.</p><p class="text-xs text-gray-400 mt-1">Try resetting the carrier selection tab.</p></div>`;
                 return;
             }
-
             filtered.forEach(pkg => {
                 const isVuma = pkg.provider === 'vuma';
                 const isFrog = pkg.provider === 'frog';
                 const providerName = isVuma ? 'Vumatel Network' : (isFrog ? 'Frogfoot Network' : 'Openserve Network');
-                
                 const cardAccentBorder = pkg.isPopular ? 'gold-sheen-border' : 'border border-black/5 shadow-sm';
-                const popBadge = pkg.isPopular ? `
-                    <div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">
-                        Top Symmetrical Pick
-                    </div>
-                ` : '';
-
-                const cardHtml = `
-                    <div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ${cardAccentBorder}">
-                        ${popBadge}
-                        
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5">
-                                    <span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>
-                                    ${providerName}
-                                </span>
-                                <span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">Uncapped</span>
-                            </div>
-
-                            <div>
-                                <h3 class="text-lg font-extrabold text-brand-black tracking-tight">${pkg.name}</h3>
-                                <div class="flex items-baseline gap-1.5 mt-2">
-                                    <span class="text-3xl font-black text-brand-black tracking-tight">${pkg.down}</span>
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mbps Down & Up Symmetrical</span>
-                                </div>
-                            </div>
-
-                            <p class="text-xs text-gray-500 leading-relaxed min-h-[48px]">
-                                ${pkg.description}
-                            </p>
-
-                            <div class="space-y-2.5 border-t border-black/5 pt-5 text-xs text-gray-600">
-                                <div class="flex items-center gap-2.5">
-                                    <i class="fa-solid fa-infinity text-brand-gold"></i>
-                                    <span>Uncapped & Unshaped Pure Bandwidth</span>
-                                </div>
-                                <div class="flex items-center gap-2.5">
-                                    <i class="fa-solid fa-box text-brand-gold"></i>
-                                    <span>Pre-configured Wi-Fi 6 Router Included</span>
-                                </div>
-                                <div class="flex items-center gap-2.5">
-                                    <i class="fa-solid fa-circle-check text-brand-green"></i>
-                                    <span>Free Installation & Connection SLA</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Price and Hybrid CTA Options Grid -->
-                        <div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-2xl font-black text-brand-black tracking-tight">R${pkg.price}</span>
-                                    <span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-1">
-                                <button onclick="directBuy('host', ${pkg.id})" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5">
-                                    <span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i>
-                                </button>
-                                <button onclick="addToCart('host', ${pkg.id})" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold">
-                                    <span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const popBadge = pkg.isPopular ? `<div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">Top Symmetrical Pick</div>` : '';
+                const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ${cardAccentBorder}">${popBadge}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${providerName}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">Uncapped</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${pkg.name}</h3><div class="flex items-baseline gap-1.5 mt-2"><span class="text-3xl font-black text-brand-black tracking-tight">${pkg.down}</span><span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mbps Down & Up Symmetrical</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[48px]">${pkg.description}</p><div class="space-y-2.5 border-t border-black/5 pt-5 text-xs text-gray-600"><div class="flex items-center gap-2.5"><i class="fa-solid fa-infinity text-brand-gold"></i><span>Uncapped & Unshaped Pure Bandwidth</span></div><div class="flex items-center gap-2.5"><i class="fa-solid fa-box text-brand-gold"></i><span>Pre-configured Wi-Fi 6 Router Included</span></div><div class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-brand-green"></i><span>Free Installation & Connection SLA</span></div></div></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="flex items-center justify-between"><div><span class="text-2xl font-black text-brand-black tracking-tight">R${pkg.price}</span><span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span></div></div><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('host', ${pkg.id})" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('host', ${pkg.id})" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
                 container.innerHTML += cardHtml;
             });
         }
 
         function setFNO(provider) {
             currentFNO = provider;
-            
-            document.querySelectorAll('.fno-tab').forEach(tab => {
-                tab.className = "fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50";
-            });
-
+            document.querySelectorAll('.fno-tab').forEach(tab => tab.className = "fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50");
             const activeTab = document.getElementById(`tab-${provider}`);
-            if (activeTab) {
-                activeTab.className = "fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
-            }
-
+            if (activeTab) activeTab.className = "fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
             renderPackages();
         }
 
         function filterSpeedRange(range) {
             currentSpeedRange = range;
-
-            document.querySelectorAll('.speed-filter-btn').forEach(btn => {
-                btn.className = "speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm";
-            });
-
+            document.querySelectorAll('.speed-filter-btn').forEach(btn => btn.className = "speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm");
             const activeBtn = document.getElementById(`btn-speed-${range}`);
-            if (activeBtn) {
-                activeBtn.className = "speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm";
-            }
-
+            if (activeBtn) activeBtn.className = "speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm";
             renderPackages();
         }
 
         function toggleFaq(btn) {
             const containerBox = btn.nextElementSibling;
             const indicatorIcon = btn.querySelector('i');
-
             if (containerBox.classList.contains('hidden')) {
                 containerBox.classList.remove('hidden');
                 indicatorIcon.className = "fa-solid fa-chevron-up transition-transform text-brand-gold";
@@ -1965,110 +2123,44 @@ html_content = """
             }
         }
 
-        /* Coverage search with autocomplete setup */
         function setupSearchAutocomplete() {
             const inputField = document.getElementById('area-search');
             const dropDownContainer = document.getElementById('search-dropdown');
-
             inputField.addEventListener('input', () => {
                 const inputVal = inputField.value.trim().toLowerCase();
                 dropDownContainer.innerHTML = '';
-
-                if (!inputVal) {
-                    dropDownContainer.classList.add('hidden');
-                    return;
-                }
-
+                if (!inputVal) { dropDownContainer.classList.add('hidden'); return; }
                 const matches = mockAreas.filter(area => area.name.toLowerCase().includes(inputVal));
-
-                if (matches.length === 0) {
-                    dropDownContainer.innerHTML = `
-                        <div class="p-3.5 text-xs text-gray-400">
-                            No Listed Coverage Match. Run a Manual Carrier Analysis check!
-                        </div>
-                    `;
-                } else {
-                    matches.forEach(match => {
-                        const itemDiv = document.createElement('div');
-                        itemDiv.className = "p-3 hover:bg-white/5 cursor-pointer flex justify-between items-center transition-all border-b border-white/5 last:border-b-0";
-                        itemDiv.innerHTML = `
-                            <span class="font-bold text-white text-xs">${match.name}</span>
-                            <span class="text-[9px] bg-brand-green/10 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">Fibre Active</span>
-                        `;
-                        itemDiv.onclick = () => {
-                            inputField.value = match.name;
-                            dropDownContainer.classList.add('hidden');
-                            displaySearchResult(match);
-                        };
-                        dropDownContainer.appendChild(itemDiv);
-                    });
-                }
+                if (matches.length === 0) dropDownContainer.innerHTML = `<div class="p-3.5 text-xs text-gray-400">No Listed Coverage Match. Run a Manual Carrier Analysis check!</div>`;
+                else matches.forEach(match => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "p-3 hover:bg-white/5 cursor-pointer flex justify-between items-center transition-all border-b border-white/5 last:border-b-0";
+                    itemDiv.innerHTML = `<span class="font-bold text-white text-xs">${match.name}</span><span class="text-[9px] bg-brand-green/10 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">Fibre Active</span>`;
+                    itemDiv.onclick = () => { inputField.value = match.name; dropDownContainer.classList.add('hidden'); displaySearchResult(match); };
+                    dropDownContainer.appendChild(itemDiv);
+                });
                 dropDownContainer.classList.remove('hidden');
             });
-
-            document.addEventListener('click', (e) => {
-                if (!inputField.contains(e.target) && !dropDownContainer.contains(e.target)) {
-                    dropDownContainer.classList.add('hidden');
-                }
-            });
+            document.addEventListener('click', (e) => { if (!inputField.contains(e.target) && !dropDownContainer.contains(e.target)) dropDownContainer.classList.add('hidden'); });
         }
 
         function triggerSearch() {
             const searchVal = document.getElementById('area-search').value.trim();
-
-            if (!searchVal) {
-                displaySearchFeedback("Please indicate a valid street, suburb, or estate location.", false);
-                return;
-            }
-
+            if (!searchVal) { displaySearchFeedback("Please indicate a valid street, suburb, or estate location.", false); return; }
             const registeredMatch = mockAreas.find(a => a.name.toLowerCase() === searchVal.toLowerCase());
-            if (registeredMatch) {
-                displaySearchResult(registeredMatch);
-            } else {
-                displaySearchResult({
-                    name: searchVal,
-                    state: 'available',
-                    provider: 'Openserve Carrier Symmetrical Splicing',
-                    speed: '1000 Mbps'
-                });
-            }
+            if (registeredMatch) displaySearchResult(registeredMatch);
+            else displaySearchResult({ name: searchVal, state: 'available', provider: 'Openserve Carrier Symmetrical Splicing', speed: '1000 Mbps' });
         }
 
         function displaySearchResult(matchData) {
             const resultsDiv = document.getElementById('search-result');
             resultsDiv.classList.remove('hidden');
-
             if (matchData.state === 'available') {
                 resultsDiv.className = "mt-6 p-5 rounded-2xl border border-brand-green/20 bg-brand-green/5 text-gray-300";
-                resultsDiv.innerHTML = `
-                    <div class="flex items-start gap-3 text-xs">
-                        <div class="h-8 w-8 bg-brand-green/15 rounded-lg flex items-center justify-center text-brand-green text-lg shrink-0 shadow-inner">
-                            <i class="fa-solid fa-wifi"></i>
-                        </div>
-                        <div class="space-y-1.5 flex-1">
-                            <h5 class="font-bold text-white text-sm">Light Speed Active in ${matchData.name}!</h5>
-                            <p class="text-gray-400">The primary local network connection operator is <span class="text-brand-gold font-bold">${matchData.provider}</span> with speeds configured up to <span class="text-white font-bold">${matchData.speed}</span>.</p>
-                            <div class="pt-3">
-                                <button onclick="autoSelectProvider('${matchData.provider}')" class="bg-brand-green hover:bg-brand-greenDark text-white px-4 py-2 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors">
-                                    Show Symmetrical Packages
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                resultsDiv.innerHTML = `<div class="flex items-start gap-3 text-xs"><div class="h-8 w-8 bg-brand-green/15 rounded-lg flex items-center justify-center text-brand-green text-lg shrink-0 shadow-inner"><i class="fa-solid fa-wifi"></i></div><div class="space-y-1.5 flex-1"><h5 class="font-bold text-white text-sm">Light Speed Active in ${matchData.name}!</h5><p class="text-gray-400">The primary local network connection operator is <span class="text-brand-gold font-bold">${matchData.provider}</span> with speeds configured up to <span class="text-white font-bold">${matchData.speed}</span>.</p><div class="pt-3"><button onclick="autoSelectProvider('${matchData.provider}')" class="bg-brand-green hover:bg-brand-greenDark text-white px-4 py-2 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors">Show Symmetrical Packages</button></div></div></div>`;
             } else {
                 resultsDiv.className = "mt-6 p-5 rounded-2xl border border-brand-gold/20 bg-brand-gold/5 text-gray-300";
-                resultsDiv.innerHTML = `
-                    <div class="flex items-start gap-3 text-xs">
-                        <div class="h-8 w-8 bg-brand-gold/15 rounded-lg flex items-center justify-center text-brand-gold text-lg shrink-0 shadow-inner">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </div>
-                        <div class="space-y-1">
-                            <h5 class="font-bold text-white text-sm">Deployment Pending in ${matchData.name}</h5>
-                            <p class="text-gray-400">Lines are currently being spliced in your neighborhood! Pre-register to lock down free routing hardware installation slots early.</p>
-                        </div>
-                    </div>
-                `;
+                resultsDiv.innerHTML = `<div class="flex items-start gap-3 text-xs"><div class="h-8 w-8 bg-brand-gold/15 rounded-lg flex items-center justify-center text-brand-gold text-lg shrink-0 shadow-inner"><i class="fa-solid fa-clock-rotate-left"></i></div><div class="space-y-1"><h5 class="font-bold text-white text-sm">Deployment Pending in ${matchData.name}</h5><p class="text-gray-400">Lines are currently being spliced in your neighborhood! Pre-register to lock down free routing hardware installation slots early.</p></div></div>`;
             }
         }
 
@@ -2081,36 +2173,23 @@ html_content = """
 
         function autoSelectProvider(providerName) {
             const simpleName = providerName.toLowerCase();
-            if (simpleName.includes('vuma')) {
-                setFNO('vuma');
-            } else if (simpleName.includes('open')) {
-                setFNO('open');
-            } else if (simpleName.includes('frog')) {
-                setFNO('frog');
-            } else {
-                setFNO('all');
-            }
+            if (simpleName.includes('vuma')) setFNO('vuma');
+            else if (simpleName.includes('open')) setFNO('open');
+            else if (simpleName.includes('frog')) setFNO('frog');
+            else setFNO('all');
             document.getElementById('packages').scrollIntoView({ behavior: 'smooth' });
         }
 
         function openCheckoutModal() {
-            if (cart.length === 0) {
-                alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!");
-                return;
-            }
-
-            currentModalStep = 2; // Capture Address
+            if (cart.length === 0) { alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!"); return; }
+            currentModalStep = 2;
             updateModalStepsUI();
-
-            // Populate summary view calculations
             let totalVal = 0;
             const summaryContainer = document.getElementById('modal-verification-summary');
             summaryContainer.innerHTML = '';
-
             cart.forEach(item => {
                 let itemTotal = item.price;
                 let addonTexts = [];
-
                 if (item.type === 'host') {
                     if (item.addons.router) { itemTotal += 99; addonTexts.push("Wi-Fi 6 Router Upgrade (+R99)"); }
                     if (item.addons.ip) { itemTotal += 49; addonTexts.push("Static IP Allocation (+R49)"); }
@@ -2118,81 +2197,41 @@ html_content = """
                     if (item.addons.router) { itemTotal += 199; addonTexts.push("High-Performance Hosting (+R199)"); }
                     if (item.addons.ip) { itemTotal += 250; addonTexts.push("Custom Domain Acquisition (+R250)"); }
                 }
-
                 totalVal += itemTotal;
-
                 const row = document.createElement('div');
                 row.className = "flex justify-between items-start text-xs border-b border-white/5 pb-2 last:border-b-0";
-                row.innerHTML = `
-                    <div>
-                        <span class="font-bold text-white block">${item.name}</span>
-                        <span class="text-[8px] text-gray-500">${addonTexts.join(' / ') || 'No Addons Selected'}</span>
-                    </div>
-                    <span class="font-extrabold text-brand-gold shrink-0">R${itemTotal}.00</span>
-                `;
+                row.innerHTML = `<div><span class="font-bold text-white block">${item.name}</span><span class="text-[8px] text-gray-500">${addonTexts.join(' / ') || 'No Addons Selected'}</span></div><span class="font-extrabold text-brand-gold shrink-0">R${itemTotal}.00</span>`;
                 summaryContainer.appendChild(row);
             });
-
             document.getElementById('modal-footer-price').innerText = `R${totalVal}.00`;
             document.getElementById('summary-total-price').innerText = `R${totalVal}.00`;
-
             document.getElementById('signup-modal').classList.remove('hidden');
         }
 
         function updateModalStepsUI() {
             document.getElementById('modal-step-2').classList.add('hidden');
             document.getElementById('modal-step-3').classList.add('hidden');
-
             document.getElementById(`modal-step-${currentModalStep}`).classList.remove('hidden');
-
             const backBtn = document.getElementById('modal-back-btn');
-            if (currentModalStep === 2) {
-                backBtn.classList.add('hidden');
-            } else {
-                backBtn.classList.remove('hidden');
-            }
-
-            // Subtotal computation
+            if (currentModalStep === 2) backBtn.classList.add('hidden');
+            else backBtn.classList.remove('hidden');
             let totalVal = 0;
             cart.forEach(item => {
                 let itemTotal = item.price;
-                if (item.type === 'host') {
-                    if (item.addons.router) itemTotal += 99;
-                    if (item.addons.ip) itemTotal += 49;
-                } else {
-                    if (item.addons.router) itemTotal += 199;
-                    if (item.addons.ip) itemTotal += 250;
-                }
+                if (item.type === 'host') { if (item.addons.router) itemTotal += 99; if (item.addons.ip) itemTotal += 49; }
+                else { if (item.addons.router) itemTotal += 199; if (item.addons.ip) itemTotal += 250; }
                 totalVal += itemTotal;
             });
-
-            /* Dynamic Polar.sh Sandbox Link formulation based on checkout options */
             let checkoutLink = `https://sandbox.polar.sh/checkout/new?org=angwa&amount=${totalVal}`;
-
             const nextBtnContainer = document.getElementById('modal-next-btn-container');
             if (currentModalStep === 3) {
-                nextBtnContainer.innerHTML = `
-                    <a href="${checkoutLink}" id="modal-next-btn" data-polar-checkout data-polar-checkout-theme="dark" class="glossy-green text-white px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-1.5 cursor-pointer no-underline select-none">
-                        <span>Pay with Polar</span> <i class="fa-solid fa-shield-halved text-brand-gold text-[10px]"></i>
-                    </a>
-                `;
-                if (window.PolarEmbedCheckout) {
-                    setTimeout(() => {
-                        window.PolarEmbedCheckout.init();
-                    }, 60);
-                }
+                nextBtnContainer.innerHTML = `<a href="${checkoutLink}" id="modal-next-btn" data-polar-checkout data-polar-checkout-theme="dark" class="glossy-green text-white px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-1.5 cursor-pointer no-underline select-none"><span>Pay with Polar</span> <i class="fa-solid fa-shield-halved text-brand-gold text-[10px]"></i></a>`;
+                if (window.PolarEmbedCheckout) setTimeout(() => window.PolarEmbedCheckout.init(), 60);
             } else {
-                nextBtnContainer.innerHTML = `
-                    <button id="modal-next-btn" onclick="nextStep()" class="glossy-gold text-brand-black px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md">
-                        Continue <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </button>
-                `;
+                nextBtnContainer.innerHTML = `<button id="modal-next-btn" onclick="nextStep()" class="glossy-gold text-brand-black px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md">Continue <i class="fa-solid fa-chevron-right ml-1"></i></button>`;
             }
-
-            // Adjust indicators
             const ind2 = document.getElementById('step-indicator-2');
             const ind3 = document.getElementById('step-indicator-3');
-
             if (currentModalStep === 2) {
                 ind2.className = "text-brand-gold flex items-center gap-1.5";
                 ind2.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black";
@@ -2206,21 +2245,14 @@ html_content = """
             }
         }
 
-        function closeModal() {
-            document.getElementById('signup-modal').classList.add('hidden');
-        }
+        function closeModal() { document.getElementById('signup-modal').classList.add('hidden'); }
 
         function nextStep() {
             if (currentModalStep === 2) {
                 const nameInput = document.getElementById('cust-name').value.trim();
                 const emailInput = document.getElementById('cust-email').value.trim();
                 const addrInput = document.getElementById('cust-address').value.trim();
-
-                if (!nameInput || !emailInput || !addrInput) {
-                    alertModal("Please complete all setup destination fields before progressing.");
-                    return;
-                }
-
+                if (!nameInput || !emailInput || !addrInput) { alertModal("Please complete all setup destination fields before progressing."); return; }
                 currentModalStep = 3;
                 updateModalStepsUI();
             } else if (currentModalStep === 3) {
@@ -2230,69 +2262,39 @@ html_content = """
             }
         }
 
-        function prevStep() {
-            if (currentModalStep > 2) {
-                currentModalStep--;
-                updateModalStepsUI();
-            }
-        }
+        function prevStep() { if (currentModalStep > 2) { currentModalStep--; updateModalStepsUI(); } }
 
         function alertModal(msg) {
             const alertBox = document.createElement('div');
             alertBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
-            alertBox.innerHTML = `
-                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl">
-                    <div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <h4 class="font-bold text-sm tracking-wide">Action Required</h4>
-                    <p class="text-[11px] text-gray-400 leading-relaxed">${msg}</p>
-                    <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button>
-                </div>
-            `;
+            alertBox.innerHTML = `<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div><h4 class="font-bold text-sm tracking-wide">Action Required</h4><p class="text-[11px] text-gray-400 leading-relaxed">${msg}</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`;
             document.body.appendChild(alertBox);
         }
 
         function triggerLeadershipNotice() {
             const noticeBox = document.createElement('div');
             noticeBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
-            noticeBox.innerHTML = `
-                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl">
-                    <div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                    <h4 class="font-bold text-sm tracking-wide">ANGWA Executive Board</h4>
-                    <p class="text-[11px] text-gray-400 leading-relaxed">Our comprehensive Board bios & investor portfolio records are securely archived on page. Reach out to our direct support desk to get a copy.</p>
-                    <button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button>
-                </div>
-            `;
+            noticeBox.innerHTML = `<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-users"></i></div><h4 class="font-bold text-sm tracking-wide">ANGWA Executive Board</h4><p class="text-[11px] text-gray-400 leading-relaxed">Our comprehensive Board bios & investor portfolio records are securely archived on page. Reach out to our direct support desk to get a copy.</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`;
             document.body.appendChild(noticeBox);
         }
 
         function showOrderToast() {
             const toast = document.getElementById('order-toast');
             toast.classList.remove('hidden');
-            setTimeout(() => {
-                hideOrderToast();
-            }, 6500);
+            setTimeout(() => hideOrderToast(), 6500);
         }
 
-        function hideOrderToast() {
-            document.getElementById('order-toast').classList.add('hidden');
-        }
+        function hideOrderToast() { document.getElementById('order-toast').classList.add('hidden'); }
 
-        /* --- Cloud Filling Dropdown and Sync Simulator --- */
         function triggerCloudSync(provider) {
             const cloudIcon = document.getElementById('cloud-icon');
             const statusText = document.getElementById('cloud-sync-status');
             const progress = document.getElementById('cloud-progress-bar');
             const timer = document.getElementById('cloud-timer-val');
-
             const panelRate = document.getElementById('panel-sync-rate');
             const panelProgress = document.getElementById('panel-progress-bar');
             const panelStatus = document.getElementById('panel-sync-status');
             const panelTimer = document.getElementById('panel-sync-timer');
-
             if (provider === 'dropbox') {
                 if (cloudIcon) cloudIcon.className = "fa-brands fa-dropbox text-blue-400";
                 if (statusText) statusText.innerText = "Connecting to Dropbox Fibre pipeline...";
@@ -2302,25 +2304,20 @@ html_content = """
                 if (statusText) statusText.innerText = "Connecting to Google Drive high-speed backup system...";
                 panelStatus.innerText = "Securing direct cloud handshake with Google clusters...";
             }
-
             document.getElementById('cloud-sync-modal').classList.remove('hidden');
             panelRate.innerText = "1,000 Mbps";
-
             let width = 0;
             if (progress) progress.style.width = '0%';
             panelProgress.style.width = '0%';
             if (timer) timer.innerText = "6.2 seconds remaining";
             panelTimer.innerText = "6.2s left";
-
             const interval = setInterval(() => {
                 width += 10;
                 if (progress) progress.style.width = `${width}%`;
                 panelProgress.style.width = `${width}%`;
-                
                 const timeLeft = Math.max(0, ((100 - width) / 15).toFixed(1));
                 if (timer) timer.innerText = `${timeLeft} seconds remaining`;
                 panelTimer.innerText = `${timeLeft}s left`;
-
                 if (width === 40) {
                     if (statusText) statusText.innerText = `Encrypting file systems with symmetrical light speed...`;
                     panelStatus.innerText = "Sending secure multi-threaded file chunks...";
@@ -2328,7 +2325,6 @@ html_content = """
                     if (statusText) statusText.innerText = `Finalizing cloud handshake metrics...`;
                     panelStatus.innerText = "Assembling directory structures on destination server...";
                 }
-
                 if (width >= 100) {
                     clearInterval(interval);
                     if (statusText) statusText.innerText = "Sync complete! 50GB file database successfully uploaded in 0.8 seconds.";
@@ -2340,63 +2336,21 @@ html_content = """
             }, 250);
         }
 
-        function closeCloudModal() {
-            document.getElementById('cloud-sync-modal').classList.add('hidden');
-        }
+        function closeCloudModal() { document.getElementById('cloud-sync-modal').classList.add('hidden'); }
 
-        /* --- ClientZone simulation triggers --- */
-        function triggerClientZone() {
-            document.getElementById('clientzone-modal').classList.remove('hidden');
-        }
-
-        function closeClientZone() {
-            document.getElementById('clientzone-modal').classList.add('hidden');
-        }
-
+        function triggerClientZone() { document.getElementById('clientzone-modal').classList.remove('hidden'); }
+        function closeClientZone() { document.getElementById('clientzone-modal').classList.add('hidden'); }
         function submitClientZoneMock() {
             closeClientZone();
             const welcomeBox = document.createElement('div');
             welcomeBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
-            welcomeBox.innerHTML = `
-                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-md w-full space-y-4 border border-white/10 text-white shadow-2xl">
-                    <div class="flex justify-between items-center border-b border-white/5 pb-3">
-                        <h5 class="font-bold text-brand-gold text-sm">ANGWA Active Client Portal</h5>
-                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white text-xs">Close</button>
-                    </div>
-                    <div class="space-y-3.5 text-xs">
-                        <div class="flex justify-between items-center p-3 bg-black/40 rounded-xl border border-white/5">
-                            <div>
-                                <span class="text-gray-400 block text-[9px] uppercase font-bold">Active Subscribed Line</span>
-                                <span class="font-bold text-white text-xs">Vumatel 500/500 Mbps</span>
-                            </div>
-                            <span class="text-[9px] bg-brand-green/20 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Online</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2.5">
-                            <div class="p-3 bg-black/40 rounded-xl border border-white/5">
-                                <span class="text-gray-400 block text-[9px] uppercase">Data Transferred</span>
-                                <span class="font-extrabold text-white">4.12 TB (Uncapped)</span>
-                            </div>
-                            <div class="p-3 bg-black/40 rounded-xl border border-white/5">
-                                <span class="text-gray-400 block text-[9px] uppercase">Next Billing Cycle</span>
-                                <span class="font-extrabold text-brand-gold">July 1, 2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+            welcomeBox.innerHTML = `<div class="bg-brand-darkGray p-6 rounded-3xl max-w-md w-full space-y-4 border border-white/10 text-white shadow-2xl"><div class="flex justify-between items-center border-b border-white/5 pb-3"><h5 class="font-bold text-brand-gold text-sm">ANGWA Active Client Portal</h5><button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white text-xs">Close</button></div><div class="space-y-3.5 text-xs"><div class="flex justify-between items-center p-3 bg-black/40 rounded-xl border border-white/5"><div><span class="text-gray-400 block text-[9px] uppercase font-bold">Active Subscribed Line</span><span class="font-bold text-white text-xs">Vumatel 500/500 Mbps</span></div><span class="text-[9px] bg-brand-green/20 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Online</span></div><div class="grid grid-cols-2 gap-2.5"><div class="p-3 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-[9px] uppercase">Data Transferred</span><span class="font-extrabold text-white">4.12 TB (Uncapped)</span></div><div class="p-3 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-[9px] uppercase">Next Billing Cycle</span><span class="font-extrabold text-brand-gold">July 1, 2026</span></div></div></div></div>`;
             document.body.appendChild(welcomeBox);
         }
 
-        /* --- Blogs Dialog handlers --- */
-        function triggerBlogsModal() {
-            document.getElementById('blogs-modal').classList.remove('hidden');
-        }
+        function triggerBlogsModal() { document.getElementById('blogs-modal').classList.remove('hidden'); }
+        function closeBlogsModal() { document.getElementById('blogs-modal').classList.add('hidden'); }
 
-        function closeBlogsModal() {
-            document.getElementById('blogs-modal').classList.add('hidden');
-        }
-
-        /* --- Collapsible Submenu Controls for Sidebar --- */
         function toggleSidebarSubmenu(id) {
             const el = document.getElementById(id);
             const arrow = document.getElementById(id + '-arrow');
@@ -2413,63 +2367,36 @@ html_content = """
             toggleSidebar();
             const welcomeBox = document.createElement('div');
             welcomeBox.className = "fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm";
-            welcomeBox.innerHTML = `
-                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl">
-                    <div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-                    <h4 class="font-bold text-sm tracking-wide capitalize">${type} Client Portal</h4>
-                    <p class="text-[11px] text-gray-400 leading-relaxed">Secure gateway gateway authentication is active for authorized ${type} networks. Please authenticate within the ClientZone.</p>
-                    <button onclick="this.parentElement.parentElement.remove(); triggerClientZone();" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Access ClientZone</button>
-                </div>
-            `;
+            welcomeBox.innerHTML = `<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div><h4 class="font-bold text-sm tracking-wide capitalize">${type} Client Portal</h4><p class="text-[11px] text-gray-400 leading-relaxed">Secure gateway gateway authentication is active for authorized ${type} networks. Please authenticate within the ClientZone.</p><button onclick="this.parentElement.parentElement.remove(); triggerClientZone();" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Access ClientZone</button></div>`;
             document.body.appendChild(welcomeBox);
         }
 
-        /* --- Support chat controls --- */
         function toggleLiveChat() {
             const chatBox = document.getElementById('chat-popup');
-            if (chatBox.classList.contains('hidden')) {
-                chatBox.classList.remove('hidden');
-            } else {
-                chatBox.classList.add('hidden');
-            }
+            if (chatBox.classList.contains('hidden')) chatBox.classList.remove('hidden');
+            else chatBox.classList.add('hidden');
         }
 
-        function handleChatSubmit(event) {
-            if (event.key === 'Enter') {
-                sendChatMessage();
-            }
-        }
+        function handleChatSubmit(event) { if (event.key === 'Enter') sendChatMessage(); }
 
         function sendChatMessage() {
             const inputField = document.getElementById('chat-input');
             const userMsg = inputField.value.trim();
             if (!userMsg) return;
-
             const chatMessagesContainer = document.getElementById('chat-messages');
-
             const divUser = document.createElement('div');
             divUser.className = "bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-black font-semibold p-3 rounded-2xl text-[11px] max-w-[85%] self-end ml-auto mb-2.5 leading-relaxed shadow-sm";
             divUser.innerText = userMsg;
             chatMessagesContainer.appendChild(divUser);
-
             inputField.value = '';
             chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-
             setTimeout(() => {
                 const divAgent = document.createElement('div');
                 divAgent.className = "bg-brand-darkGray/60 p-3 rounded-2xl border border-white/5 text-gray-300 max-w-[85%] mb-2.5 leading-relaxed";
-                
                 const lowerInput = userMsg.toLowerCase();
-                if (lowerInput.includes('price') || lowerInput.includes('cost') || lowerInput.includes('rand')) {
-                    divAgent.innerText = "All our hosting templates are month-to-month and fully transparent! Symmetrical Openserve setups start at R499/pm and bespoke creative design portfolios start at R3,999 once-off. Which speed or layout is your target?";
-                } else if (lowerInput.includes('vuma') || lowerInput.includes('openserve') || lowerInput.includes('frogfoot')) {
-                    divAgent.innerText = "We provide direct Symmetrical options on those providers. Try running your physical address inside the Coverage search tool above to verify!";
-                } else {
-                    divAgent.innerText = "Understood. The most efficient way is to enter your street location in the Availability Check at the top. It identifies exact active fibre splicing grids and matching layouts instantly.";
-                }
-
+                if (lowerInput.includes('price') || lowerInput.includes('cost') || lowerInput.includes('rand')) divAgent.innerText = "All our hosting templates are month-to-month and fully transparent! Symmetrical Openserve setups start at R499/pm and bespoke creative design portfolios start at R3,999 once-off. Which speed or layout is your target?";
+                else if (lowerInput.includes('vuma') || lowerInput.includes('openserve') || lowerInput.includes('frogfoot')) divAgent.innerText = "We provide direct Symmetrical options on those providers. Try running your physical address inside the Coverage search tool above to verify!";
+                else divAgent.innerText = "Understood. The most efficient way is to enter your street location in the Availability Check at the top. It identifies exact active fibre splicing grids and matching layouts instantly.";
                 chatMessagesContainer.appendChild(divAgent);
                 chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
             }, 1100);
@@ -2480,4 +2407,4 @@ html_content = """
 """
 
 # Render the single-page responsive template with a custom viewport height
-components.html(html_content, height=2200, width=None, scrolling=True)
+components.html(html_content, height=2800, width=None, scrolling=True)
