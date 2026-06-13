@@ -1,22 +1,47 @@
 import streamlit as st
 import streamlit.components.v1 as components
-import libsql_experimental as libsql
+import requests
 import json
 
-# ---------- Turso Connection ----------
-@st.cache_resource
+# ---------- Turso HTTP API Connection ----------
 def get_turso_connection():
+    """Returns a function that executes SQL via Turso's HTTP API"""
     url = st.secrets["TURSO_URL"]
     token = st.secrets["TURSO_TOKEN"]
-    return libsql.connect(url, auth_token=token)
+    
+    def execute_sql(sql):
+        response = requests.post(
+            url,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "requests": [
+                    {
+                        "type": "execute",
+                        "stmt": {"sql": sql}
+                    }
+                ]
+            }
+        )
+        if response.status_code != 200:
+            st.error(f"Database error: {response.text}")
+            return []
+        data = response.json()
+        if "results" in data and len(data["results"]) > 0:
+            result = data["results"][0].get("response", {}).get("result", {})
+            return result.get("rows", [])
+        return []
+    
+    return execute_sql
 
 def fetch_products():
-    conn = get_turso_connection()
-    cur = conn.cursor()
+    execute = get_turso_connection()
     
     # Host packages
-    cur.execute("SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'")
-    host_rows = cur.fetchall()
+    sql = "SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'"
+    host_rows = execute(sql)
     package_data = []
     for row in host_rows:
         package_data.append({
@@ -25,32 +50,35 @@ def fetch_products():
             "name": row[2],
             "down": row[3],
             "up": row[4],
-            "price": row[5] // 100,
-            "isPopular": bool(row[6]),
-            "description": row[7]
+            "price": row[5] // 100 if row[5] else 0,
+            "isPopular": bool(row[6]) if len(row) > 6 else False,
+            "description": row[7] if len(row) > 7 else ""
         })
     
     # Cloud storage plans
-    cur.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'cloud'")
-    cloud_rows = cur.fetchall()
+    sql = "SELECT id, name, price, is_popular, description FROM products WHERE type = 'cloud'"
+    cloud_rows = execute(sql)
     cloud_data = []
     for row in cloud_rows:
-        storage = row[1].split('(')[-1].replace(')', '') if '(' in row[1] else ""
+        name = row[1] if len(row) > 1 else ""
+        storage = name.split('(')[-1].replace(')', '') if '(' in name else ""
         cloud_data.append({
             "id": row[0],
-            "name": row[1],
+            "name": name,
             "storage": storage,
-            "price": row[2] // 100,
-            "isPopular": bool(row[3]),
-            "description": row[4]
+            "price": row[2] // 100 if len(row) > 2 and row[2] else 0,
+            "isPopular": bool(row[3]) if len(row) > 3 else False,
+            "description": row[4] if len(row) > 4 else ""
         })
     
     # Design templates
-    cur.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'")
-    design_rows = cur.fetchall()
+    sql = "SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'"
+    design_rows = execute(sql)
     design_data = {}
     for row in design_rows:
-        name_lower = row[1].lower()
+        name_lower = row[1].lower() if len(row) > 1 else ""
+        price = row[2] // 100 if len(row) > 2 and row[2] else 0
+        
         if "luxe" in name_lower:
             key = "luxe"
             logo_text = "OBSIDIAN."
@@ -87,7 +115,7 @@ def fetch_products():
         
         design_data[key] = {
             "id": f"design-{key}",
-            "price": row[2] // 100,
+            "price": price,
             "logoText": logo_text,
             "logoClass": logo_class,
             "badgeText": badge_text,
@@ -100,13 +128,13 @@ def fetch_products():
         }
     
     # Add-ons
-    cur.execute("SELECT product_type, name, price FROM addons")
-    addon_rows = cur.fetchall()
+    sql = "SELECT product_type, name, price FROM addons"
+    addon_rows = execute(sql)
     addon_data = {}
     for row in addon_rows:
-        ptype = row[0]
-        name = row[1]
-        price_rand = row[2] // 100
+        ptype = row[0] if len(row) > 0 else ""
+        name = row[1] if len(row) > 1 else ""
+        price_rand = row[2] // 100 if len(row) > 2 and row[2] else 0
         if ptype not in addon_data:
             addon_data[ptype] = []
         addon_data[ptype].append({"name": name, "price": price_rand})
@@ -115,12 +143,11 @@ def fetch_products():
 
 def fetch_coverage_areas():
     """Fetch coverage areas from Turso database"""
-    conn = get_turso_connection()
-    cur = conn.cursor()
+    execute = get_turso_connection()
     
-    cur.execute("""
-        SELECT area_name, city, province, suburb, postal_code, status, provider, 
-               max_speed, infrastructure_ready, estimated_date, notes
+    sql = """
+        SELECT area_name, city, province, status, provider, 
+               max_speed, infrastructure_ready, estimated_date
         FROM coverage_areas
         ORDER BY 
             CASE status 
@@ -128,30 +155,36 @@ def fetch_coverage_areas():
                 WHEN 'coming_soon' THEN 2 
                 WHEN 'planned' THEN 3 
             END, area_name
-    """)
+    """
     
-    rows = cur.fetchall()
+    rows = execute(sql)
     coverage_data = []
     for row in rows:
         coverage_data.append({
-            "name": row[0],
-            "city": row[1],
-            "province": row[2],
-            "suburb": row[3] if row[3] else "",
-            "postal_code": row[4] if row[4] else "",
-            "status": row[5],
-            "provider": row[6],
-            "max_speed": row[7],
-            "infrastructure_ready": bool(row[8]) if row[8] is not None else False,
-            "estimated_date": row[9],
-            "notes": row[10]
+            "name": row[0] if len(row) > 0 else "",
+            "city": row[1] if len(row) > 1 else "",
+            "province": row[2] if len(row) > 2 else "",
+            "status": row[3] if len(row) > 3 else "",
+            "provider": row[4] if len(row) > 4 else "",
+            "max_speed": row[5] if len(row) > 5 else None,
+            "infrastructure_ready": bool(row[6]) if len(row) > 6 and row[6] is not None else False,
+            "estimated_date": row[7] if len(row) > 7 else None
         })
     
     return coverage_data
 
 # Fetch dynamic data from Turso
-package_data, cloud_data, design_data, addon_data = fetch_products()
-coverage_data = fetch_coverage_areas()
+try:
+    package_data, cloud_data, design_data, addon_data = fetch_products()
+    coverage_data = fetch_coverage_areas()
+except Exception as e:
+    st.error(f"Error fetching data from Turso: {e}")
+    # Fallback to empty data
+    package_data = []
+    cloud_data = []
+    design_data = {}
+    addon_data = {}
+    coverage_data = []
 
 # Convert to JSON strings for embedding
 package_json = json.dumps(package_data)
@@ -806,9 +839,7 @@ html_content = f"""
         const term = searchTerm.toLowerCase().trim();
         return coverageAreas.filter(area => 
             area.name.toLowerCase().includes(term) ||
-            area.city.toLowerCase().includes(term) ||
-            (area.suburb && area.suburb.toLowerCase().includes(term)) ||
-            (area.postal_code && area.postal_code.includes(term))
+            area.city.toLowerCase().includes(term)
         );
     }}
 
