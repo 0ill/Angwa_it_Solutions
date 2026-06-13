@@ -3,6 +3,7 @@ import streamlit.components.v1 as components
 import libsql_client
 import json
 
+# ---------- Turso Connection ----------
 @st.cache_resource
 def get_turso_connection():
     url = st.secrets["TURSO_URL"]
@@ -86,6 +87,7 @@ def fetch_products():
     return package_data, cloud_data, design_data, addon_data
 
 def fetch_coverage_areas():
+    """Fetch coverage areas from Turso database"""
     client = get_turso_connection()
     rows = client.execute("""
         SELECT area_name, city, province, status, provider, 
@@ -344,78 +346,78 @@ html_content = f"""
 </div>
 
 <!-- Apple style Navigation Header -->
-<header class="sticky top-0 z-40 bg-brand-slateBlack/90 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
+<header class="sticky top-0 z-40 bg-brand-slateBlack/90 backdrop-blur-md border-b border-white/10 shadow-lg">
+    <div class="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 overflow-hidden">
 
         <!-- LEFT: Hamburger + Logo -->
-        <div class="flex items-center gap-2 shrink-0">
-            <button onclick="toggleSidebar()" class="text-white hover:text-brand-gold transition-colors focus:outline-none h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner shrink-0">
-                <i class="fa-solid fa-bars text-base"></i>
+        <div class="flex items-center gap-2 shrink-0 min-w-0">
+            <button onclick="toggleSidebar()" class="text-white hover:text-brand-gold h-9 w-9 shrink-0 rounded-xl border border-white/10 flex items-center justify-center bg-white/5">
+                <i class="fa-solid fa-bars"></i>
             </button>
             <a href="javascript:void(0)" onclick="showPage('home')" class="flex items-center gap-1.5 group shrink-0">
-                <div class="h-7 w-7 sm:h-8 sm:w-8 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-base sm:text-lg tracking-tight shadow-md transition-transform group-hover:rotate-6 shrink-0">A</div>
-                <span class="hidden sm:inline text-xs sm:text-sm font-extrabold tracking-tight text-white uppercase">ANGWA<span class="text-brand-gold">.</span></span>
+                <div class="h-7 w-7 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-sm shadow-md shrink-0">A</div>
+                <span class="hidden sm:block text-xs font-extrabold tracking-tight text-white uppercase">ANGWA<span class="text-brand-gold">.</span></span>
             </a>
         </div>
 
-        <!-- CENTRE: Page Nav (icons on md, icons+labels on lg) -->
-        <nav class="hidden md:flex items-center gap-1 lg:gap-3 text-[10px] text-white font-extrabold uppercase tracking-widest flex-1 justify-center">
-            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors px-2 lg:px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 whitespace-nowrap">
-                <i class="fa-solid fa-house text-xs"></i><span class="hidden lg:inline">Home</span>
+        <!-- CENTRE: Icon-only nav on md, icon+label on lg -->
+        <nav class="hidden md:flex items-center gap-0.5 lg:gap-2 text-[10px] text-white font-extrabold uppercase tracking-widest flex-1 justify-center">
+            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Home">
+                <i class="fa-solid fa-house text-sm"></i><span class="hidden lg:inline">Home</span>
             </button>
-            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors px-2 lg:px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 whitespace-nowrap">
-                <i class="fa-solid fa-server text-xs"></i><span class="hidden lg:inline">Host</span>
+            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Host">
+                <i class="fa-solid fa-server text-sm"></i><span class="hidden lg:inline">Host</span>
             </button>
-            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors px-2 lg:px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 whitespace-nowrap">
-                <i class="fa-solid fa-pen-nib text-xs"></i><span class="hidden lg:inline">Design</span>
+            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Design">
+                <i class="fa-solid fa-pen-nib text-sm"></i><span class="hidden lg:inline">Design</span>
             </button>
-            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors px-2 lg:px-3 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 whitespace-nowrap">
-                <i class="fa-solid fa-cloud text-xs"></i><span class="hidden lg:inline">Cloud</span>
+            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Cloud">
+                <i class="fa-solid fa-cloud text-sm"></i><span class="hidden lg:inline">Cloud</span>
             </button>
-            <div class="relative group">
-                <button class="flex items-center gap-1.5 hover:text-brand-gold transition-colors focus:outline-none px-2 lg:px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">
-                    <i class="fa-solid fa-ellipsis text-xs"></i><span class="hidden lg:inline">More</span><i class="fa-solid fa-chevron-down text-[8px] text-gray-500 hidden lg:inline"></i>
+            <div class="relative group shrink-0">
+                <button class="flex items-center gap-1.5 hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5" title="More">
+                    <i class="fa-solid fa-ellipsis text-sm"></i><span class="hidden lg:inline">More</span>
                 </button>
-                <div class="absolute left-0 mt-1 w-64 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50 normal-case">
-                    <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Engineers</button>
-                    <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Architect</button>
-                    <button onclick="alertModal('Occupational health & safety logs and regulatory compliance checklists loaded.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Occupational Health & Safety</button>
-                    <button onclick="alertModal('Social facilitators outreach campaign metrics and community alignment matrix opened.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Social Facilitators</button>
-                    <button onclick="alertModal('Quantity surveyors cost-estimation engine and project billing ledger updated.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Quantity Surveyors</button>
-                    <button onclick="alertModal('Developer repository sync-state, cloud hosting cluster, and SLA logs active.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Developer</button>
+                <div class="absolute left-0 mt-1 w-64 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 normal-case">
+                    <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Engineers</button>
+                    <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Architect</button>
+                    <button onclick="alertModal('Occupational health & safety logs and regulatory compliance checklists loaded.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Occupational Health & Safety</button>
+                    <button onclick="alertModal('Social facilitators outreach campaign metrics and community alignment matrix opened.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Social Facilitators</button>
+                    <button onclick="alertModal('Quantity surveyors cost-estimation engine and project billing ledger updated.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Quantity Surveyors</button>
+                    <button onclick="alertModal('Developer repository sync-state, cloud hosting cluster, and SLA logs active.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Developer</button>
                 </div>
             </div>
         </nav>
 
-        <!-- RIGHT: Actions -->
+        <!-- RIGHT: Bell, Cart, ClientZone -->
         <div class="flex items-center gap-1.5 shrink-0">
-            <!-- Notification Bell -->
+            <!-- Bell -->
             <div class="relative">
-                <button onclick="toggleNotificationDropdown(event)" class="relative text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner">
+                <button onclick="toggleNotificationDropdown(event)" class="relative text-white hover:text-brand-gold h-9 w-9 rounded-xl border border-white/10 flex items-center justify-center bg-white/5">
                     <i class="fa-solid fa-bell text-sm"></i>
-                    <span id="notify-pulse-dot" class="absolute top-2 right-2 h-2 w-2 bg-brand-green rounded-full shadow-[0_0_8px_#30D158] animate-pulse"></span>
+                    <span id="notify-pulse-dot" class="absolute top-1.5 right-1.5 h-2 w-2 bg-brand-green rounded-full shadow-[0_0_8px_#30D158] animate-pulse"></span>
                 </button>
-                <div id="notify-dropdown-panel" class="hidden absolute right-0 mt-3.5 w-72 sm:w-76 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50">
+                <div id="notify-dropdown-panel" class="hidden absolute right-0 mt-3 w-72 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50">
                     <h5 class="text-[10px] font-black text-brand-gold tracking-widest uppercase mb-3">Live Symmetrical Alerts</h5>
                     <div class="space-y-2.5 text-[10px] text-gray-300">
-                        <div class="p-2.5 bg-white/5 rounded-xl border border-white/5 hover:border-brand-gold/20 transition-all flex items-start gap-2.5"><i class="fa-solid fa-gift text-brand-gold mt-0.5 shrink-0"></i><div><span class="font-bold text-white block">Wi-Fi 6 Router Active!</span>Free pre-configured hardware included in your package.</div></div>
-                        <div class="p-2.5 bg-white/5 rounded-xl border border-white/5 hover:border-brand-gold/20 transition-all flex items-start gap-2.5"><i class="fa-solid fa-plug-circle-check text-brand-green mt-0.5 shrink-0"></i><div><span class="font-bold text-white block">Local Grid Upgraded</span>Symmetrical transmission rates optimized across network pools.</div></div>
+                        <div class="p-2.5 bg-white/5 rounded-xl border border-white/5 flex items-start gap-2.5"><i class="fa-solid fa-gift text-brand-gold mt-0.5 shrink-0"></i><div><span class="font-bold text-white block">Wi-Fi 6 Router Active!</span>Free pre-configured hardware included in your package.</div></div>
+                        <div class="p-2.5 bg-white/5 rounded-xl border border-white/5 flex items-start gap-2.5"><i class="fa-solid fa-plug-circle-check text-brand-green mt-0.5 shrink-0"></i><div><span class="font-bold text-white block">Local Grid Upgraded</span>Symmetrical transmission rates optimized across network pools.</div></div>
                     </div>
                 </div>
             </div>
             <!-- Cart -->
             <div class="relative">
-                <button id="cart-btn" onclick="toggleCartDropdown(event)" class="relative text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner">
+                <button id="cart-btn" onclick="toggleCartDropdown(event)" class="relative text-white hover:text-brand-gold h-9 w-9 rounded-xl border border-white/10 flex items-center justify-center bg-white/5">
                     <i class="fa-solid fa-bag-shopping text-sm"></i>
                     <span id="header-cart-badge" class="absolute -top-1 -right-1 h-4 w-4 bg-brand-gold text-brand-black rounded-full text-[8px] font-black flex items-center justify-center hidden">0</span>
                 </button>
-                <div id="cart-dropdown-panel" class="hidden absolute right-0 mt-3.5 w-80 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50 text-white">
-                    <h5 class="text-[10px] font-black text-brand-gold tracking-widest uppercase mb-3 flex items-center justify-between"><span>Your Configured Bag</span><button onclick="clearCart()" class="text-gray-400 hover:text-red-400 text-[8px] tracking-normal font-bold">Clear All</button></h5>
+                <div id="cart-dropdown-panel" class="hidden absolute right-0 mt-3 w-80 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50 text-white">
+                    <h5 class="text-[10px] font-black text-brand-gold tracking-widest uppercase mb-3 flex items-center justify-between"><span>Your Configured Bag</span><button onclick="clearCart()" class="text-gray-400 hover:text-red-400 text-[8px] font-bold">Clear All</button></h5>
                     <div id="cart-dropdown-content" class="text-[10px] text-gray-400 text-center py-4 space-y-3"><i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span></div>
                 </div>
             </div>
-            <!-- ClientZone — icon only on mobile, icon+label on sm+ -->
-            <button onclick="triggerClientZone()" class="glossy-gold text-brand-black h-9 px-2 sm:px-4 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0">
+            <!-- ClientZone: icon-only on mobile, icon+text on sm+ -->
+            <button onclick="triggerClientZone()" class="glossy-gold text-brand-black h-9 px-2.5 sm:px-4 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0">
                 <i class="fa-solid fa-user-shield"></i>
                 <span class="hidden sm:inline">ClientZone</span>
             </button>
