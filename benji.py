@@ -322,7 +322,7 @@ html_content = f"""
                     <i class="fa-solid fa-chevron-down text-[9px] text-gray-500 mr-3 transition-transform duration-200" id="services-submenu-arrow"></i>
                 </button>
                 <div id="services-submenu" class="hidden flex flex-col gap-2 pl-9 pt-1 pb-2 text-[10px] text-gray-400 font-bold lowercase tracking-normal">
-                    <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> build environment</a>
+                    <a href="javascript:void(0)" onclick="showPage('host'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> build environment</a>
                     <div class="flex flex-col">
                         <button onclick="toggleSidebarSubmenu('advisory-submenu')" class="text-left hover:text-brand-gold transition-colors py-1.5 flex items-center justify-between w-full">
                             <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span> advisory & management</span>
@@ -335,12 +335,12 @@ html_content = f"""
                                     <i class="fa-solid fa-chevron-down text-[7px] text-gray-600 mr-1 transition-transform duration-200" id="it-submenu-arrow"></i>
                                 </button>
                                 <div id="it-submenu" class="hidden flex flex-col gap-1 pl-4 pt-1 pb-1 text-[9px] text-gray-600 font-bold lowercase tracking-normal border-l border-brand-gold/15 ml-1.5">
-                                    <a href="#" onclick="showPage('host'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-server text-brand-gold/50 text-[7px] w-3"></i> host</a>
-                                    <a href="#" onclick="showPage('design'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-pen-nib text-brand-gold/50 text-[7px] w-3"></i> web design</a>
-                                    <a href="#" onclick="showPage('cloud'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-cloud text-brand-gold/50 text-[7px] w-3"></i> cloud</a>
+                                    <a href="javascript:void(0)" onclick="showPage('host'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-server text-brand-gold/50 text-[7px] w-3"></i> host</a>
+                                    <a href="javascript:void(0)" onclick="showPage('design'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-pen-nib text-brand-gold/50 text-[7px] w-3"></i> web design</a>
+                                    <a href="javascript:void(0)" onclick="showPage('cloud'); toggleSidebar();" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-cloud text-brand-gold/50 text-[7px] w-3"></i> cloud</a>
                                 </div>
                             </div>
-                            <a href="#services" onclick="toggleSidebar()" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-building text-brand-gold/70 text-[8px] w-3"></i> properties</a>
+                            <a href="javascript:void(0)" onclick="toggleSidebar(); alertModal('Properties & Advisory services coming soon.');" class="hover:text-brand-gold transition-colors py-1.5 flex items-center gap-2"><i class="fa-solid fa-building text-brand-gold/70 text-[8px] w-3"></i> properties</a>
                         </div>
                     </div>
                 </div>
@@ -383,11 +383,11 @@ html_content = f"""
                 <span id="dynamic-nav-badge" class="text-xs sm:text-sm font-extrabold tracking-tight text-white uppercase transition-all duration-300 min-w-[130px] inline-block opacity-100 transform translate-y-0">ANGWA<span class="text-brand-gold">.</span></span>
             </a>
         </div>
-        <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-xs text-white font-extrabold uppercase tracking-widest">
-            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2">Home</button>
-            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2">HOST</button>
-            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2">DESIGN</button>
-            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 uppercase flex items-center gap-1"><span>Cloud</span><i class="fa-solid fa-cloud text-[11px] text-brand-gold"></i></button>
+        <nav class="hidden md:flex items-center gap-2 lg:gap-5 text-xs text-white font-extrabold uppercase tracking-widest">
+            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5"><i class="fa-solid fa-house text-[11px]"></i><span class="hidden lg:inline">Home</span></button>
+            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5"><i class="fa-solid fa-server text-[11px]"></i><span class="hidden lg:inline">HOST</span></button>
+            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-[11px]"></i><span class="hidden lg:inline">DESIGN</span></button>
+            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5"><i class="fa-solid fa-cloud text-[11px]"></i><span class="hidden lg:inline">Cloud</span></button>
             <div class="relative group">
                 <button class="flex items-center gap-1 hover:text-brand-gold transition-colors focus:outline-none py-2 uppercase"><span>MORE</span><i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i></button>
                 <div class="absolute left-0 mt-1 w-64 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50 normal-case">
