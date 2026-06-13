@@ -113,14 +113,52 @@ def fetch_products():
     
     return package_data, cloud_data, design_data, addon_data
 
+def fetch_coverage_areas():
+    """Fetch coverage areas from Turso database"""
+    conn = get_turso_connection()
+    cur = conn.cursor()
+    
+    cur.execute("""
+        SELECT area_name, city, province, suburb, postal_code, status, provider, 
+               max_speed, infrastructure_ready, estimated_date, notes
+        FROM coverage_areas
+        ORDER BY 
+            CASE status 
+                WHEN 'available' THEN 1 
+                WHEN 'coming_soon' THEN 2 
+                WHEN 'planned' THEN 3 
+            END, area_name
+    """)
+    
+    rows = cur.fetchall()
+    coverage_data = []
+    for row in rows:
+        coverage_data.append({
+            "name": row[0],
+            "city": row[1],
+            "province": row[2],
+            "suburb": row[3],
+            "postal_code": row[4],
+            "status": row[5],
+            "provider": row[6],
+            "max_speed": row[7],
+            "infrastructure_ready": bool(row[8]) if row[8] is not None else False,
+            "estimated_date": row[9],
+            "notes": row[10]
+        })
+    
+    return coverage_data
+
 # Fetch dynamic data from Turso
 package_data, cloud_data, design_data, addon_data = fetch_products()
+coverage_data = fetch_coverage_areas()
 
 # Convert to JSON strings for embedding
 package_json = json.dumps(package_data)
 cloud_json = json.dumps(cloud_data)
 design_json = json.dumps(design_data)
 addon_json = json.dumps(addon_data)
+coverage_json = json.dumps(coverage_data)
 
 # ---------- Streamlit Page Config ----------
 st.set_page_config(
@@ -760,6 +798,303 @@ html_content = f"""
     const cloudStorageData = {cloud_json};
     const designData = {design_json};
     const addonData = {addon_json};
+    const coverageAreas = {coverage_json};
+
+    // ==================== COVERAGE SEARCH FUNCTIONS ====================
+    function searchCoverage(searchTerm) {{
+        if (!searchTerm || searchTerm.trim() === '') return [];
+        const term = searchTerm.toLowerCase().trim();
+        return coverageAreas.filter(area => 
+            area.name.toLowerCase().includes(term) ||
+            area.city.toLowerCase().includes(term) ||
+            (area.suburb && area.suburb.toLowerCase().includes(term)) ||
+            (area.postal_code && area.postal_code.includes(term))
+        );
+    }}
+
+    function setupSearchAutocomplete() {{
+        const inputField = document.getElementById('area-search');
+        const dropDownContainer = document.getElementById('search-dropdown');
+        if (!inputField) return;
+        
+        inputField.addEventListener('input', () => {{
+            const inputVal = inputField.value.trim();
+            dropDownContainer.innerHTML = '';
+            if (!inputVal) {{
+                dropDownContainer.classList.add('hidden');
+                return;
+            }}
+            
+            const matches = searchCoverage(inputVal);
+            
+            if (matches.length === 0) {{
+                dropDownContainer.innerHTML = `<div class="p-3.5 text-xs text-gray-400">📍 No coverage data found. Contact us to check availability!</div>`;
+            }} else {{
+                matches.slice(0, 8).forEach(match => {{
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "p-3 hover:bg-white/5 cursor-pointer flex justify-between items-center transition-all border-b border-white/5 last:border-b-0";
+                    
+                    let statusBadge = '';
+                    let statusColor = '';
+                    if (match.status === 'available') {{
+                        statusBadge = '✓ Available';
+                        statusColor = 'bg-brand-green/10 text-brand-green';
+                    }} else if (match.status === 'coming_soon') {{
+                        statusBadge = '⏰ Coming Soon';
+                        statusColor = 'bg-brand-gold/10 text-brand-gold';
+                    }} else {{
+                        statusBadge = '📋 Planned';
+                        statusColor = 'bg-gray-500/10 text-gray-400';
+                    }}
+                    
+                    itemDiv.innerHTML = `
+                        <div>
+                            <div class="font-bold text-white text-sm">${{match.name}}</div>
+                            <div class="text-[10px] text-gray-500">${{match.city}}, ${{match.province}}</div>
+                        </div>
+                        <div class="text-[9px] ${{statusColor}} font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                            ${{statusBadge}}
+                        </div>
+                    `;
+                    
+                    itemDiv.onclick = () => {{
+                        inputField.value = match.name;
+                        dropDownContainer.classList.add('hidden');
+                        displaySearchResult(match);
+                    }};
+                    
+                    dropDownContainer.appendChild(itemDiv);
+                }});
+                
+                if (matches.length > 8) {{
+                    const moreDiv = document.createElement('div');
+                    moreDiv.className = "p-2 text-center text-[10px] text-gray-500";
+                    moreDiv.innerHTML = `<i class="fas fa-ellipsis-h"></i> ${{matches.length - 8}} more results`;
+                    dropDownContainer.appendChild(moreDiv);
+                }}
+            }}
+            
+            dropDownContainer.classList.remove('hidden');
+        }});
+        
+        document.addEventListener('click', (e) => {{
+            if (!inputField.contains(e.target) && !dropDownContainer.contains(e.target)) {{
+                dropDownContainer.classList.add('hidden');
+            }}
+        }});
+    }}
+
+    function triggerSearch() {{
+        const searchVal = document.getElementById('area-search').value.trim();
+        if (!searchVal) {{
+            displaySearchFeedback("🏠 Please enter a suburb, city, or street name to check coverage.", false);
+            return;
+        }}
+        
+        const matches = searchCoverage(searchVal);
+        
+        if (matches.length === 0) {{
+            displaySearchFeedback(`
+                <div class="text-center">
+                    <i class="fas fa-map-marked-alt text-2xl mb-2 block"></i>
+                    <strong>No coverage found for "${{searchVal}}"</strong><br>
+                    <span class="text-xs">Our network is expanding monthly. <button onclick="openInterestForm()" class="text-brand-gold underline">Notify me when available</button></span>
+                </div>
+            `, false);
+            return;
+        }}
+        
+        displaySearchResult(matches[0]);
+        
+        if (matches.length > 1) {{
+            const resultsDiv = document.getElementById('search-result');
+            const otherAreas = matches.slice(1, 4);
+            const otherHtml = `
+                <div class="mt-3 pt-3 border-t border-white/10">
+                    <div class="text-[10px] text-gray-500 mb-2">📍 Also available in:</div>
+                    <div class="flex flex-wrap gap-2">
+                        ${{otherAreas.map(area => `
+                            <button onclick="displaySearchResult(${{JSON.stringify(area).replace(/"/g, '&quot;')}})" 
+                                    class="text-[9px] bg-white/5 hover:bg-white/10 px-2 py-1 rounded-full transition-colors">
+                                ${{area.name}}
+                            </button>
+                        `).join('')}}
+                    </div>
+                </div>
+            `;
+            resultsDiv.insertAdjacentHTML('beforeend', otherHtml);
+        }}
+    }}
+
+    function displaySearchResult(area) {{
+        const resultsDiv = document.getElementById('search-result');
+        resultsDiv.classList.remove('hidden');
+        
+        if (area.status === 'available') {{
+            const maxSpeedDisplay = area.max_speed ? `${{area.max_speed}} Mbps` : 'Gigabit';
+            
+            resultsDiv.className = "mt-6 p-5 rounded-2xl border border-brand-green/20 bg-brand-green/5 text-gray-300";
+            resultsDiv.innerHTML = `
+                <div class="flex items-start gap-3 text-xs">
+                    <div class="h-10 w-10 bg-brand-green/15 rounded-xl flex items-center justify-center text-brand-green text-xl shrink-0 shadow-inner">
+                        <i class="fa-solid fa-tower-cell"></i>
+                    </div>
+                    <div class="space-y-2 flex-1">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <h5 class="font-bold text-white text-base">✓ ${{area.name}} is Fibre Ready!</h5>
+                            <span class="text-[9px] bg-brand-green/20 text-brand-green px-2 py-0.5 rounded-full">${{area.provider}}</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            ${{area.provider}} fibre infrastructure is live in ${{area.name}}. 
+                            Get symmetrical speeds up to <span class="text-white font-bold">${{maxSpeedDisplay}}</span>.
+                        </p>
+                        <div class="grid grid-cols-2 gap-3 text-[10px] text-gray-400 bg-black/20 p-2 rounded-lg">
+                            <div><i class="fas fa-arrow-up text-brand-green mr-1"></i> Symmetrical Upload/Download</div>
+                            <div><i class="fas fa-infinity text-brand-gold mr-1"></i> Uncapped & Unshaped</div>
+                            <div><i class="fas fa-wifi text-brand-green mr-1"></i> Free Wi-Fi 6 Router</div>
+                            <div><i class="fas fa-tools text-brand-gold mr-1"></i> Free Installation</div>
+                        </div>
+                        <div class="pt-2 flex gap-3">
+                            <button onclick="autoSelectProvider('${{area.provider}}')" class="bg-brand-green hover:bg-brand-greenDark text-white px-5 py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors shadow-md">
+                                <i class="fas fa-tags mr-1"></i> View Packages
+                            </button>
+                            <button onclick="openCheckoutModal()" class="glossy-gold text-brand-black px-5 py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors shadow-md">
+                                <i class="fas fa-bolt mr-1"></i> Order Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }} else if (area.status === 'coming_soon') {{
+            resultsDiv.className = "mt-6 p-5 rounded-2xl border border-brand-gold/20 bg-brand-gold/5 text-gray-300";
+            resultsDiv.innerHTML = `
+                <div class="flex items-start gap-3 text-xs">
+                    <div class="h-10 w-10 bg-brand-gold/15 rounded-xl flex items-center justify-center text-brand-gold text-xl shrink-0 shadow-inner">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div class="space-y-2 flex-1">
+                        <h5 class="font-bold text-white text-base">🚀 Coming Soon to ${{area.name}}!</h5>
+                        <p class="text-gray-400 text-sm">
+                            ${{area.provider}} is deploying fibre infrastructure in your area.
+                            Estimated availability: <span class="text-brand-gold font-bold">${{area.estimated_date || 'TBA'}}</span>
+                        </p>
+                        <div class="bg-black/30 p-3 rounded-lg">
+                            <p class="text-[10px] text-gray-400">
+                                <i class="fas fa-gift text-brand-gold mr-1"></i> 
+                                <strong>Pre-registration bonus:</strong> 20% off first 3 months + free installation
+                            </p>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="openPreRegister('${{area.name}}')" class="glossy-gold text-brand-black px-5 py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors shadow-md">
+                                <i class="fas fa-envelope mr-1"></i> Pre-Register Interest
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }} else {{
+            resultsDiv.className = "mt-6 p-5 rounded-2xl border border-gray-500/20 bg-gray-500/5 text-gray-300";
+            resultsDiv.innerHTML = `
+                <div class="flex items-start gap-3 text-xs">
+                    <div class="h-10 w-10 bg-gray-500/15 rounded-xl flex items-center justify-center text-gray-400 text-xl shrink-0 shadow-inner">
+                        <i class="fa-solid fa-draw-polygon"></i>
+                    </div>
+                    <div class="space-y-2 flex-1">
+                        <h5 class="font-bold text-white text-base">📋 Planned Coverage: ${{area.name}}</h5>
+                        <p class="text-gray-400 text-sm">
+                            ${{area.provider}} has ${{area.name}} in their rollout plan.
+                            Target: <span class="text-brand-gold font-bold">${{area.estimated_date || 'To be confirmed'}}</span>
+                        </p>
+                        <div class="bg-black/30 p-3 rounded-lg">
+                            <p class="text-[10px] text-gray-400">
+                                <i class="fas fa-users text-brand-gold mr-1"></i> 
+                                Help us prioritize: each interest expression accelerates deployment
+                            </p>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="openExpressInterest('${{area.name}}')" class="glossy-black text-white px-5 py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors shadow-md">
+                                <i class="fas fa-thumbs-up mr-1"></i> Express Interest
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }}
+    }}
+
+    function displaySearchFeedback(msg, isSuccess) {{
+        const resultsDiv = document.getElementById('search-result');
+        resultsDiv.classList.remove('hidden');
+        resultsDiv.className = isSuccess 
+            ? "mt-6 p-4 rounded-2xl border border-brand-green/20 bg-brand-green/5 text-brand-green text-xs font-semibold" 
+            : "mt-6 p-4 rounded-2xl border border-red-500/20 bg-red-500/5 text-red-400 text-xs font-semibold";
+        resultsDiv.innerHTML = msg;
+    }}
+
+    function openPreRegister(areaName) {{
+        const modal = document.createElement('div');
+        modal.className = "fixed inset-0 z-[200] flex items-center justify-center p-4 bg-brand-black/90 backdrop-blur-md";
+        modal.innerHTML = `
+            <div class="bg-brand-darkGray rounded-3xl max-w-md w-full p-6 border border-brand-gold/20 text-white shadow-2xl">
+                <div class="text-center mb-4">
+                    <div class="h-12 w-12 bg-brand-gold/15 rounded-full flex items-center justify-center text-brand-gold text-xl mx-auto">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mt-3">Pre-Register for ${{areaName}}</h3>
+                    <p class="text-sm text-gray-400 mt-1">Get notified when fibre arrives + exclusive launch discount</p>
+                </div>
+                <div class="space-y-3">
+                    <input type="text" id="prereg-name" placeholder="Full name" class="w-full px-4 py-3 bg-brand-black border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold">
+                    <input type="email" id="prereg-email" placeholder="Email address" class="w-full px-4 py-3 bg-brand-black border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold">
+                    <input type="tel" id="prereg-phone" placeholder="Phone number (optional)" class="w-full px-4 py-3 bg-brand-black border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold">
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button onclick="submitPreRegister('${{areaName}}')" class="flex-1 glossy-gold text-brand-black py-3 rounded-xl font-bold text-sm">Submit</button>
+                    <button onclick="this.closest('.fixed').remove()" class="flex-1 glossy-black text-white py-3 rounded-xl font-bold text-sm">Cancel</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }}
+
+    function submitPreRegister(areaName) {{
+        const name = document.getElementById('prereg-name')?.value || '';
+        const email = document.getElementById('prereg-email')?.value;
+        const phone = document.getElementById('prereg-phone')?.value || '';
+        
+        if (!email) {{
+            alertModal("Please enter your email address.");
+            return;
+        }}
+        
+        console.log(`Pre-registration for ${{areaName}}:`, {{ name, email, phone }});
+        
+        document.querySelector('.fixed[style*="z-index: 200"]')?.remove();
+        
+        const success = document.createElement('div');
+        success.className = "fixed bottom-6 right-6 z-50 bg-brand-green text-brand-black px-6 py-3 rounded-xl shadow-lg text-sm font-bold animate-bounce";
+        success.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Registered! We'll notify you when ${{areaName}} goes live.`;
+        document.body.appendChild(success);
+        setTimeout(() => success.remove(), 5000);
+    }}
+
+    function openExpressInterest(areaName) {{
+        openPreRegister(areaName);
+    }}
+
+    function openInterestForm() {{
+        openPreRegister("your area");
+    }}
+
+    function autoSelectProvider(providerName) {{
+        const simpleName = providerName.toLowerCase();
+        if (simpleName.includes('vuma')) setFNO('vuma');
+        else if (simpleName.includes('open')) setFNO('open');
+        else if (simpleName.includes('frog')) setFNO('frog');
+        else setFNO('all');
+        showPage('host');
+        document.getElementById('packages').scrollIntoView({{ behavior: 'smooth' }});
+    }}
 
     // ==================== GLOBAL VARIABLES ====================
     let cart = [];
@@ -785,6 +1120,7 @@ html_content = f"""
     function toggleCartAddon(cartId, addonKey, checked) {{ const item = cart.find(i => i.cartId === cartId); if(item) {{ item.addons[addonKey] = checked; updateCartUI(); }} }}
     function animateCartIcon() {{ const btn = document.getElementById('cart-btn'); if(btn) {{ btn.classList.add('cart-bounce','border-brand-gold'); setTimeout(() => btn.classList.remove('cart-bounce'),400); }} }}
     function showPreorderToast(message) {{ const toast = document.getElementById('order-toast'); const toastText = toast.querySelector('p'); const toastHeader = toast.querySelector('h5'); toastHeader.innerText = "Shopping Bag Updated"; toastText.innerText = message; toast.classList.remove('hidden'); setTimeout(() => toast.classList.add('hidden'),5000); }}
+    
     function updateCartUI() {{
         const badge = document.getElementById('header-cart-badge'); const content = document.getElementById('cart-dropdown-content');
         if(cart.length===0) {{ badge.classList.add('hidden'); badge.innerText='0'; content.className="text-[10px] text-gray-400 text-center py-4 space-y-3"; content.innerHTML=`<i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span>`; return; }}
@@ -862,19 +1198,7 @@ html_content = f"""
 
     function toggleFaq(btn) {{ const containerBox = btn.nextElementSibling; const indicatorIcon = btn.querySelector('i'); if(containerBox.classList.contains('hidden')) {{ containerBox.classList.remove('hidden'); indicatorIcon.className = "fa-solid fa-chevron-up transition-transform text-brand-gold"; }} else {{ containerBox.classList.add('hidden'); indicatorIcon.className = "fa-solid fa-chevron-down transition-transform"; }} }}
 
-    const mockAreas = [
-        {{ name: "Sandton", state: "available", provider: "Vumatel", speed: "1000 Mbps" }}, {{ name: "Sea Point", state: "available", provider: "Openserve", speed: "500 Mbps" }},
-        {{ name: "Hatfield", state: "available", provider: "Frogfoot", speed: "200 Mbps" }}, {{ name: "Umhlanga", state: "available", provider: "Vumatel", speed: "1000 Mbps" }},
-        {{ name: "Randburg", state: "available", provider: "Openserve", speed: "100 Mbps" }}, {{ name: "Centurion", state: "available", provider: "Frogfoot", speed: "1000 Mbps" }},
-        {{ name: "Soweto", state: "pending", provider: "Vumatel Reach", speed: "40 Mbps" }}, {{ name: "Gqeberha", state: "available", provider: "Frogfoot", speed: "200 Mbps" }},
-        {{ name: "Rondebosch", state: "available", provider: "Openserve", speed: "500 Mbps" }}
-    ];
-    function setupSearchAutocomplete() {{ const inputField = document.getElementById('area-search'); const dropDownContainer = document.getElementById('search-dropdown'); inputField.addEventListener('input', () => {{ const inputVal = inputField.value.trim().toLowerCase(); dropDownContainer.innerHTML = ''; if(!inputVal) {{ dropDownContainer.classList.add('hidden'); return; }} const matches = mockAreas.filter(area => area.name.toLowerCase().includes(inputVal)); if(matches.length===0) dropDownContainer.innerHTML = `<div class="p-3.5 text-xs text-gray-400">No Listed Coverage Match. Run a Manual Carrier Analysis check!</div>`; else matches.forEach(match => {{ const itemDiv = document.createElement('div'); itemDiv.className = "p-3 hover:bg-white/5 cursor-pointer flex justify-between items-center transition-all border-b border-white/5 last:border-b-0"; itemDiv.innerHTML = `<span class="font-bold text-white text-xs">${{match.name}}</span><span class="text-[9px] bg-brand-green/10 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">Fibre Active</span>`; itemDiv.onclick = () => {{ inputField.value = match.name; dropDownContainer.classList.add('hidden'); displaySearchResult(match); }}; dropDownContainer.appendChild(itemDiv); }}); dropDownContainer.classList.remove('hidden'); }}); document.addEventListener('click', (e) => {{ if(!inputField.contains(e.target) && !dropDownContainer.contains(e.target)) dropDownContainer.classList.add('hidden'); }}); }}
-    function triggerSearch() {{ const searchVal = document.getElementById('area-search').value.trim(); if(!searchVal) {{ displaySearchFeedback("Please indicate a valid street, suburb, or estate location.", false); return; }} const registeredMatch = mockAreas.find(a => a.name.toLowerCase() === searchVal.toLowerCase()); if(registeredMatch) displaySearchResult(registeredMatch); else displaySearchResult({{ name: searchVal, state: 'available', provider: 'Openserve Carrier Symmetrical Splicing', speed: '1000 Mbps' }}); }}
-    function displaySearchResult(matchData) {{ const resultsDiv = document.getElementById('search-result'); resultsDiv.classList.remove('hidden'); if(matchData.state === 'available') {{ resultsDiv.className = "mt-6 p-5 rounded-2xl border border-brand-green/20 bg-brand-green/5 text-gray-300"; resultsDiv.innerHTML = `<div class="flex items-start gap-3 text-xs"><div class="h-8 w-8 bg-brand-green/15 rounded-lg flex items-center justify-center text-brand-green text-lg shrink-0 shadow-inner"><i class="fa-solid fa-wifi"></i></div><div class="space-y-1.5 flex-1"><h5 class="font-bold text-white text-sm">Light Speed Active in ${{matchData.name}}!</h5><p class="text-gray-400">The primary local network connection operator is <span class="text-brand-gold font-bold">${{matchData.provider}}</span> with speeds configured up to <span class="text-white font-bold">${{matchData.speed}}</span>.</p><div class="pt-3"><button onclick="autoSelectProvider('${{matchData.provider}}')" class="bg-brand-green hover:bg-brand-greenDark text-white px-4 py-2 rounded-full font-bold text-[10px] tracking-wider uppercase transition-colors">Show Symmetrical Packages</button></div></div></div>`; }} else {{ resultsDiv.className = "mt-6 p-5 rounded-2xl border border-brand-gold/20 bg-brand-gold/5 text-gray-300"; resultsDiv.innerHTML = `<div class="flex items-start gap-3 text-xs"><div class="h-8 w-8 bg-brand-gold/15 rounded-lg flex items-center justify-center text-brand-gold text-lg shrink-0 shadow-inner"><i class="fa-solid fa-clock-rotate-left"></i></div><div class="space-y-1"><h5 class="font-bold text-white text-sm">Deployment Pending in ${{matchData.name}}</h5><p class="text-gray-400">Lines are currently being spliced in your neighborhood! Pre-register to lock down free routing hardware installation slots early.</p></div></div>`; }} }}
-    function displaySearchFeedback(msg, isSuccess) {{ const resultsDiv = document.getElementById('search-result'); resultsDiv.classList.remove('hidden'); resultsDiv.className = isSuccess ? "mt-6 p-4 rounded-2xl border border-brand-green/20 bg-brand-green/5 text-brand-green text-xs font-semibold" : "mt-6 p-4 rounded-2xl border border-red-500/20 bg-red-500/5 text-red-400 text-xs font-semibold"; resultsDiv.innerHTML = msg; }}
-    function autoSelectProvider(providerName) {{ const simpleName = providerName.toLowerCase(); if(simpleName.includes('vuma')) setFNO('vuma'); else if(simpleName.includes('open')) setFNO('open'); else if(simpleName.includes('frog')) setFNO('frog'); else setFNO('all'); document.getElementById('packages').scrollIntoView({{ behavior: 'smooth' }}); }}
-
+    // Checkout modal functions
     function openCheckoutModal() {{ if(cart.length===0) {{ alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!"); return; }} currentModalStep=2; updateModalStepsUI(); let totalVal=0; const summaryContainer=document.getElementById('modal-verification-summary'); summaryContainer.innerHTML=''; cart.forEach(item=>{{ let itemTotal=item.price; let addonTexts=[]; if(item.type==='host') {{ if(item.addons.router){{ itemTotal+=129; addonTexts.push("Wi-Fi 6 Router Upgrade (+R129)"); }} if(item.addons.ip){{ itemTotal+=64; addonTexts.push("Static IP Allocation (+R64)"); }} }} else {{ if(item.addons.router){{ itemTotal+=259; addonTexts.push("High-Performance Hosting (+R259)"); }} if(item.addons.ip){{ itemTotal+=325; addonTexts.push("Custom Domain Acquisition (+R325)"); }} }} totalVal+=itemTotal; const row=document.createElement('div'); row.className="flex justify-between items-start text-xs border-b border-white/5 pb-2 last:border-b-0"; row.innerHTML=`<div><span class="font-bold text-white block">${{item.name}}</span><span class="text-[8px] text-gray-500">${{addonTexts.join(' / ') || 'No Addons Selected'}}</span></div><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}.00</span>`; summaryContainer.appendChild(row); }}); document.getElementById('modal-footer-price').innerText=`R${{totalVal}}.00`; document.getElementById('summary-total-price').innerText=`R${{totalVal}}.00`; document.getElementById('signup-modal').classList.remove('hidden'); }}
     function updateModalStepsUI() {{ document.getElementById('modal-step-2').classList.add('hidden'); document.getElementById('modal-step-3').classList.add('hidden'); document.getElementById(`modal-step-${{currentModalStep}}`).classList.remove('hidden'); const backBtn=document.getElementById('modal-back-btn'); if(currentModalStep===2) backBtn.classList.add('hidden'); else backBtn.classList.remove('hidden'); let totalVal=0; cart.forEach(item=>{{ let itemTotal=item.price; if(item.type==='host'){{ if(item.addons.router) itemTotal+=129; if(item.addons.ip) itemTotal+=64; }} else {{ if(item.addons.router) itemTotal+=259; if(item.addons.ip) itemTotal+=325; }} totalVal+=itemTotal; }}); let checkoutLink=`https://sandbox.polar.sh/checkout/new?org=angwa&amount=${{totalVal}}`; const nextBtnContainer=document.getElementById('modal-next-btn-container'); if(currentModalStep===3) {{ nextBtnContainer.innerHTML=`<a href="${{checkoutLink}}" id="modal-next-btn" data-polar-checkout data-polar-checkout-theme="dark" class="glossy-green text-white px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-1.5 cursor-pointer no-underline select-none"><span>Pay with Polar</span> <i class="fa-solid fa-shield-halved text-brand-gold text-[10px]"></i></a>`; if(window.PolarEmbedCheckout) setTimeout(()=>window.PolarEmbedCheckout.init(),60); }} else {{ nextBtnContainer.innerHTML=`<button id="modal-next-btn" onclick="nextStep()" class="glossy-gold text-brand-black px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md">Continue <i class="fa-solid fa-chevron-right ml-1"></i></button>`; }} const ind2=document.getElementById('step-indicator-2'); const ind3=document.getElementById('step-indicator-3'); if(currentModalStep===2) {{ ind2.className="text-brand-gold flex items-center gap-1.5"; ind2.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black"; ind3.className="text-gray-500 flex items-center gap-1.5"; ind3.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px]"; }} else {{ ind2.className="text-brand-green flex items-center gap-1.5"; ind2.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center text-[9px] font-black"; ind3.className="text-brand-gold flex items-center gap-1.5"; ind3.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black"; }} }}
     function closeModal() {{ document.getElementById('signup-modal').classList.add('hidden'); }}
@@ -906,6 +1230,7 @@ html_content = f"""
 
     function setupScrollSpy() {{ const badgeEl = document.getElementById('dynamic-nav-badge'); const observerOptions = {{ root: null, rootMargin: '-35% 0px -45% 0px', threshold: 0 }}; const observer = new IntersectionObserver((entries) => {{ entries.forEach(entry => {{ if(entry.isIntersecting) {{ const id = entry.target.id; let htmlContent = ''; if(id==='home-hero') htmlContent = `ANGWA<span class="text-brand-gold">.</span>`; else if(id==='packages') htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`; else if(id==='design-suite') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`; else if(id==='cloud-filling') htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`; if(badgeEl) {{ badgeEl.style.opacity='0'; badgeEl.style.transform='translateY(-4px)'; setTimeout(()=>{{ if(htmlContent) badgeEl.innerHTML = htmlContent; badgeEl.style.opacity='1'; badgeEl.style.transform='translateY(0)'; }},150); }} }} }}); }}, observerOptions); document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => observer.observe(section)); }}
 
+    // Initialization
     document.addEventListener('DOMContentLoaded', () => {{
         showPage('home');
         renderPackages();
