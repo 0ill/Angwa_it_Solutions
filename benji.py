@@ -1,6 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
-import libsql_experimental as libsql
+import libsql_client
 import json
 
 # ---------- Turso Connection ----------
@@ -8,15 +8,13 @@ import json
 def get_turso_connection():
     url = st.secrets["TURSO_URL"]
     token = st.secrets["TURSO_TOKEN"]
-    return libsql.connect(url, auth_token=token)
+    return libsql_client.create_client_sync(url, auth_token=token)
 
 def fetch_products():
-    conn = get_turso_connection()
-    cur = conn.cursor()
+    client = get_turso_connection()
     
     # Host packages
-    cur.execute("SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'")
-    host_rows = cur.fetchall()
+    host_rows = client.execute("SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'").rows
     package_data = []
     for row in host_rows:
         package_data.append({
@@ -31,8 +29,7 @@ def fetch_products():
         })
     
     # Cloud storage plans
-    cur.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'cloud'")
-    cloud_rows = cur.fetchall()
+    cloud_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'cloud'").rows
     cloud_data = []
     for row in cloud_rows:
         storage = row[1].split('(')[-1].replace(')', '') if '(' in row[1] else ""
@@ -46,8 +43,7 @@ def fetch_products():
         })
     
     # Design templates
-    cur.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'")
-    design_rows = cur.fetchall()
+    design_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'").rows
     design_data = {}
     for row in design_rows:
         name_lower = row[1].lower()
@@ -100,8 +96,7 @@ def fetch_products():
         }
     
     # Add-ons
-    cur.execute("SELECT product_type, name, price FROM addons")
-    addon_rows = cur.fetchall()
+    addon_rows = client.execute("SELECT product_type, name, price FROM addons").rows
     addon_data = {}
     for row in addon_rows:
         ptype = row[0]
@@ -115,10 +110,9 @@ def fetch_products():
 
 def fetch_coverage_areas():
     """Fetch coverage areas from Turso database"""
-    conn = get_turso_connection()
-    cur = conn.cursor()
+    client = get_turso_connection()
     
-    cur.execute("""
+    rows = client.execute("""
         SELECT area_name, city, province, status, provider, 
                max_speed, infrastructure_ready, estimated_date
         FROM coverage_areas
@@ -128,9 +122,7 @@ def fetch_coverage_areas():
                 WHEN 'coming_soon' THEN 2 
                 WHEN 'planned' THEN 3 
             END, area_name
-    """)
-    
-    rows = cur.fetchall()
+    """).rows
     coverage_data = []
     for row in rows:
         coverage_data.append({
