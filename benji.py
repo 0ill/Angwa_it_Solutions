@@ -90,7 +90,7 @@ def fetch_coverage_areas():
     """Fetch coverage areas from Turso database"""
     client = get_turso_connection()
     rows = client.execute("""
-        SELECT area_name, city, province, status, provider, 
+        SELECT area_name, city, province, status, provider,
                max_speed, infrastructure_ready, estimated_date
         FROM coverage_areas
         ORDER BY CASE status WHEN 'available' THEN 1 WHEN 'coming_soon' THEN 2 WHEN 'planned' THEN 3 END, area_name
@@ -347,10 +347,10 @@ html_content = f"""
 
 <!-- Apple style Navigation Header -->
 <header class="sticky top-0 z-40 bg-brand-slateBlack/90 backdrop-blur-md border-b border-white/10 shadow-lg">
-    <div class="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 overflow-hidden">
+    <div class="w-full px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
 
         <!-- LEFT: Hamburger + Logo -->
-        <div class="flex items-center gap-2 shrink-0 min-w-0">
+        <div class="flex items-center gap-2 shrink-0">
             <button onclick="toggleSidebar()" class="text-white hover:text-brand-gold h-9 w-9 shrink-0 rounded-xl border border-white/10 flex items-center justify-center bg-white/5">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -360,40 +360,44 @@ html_content = f"""
             </a>
         </div>
 
-        <!-- CENTRE: Icon-only nav on md, icon+label on lg -->
-        <nav class="hidden md:flex items-center gap-0.5 lg:gap-2 text-[10px] text-white font-extrabold uppercase tracking-widest flex-1 justify-center">
-            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Home">
-                <i class="fa-solid fa-house text-sm"></i><span class="hidden lg:inline">Home</span>
+        <!-- CENTRE + RIGHT: All icon buttons in one row -->
+        <div class="flex items-center gap-1.5">
+
+            <!-- Page nav icon buttons -->
+            <button onclick="showPage('home')" id="nav-home" title="Home" class="nav-page-btn text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
+                <i class="fa-solid fa-house text-sm"></i>
             </button>
-            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Host">
-                <i class="fa-solid fa-server text-sm"></i><span class="hidden lg:inline">Host</span>
+            <button onclick="showPage('host')" id="nav-host" title="Host" class="nav-page-btn text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
+                <i class="fa-solid fa-server text-sm"></i>
             </button>
-            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Design">
-                <i class="fa-solid fa-pen-nib text-sm"></i><span class="hidden lg:inline">Design</span>
+            <button onclick="showPage('design')" id="nav-design" title="Design" class="nav-page-btn text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
+                <i class="fa-solid fa-pen-nib text-sm"></i>
             </button>
-            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5 flex items-center gap-1.5 shrink-0" title="Cloud">
-                <i class="fa-solid fa-cloud text-sm"></i><span class="hidden lg:inline">Cloud</span>
+            <button onclick="showPage('cloud')" id="nav-cloud" title="Cloud" class="nav-page-btn text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
+                <i class="fa-solid fa-cloud text-sm"></i>
             </button>
-            <div class="relative group shrink-0">
-                <button class="flex items-center gap-1.5 hover:text-brand-gold transition-colors px-2.5 py-2 rounded-lg hover:bg-white/5" title="More">
-                    <i class="fa-solid fa-ellipsis text-sm"></i><span class="hidden lg:inline">More</span>
+
+            <!-- More dropdown -->
+            <div class="relative group">
+                <button title="More" class="text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
+                    <i class="fa-solid fa-ellipsis text-sm"></i>
                 </button>
-                <div class="absolute left-0 mt-1 w-64 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 normal-case">
+                <div class="absolute right-0 mt-2 w-56 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Engineers</button>
                     <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Architect</button>
-                    <button onclick="alertModal('Occupational health & safety logs and regulatory compliance checklists loaded.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Occupational Health & Safety</button>
-                    <button onclick="alertModal('Social facilitators outreach campaign metrics and community alignment matrix opened.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Social Facilitators</button>
-                    <button onclick="alertModal('Quantity surveyors cost-estimation engine and project billing ledger updated.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Quantity Surveyors</button>
-                    <button onclick="alertModal('Developer repository sync-state, cloud hosting cluster, and SLA logs active.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Developer</button>
+                    <button onclick="alertModal('Occupational health & safety logs and compliance checklists loaded.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Occupational Health & Safety</button>
+                    <button onclick="alertModal('Social facilitators outreach campaign metrics opened.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Social Facilitators</button>
+                    <button onclick="alertModal('Quantity surveyors cost-estimation engine updated.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Quantity Surveyors</button>
+                    <button onclick="alertModal('Developer repository sync-state and SLA logs active.');" class="w-full text-left px-4 py-2.5 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all">Developer</button>
                 </div>
             </div>
-        </nav>
 
-        <!-- RIGHT: Bell, Cart, ClientZone -->
-        <div class="flex items-center gap-1.5 shrink-0">
-            <!-- Bell -->
+            <!-- Divider -->
+            <div class="w-px h-6 bg-white/10 mx-0.5"></div>
+
+            <!-- Notification Bell -->
             <div class="relative">
-                <button onclick="toggleNotificationDropdown(event)" class="relative text-white hover:text-brand-gold h-9 w-9 rounded-xl border border-white/10 flex items-center justify-center bg-white/5">
+                <button onclick="toggleNotificationDropdown(event)" class="relative text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
                     <i class="fa-solid fa-bell text-sm"></i>
                     <span id="notify-pulse-dot" class="absolute top-1.5 right-1.5 h-2 w-2 bg-brand-green rounded-full shadow-[0_0_8px_#30D158] animate-pulse"></span>
                 </button>
@@ -405,9 +409,10 @@ html_content = f"""
                     </div>
                 </div>
             </div>
+
             <!-- Cart -->
             <div class="relative">
-                <button id="cart-btn" onclick="toggleCartDropdown(event)" class="relative text-white hover:text-brand-gold h-9 w-9 rounded-xl border border-white/10 flex items-center justify-center bg-white/5">
+                <button id="cart-btn" onclick="toggleCartDropdown(event)" class="relative text-white hover:text-brand-gold transition-colors h-9 w-9 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5">
                     <i class="fa-solid fa-bag-shopping text-sm"></i>
                     <span id="header-cart-badge" class="absolute -top-1 -right-1 h-4 w-4 bg-brand-gold text-brand-black rounded-full text-[8px] font-black flex items-center justify-center hidden">0</span>
                 </button>
@@ -416,13 +421,14 @@ html_content = f"""
                     <div id="cart-dropdown-content" class="text-[10px] text-gray-400 text-center py-4 space-y-3"><i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span></div>
                 </div>
             </div>
-            <!-- ClientZone: icon-only on mobile, icon+text on sm+ -->
-            <button onclick="triggerClientZone()" class="glossy-gold text-brand-black h-9 px-2.5 sm:px-4 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0">
+
+            <!-- ClientZone -->
+            <button onclick="triggerClientZone()" class="glossy-gold text-brand-black h-9 px-3 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0">
                 <i class="fa-solid fa-user-shield"></i>
                 <span class="hidden sm:inline">ClientZone</span>
             </button>
-        </div>
 
+        </div>
     </div>
 </header>
 
