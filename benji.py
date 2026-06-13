@@ -206,7 +206,7 @@ html_content = f"""
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>ANGWA | Symmetrical Pure Light Fibre</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -296,6 +296,72 @@ html_content = f"""
         ::-webkit-scrollbar-thumb:hover {{ background: rgba(212, 175, 55, 0.6); }}
         @keyframes bounce-small {{ 0%,100% {{ transform: scale(1); }} 50% {{ transform: scale(1.2); }} }}
         .cart-bounce {{ animation: bounce-small 0.4s ease-in-out; }}
+        
+        /* Mobile Navigation Styles */
+        .mobile-nav-menu {{
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: rgba(13, 13, 14, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 45;
+            padding: 1rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+        }}
+        .mobile-nav-menu.open {{
+            transform: translateY(0);
+        }}
+        .mobile-nav-item {{
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 1rem;
+            transition: all 0.2s ease;
+            color: #9ca3af;
+        }}
+        .mobile-nav-item:hover, .mobile-nav-item.active {{
+            background: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+        }}
+        .mobile-nav-item i {{
+            width: 1.5rem;
+            font-size: 1.1rem;
+        }}
+        @media (min-width: 768px) {{
+            .mobile-nav-toggle {{
+                display: none !important;
+            }}
+            .desktop-nav {{
+                display: flex !important;
+            }}
+            .mobile-nav-menu {{
+                display: none !important;
+            }}
+        }}
+        @media (max-width: 767px) {{
+            .desktop-nav {{
+                display: none !important;
+            }}
+            .mobile-nav-toggle {{
+                display: flex !important;
+            }}
+        }}
+        .menu-icon-btn {{
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.625rem;
+            transition: all 0.2s ease;
+        }}
+        .menu-icon-btn:hover {{
+            border-color: rgba(212, 175, 55, 0.3);
+            color: #D4AF37;
+        }}
     </style>
 </head>
 <body class="text-brand-slateBlack antialiased text-sm transition-all duration-300">
@@ -383,8 +449,9 @@ html_content = f"""
                 <span id="dynamic-nav-badge" class="text-xs sm:text-sm font-extrabold tracking-tight text-white uppercase transition-all duration-300 min-w-[130px] inline-block opacity-100 transform translate-y-0">ANGWA<span class="text-brand-gold">.</span></span>
             </a>
         </div>
-        <!-- Navigation with Icons -->
-        <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-xs text-white font-extrabold uppercase tracking-widest">
+        
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav hidden md:flex items-center gap-4 lg:gap-6 text-xs text-white font-extrabold uppercase tracking-widest">
             <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-house text-brand-gold"></i><span>Home</span></button>
             <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-server text-brand-gold"></i><span>HOST</span></button>
             <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-pen-nib text-brand-gold"></i><span>DESIGN</span></button>
@@ -401,6 +468,12 @@ html_content = f"""
                 </div>
             </div>
         </nav>
+        
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="mobile-nav-toggle menu-icon-btn text-white hover:text-brand-gold transition-all">
+            <i id="mobile-menu-icon" class="fa-solid fa-bars text-lg"></i>
+        </button>
+        
         <div class="flex items-center gap-2">
             <div class="relative">
                 <button onclick="toggleNotificationDropdown(event)" class="text-white hover:text-brand-gold transition-colors h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner"><i class="fa-solid fa-bell text-sm"></i><span id="notify-pulse-dot" class="absolute top-2.5 right-2.5 h-2 w-2 bg-brand-green rounded-full shadow-[0_0_8px_#30D158] animate-pulse"></span></button>
@@ -419,7 +492,24 @@ html_content = f"""
                     <div id="cart-dropdown-content" class="text-[10px] text-gray-400 text-center py-4 space-y-3"><i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span></div>
                 </div>
             </div>
-            <button onclick="triggerClientZone()" class="glossy-gold text-brand-black px-4 lg:px-5 py-2 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-user-shield"></i><span>ClientZone</span></button>
+            <button onclick="triggerClientZone()" class="glossy-gold text-brand-black px-4 lg:px-5 py-2 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-user-shield"></i><span class="hidden sm:inline">ClientZone</span><span class="sm:hidden"><i class="fa-solid fa-user-shield"></i></span></button>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation Menu Dropdown -->
+    <div id="mobile-nav-menu" class="mobile-nav-menu">
+        <div class="flex flex-col gap-1">
+            <button onclick="mobileNavClick('home')" id="mobile-nav-home" class="mobile-nav-item"><i class="fa-solid fa-house"></i><span>Home</span></button>
+            <button onclick="mobileNavClick('host')" id="mobile-nav-host" class="mobile-nav-item"><i class="fa-solid fa-server"></i><span>Host</span></button>
+            <button onclick="mobileNavClick('design')" id="mobile-nav-design" class="mobile-nav-item"><i class="fa-solid fa-pen-nib"></i><span>Design</span></button>
+            <button onclick="mobileNavClick('cloud')" id="mobile-nav-cloud" class="mobile-nav-item"><i class="fa-solid fa-cloud"></i><span>Cloud</span></button>
+            <div class="border-t border-white/10 my-2"></div>
+            <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-microchip"></i><span>Engineers</span></button>
+            <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-draw-polygon"></i><span>Architect</span></button>
+            <button onclick="alertModal('Occupational health & safety safety logs and regulatory compliance checklists loaded.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-helmet-safety"></i><span>Safety</span></button>
+            <button onclick="alertModal('Social facilitators outreach campaign metrics and community alignment matrix opened.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-handshake"></i><span>Social Facilitators</span></button>
+            <button onclick="alertModal('Quantity surveyors cost-estimation engine and project billing ledger updated.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-calculator"></i><span>Quantity Surveyors</span></button>
+            <button onclick="alertModal('Developer repository sync-state, cloud hosting cluster, and SLA logs active.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-code"></i><span>Developer</span></button>
         </div>
     </div>
 </header>
@@ -789,6 +879,42 @@ html_content = f"""
     const designData = {design_json};
     const addonData = {addon_json};
     const coverageAreas = {coverage_json};
+
+    // ==================== MOBILE MENU FUNCTIONS ====================
+    let mobileMenuOpen = false;
+    
+    function toggleMobileMenu() {{
+        const menu = document.getElementById('mobile-nav-menu');
+        const icon = document.getElementById('mobile-menu-icon');
+        mobileMenuOpen = !mobileMenuOpen;
+        if (mobileMenuOpen) {{
+            menu.classList.add('open');
+            icon.className = 'fa-solid fa-xmark text-lg';
+        }} else {{
+            menu.classList.remove('open');
+            icon.className = 'fa-solid fa-bars text-lg';
+        }}
+    }}
+    
+    function mobileNavClick(pageName) {{
+        showPage(pageName);
+        toggleMobileMenu();
+    }}
+    
+    // Update active state in mobile menu
+    function updateMobileActiveNav(pageName) {{
+        const items = document.querySelectorAll('.mobile-nav-item');
+        items.forEach(item => item.classList.remove('active'));
+        const activeItem = document.getElementById(`mobile-nav-${{pageName}}`);
+        if (activeItem) activeItem.classList.add('active');
+    }}
+    
+    // Override showPage to update mobile nav
+    const originalShowPage = showPage;
+    showPage = function(pageName) {{
+        originalShowPage(pageName);
+        updateMobileActiveNav(pageName);
+    }};
 
     // ==================== COVERAGE SEARCH FUNCTIONS ====================
     function searchCoverage(searchTerm) {{
