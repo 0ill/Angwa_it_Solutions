@@ -808,7 +808,12 @@ html_content = f"""
 
 <!-- ClientZone Login Modal -->
 <div id="clientzone-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-center justify-center min-h-screen p-4"><div class="fixed inset-0 bg-brand-black/80 backdrop-blur-md transition-opacity" onclick="closeClientZone()"></div><div class="bg-brand-slateBlack text-white p-8 rounded-3xl max-w-sm w-full space-y-6 border border-white/10 relative z-10"><div class="text-center space-y-2"><div class="h-12 w-12 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div><h4 class="font-bold text-lg text-white">ANGWA ClientZone</h4><p class="text-xs text-gray-400">Manage, scale, and upgrade your month-to-month light grid.</p></div><div class="space-y-4 text-xs"><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Subscriber ID or Email</label><input type="text" id="cz-email" placeholder="e.g. client@domain.co.za" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold focus:outline-none"></div><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Access Token / Password</label><input type="password" id="cz-password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold focus:outline-none"></div><button onclick="submitClientZoneMock()" class="w-full glossy-gold text-brand-black py-3 rounded-full font-bold uppercase tracking-wider text-xs">Secure Log In</button></div></div></div>
+    <div class="flex items-center justify-center min-h-screen p-4"><div class="fixed inset-0 bg-brand-black/80 backdrop-blur-md transition-opacity" onclick="closeClientZone()"></div><div class="bg-brand-slateBlack text-white p-6 rounded-3xl max-w-sm w-full space-y-6 border border-white/10 relative z-10"><div class="text-center space-y-2"><div class="h-12 w-12 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div><h4 class="font-bold text-lg text-white">ANGWA ClientZone</h4><p class="text-xs text-gray-400">Sign in to manage your services</p></div><div class="space-y-4 text-xs"><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Email address</label><input type="email" id="cz-email" placeholder="client@example.com" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white"></div><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Password</label><input type="password" id="cz-password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white"></div><button onclick="submitClientZone()" class="w-full glossy-gold text-brand-black py-3 rounded-full font-bold uppercase tracking-wider text-xs">Sign in</button><div class="text-center text-[9px] text-gray-500">No account? <button onclick="closeClientZone(); openRegisterModal()" class="text-brand-gold hover:underline">Create one</button></div></div></div></div>
+</div>
+
+<!-- Register Modal -->
+<div id="register-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog">
+    <div class="flex items-center justify-center min-h-screen p-4"><div class="fixed inset-0 bg-brand-black/80 backdrop-blur-md" onclick="closeRegisterModal()"></div><div class="bg-brand-slateBlack text-white p-6 rounded-3xl max-w-md w-full space-y-5 border border-white/10 relative z-10"><div class="text-center space-y-2"><div class="h-12 w-12 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-plus"></i></div><h4 class="font-bold text-lg">Create ANGWA Account</h4><p class="text-xs text-gray-400">Access your fibre orders, invoices, and support tickets.</p></div><div class="space-y-3 text-xs"><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Full name</label><input type="text" id="reg-name" placeholder="e.g. Thabo Nkosi" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold"></div><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Email address</label><input type="email" id="reg-email" placeholder="thabo@example.com" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold"></div><div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Password</label><input type="password" id="reg-password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-brand-gold"></div></div><button onclick="registerUser()" class="w-full glossy-gold text-brand-black py-3 rounded-full font-bold uppercase tracking-wider text-xs">Create account</button><div class="text-center text-[9px] text-gray-500">Already have an account? <button onclick="closeRegisterModal(); triggerClientZone()" class="text-brand-gold hover:underline">Sign in</button></div></div></div>
 </div>
 
 <!-- Blogs Simulated Modal -->
@@ -1132,6 +1137,204 @@ html_content = f"""
         document.getElementById('packages').scrollIntoView({{ behavior: 'smooth' }});
     }}
 
+    // ==================== AUTHENTICATION ====================
+    const API_BASE = "http://localhost:8000";
+
+    function getAuthToken() {{
+        return localStorage.getItem("access_token");
+    }}
+
+    function setAuthToken(token) {{
+        if (token) localStorage.setItem("access_token", token);
+        else localStorage.removeItem("access_token");
+    }}
+
+    function isAuthenticated() {{
+        return !!getAuthToken();
+    }}
+
+    async function authenticatedFetch(endpoint, options = {{}}) {{
+        const token = getAuthToken();
+        if (!token) throw new Error("Not authenticated");
+        const headers = {{
+            "Authorization": `Bearer ${{token}}`,
+            "Content-Type": "application/json",
+            ...options.headers
+        }};
+        const response = await fetch(`${{API_BASE}}${{endpoint}}`, {{ ...options, headers }});
+        if (response.status === 401) {{
+            setAuthToken(null);
+            alertModal("Session expired. Please log in again.");
+            triggerClientZone();
+            throw new Error("Unauthorized");
+        }}
+        return response;
+    }}
+
+    async function registerUser() {{
+        const name = document.getElementById("reg-name")?.value.trim();
+        const email = document.getElementById("reg-email")?.value.trim();
+        const password = document.getElementById("reg-password")?.value;
+        if (!name || !email || !password) {{
+            alertModal("Please fill all fields.");
+            return;
+        }}
+        try {{
+            const response = await fetch(`${{API_BASE}}/register`, {{
+                method: "POST",
+                headers: {{ "Content-Type": "application/json" }},
+                body: JSON.stringify({{ name, email, password }})
+            }});
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || "Registration failed");
+            setAuthToken(data.access_token);
+            closeRegisterModal();
+            await loadUserDashboard();
+            alertModal("Account created and logged in successfully!");
+        }} catch (err) {{
+            alertModal(err.message);
+        }}
+    }}
+
+    async function loginUser(email, password) {{
+        const formData = new URLSearchParams();
+        formData.append("username", email);
+        formData.append("password", password);
+        const response = await fetch(`${{API_BASE}}/login`, {{
+            method: "POST",
+            headers: {{ "Content-Type": "application/x-www-form-urlencoded" }},
+            body: formData
+        }});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || "Login failed");
+        setAuthToken(data.access_token);
+        return true;
+    }}
+
+    async function loadUserDashboard() {{
+        if (!isAuthenticated()) return;
+        try {{
+            const userResp = await authenticatedFetch("/me");
+            const user = await userResp.json();
+            const ordersResp = await authenticatedFetch("/orders");
+            const orders = await ordersResp.json();
+            
+            let ordersHtml = orders.map(order => `
+                <div class="border border-white/10 rounded-xl p-3 mb-2 text-xs">
+                    <div class="flex justify-between"><span class="font-bold">Order #${{order.id}}</span><span class="text-brand-gold">R${{order.total}}</span></div>
+                    <div class="text-gray-400">${{order.items}} • ${{order.status}}</div>
+                    <div class="text-[9px] text-gray-500">${{order.date || "Recently"}}</div>
+                </div>
+            `).join('');
+            
+            const dashboardHtml = `
+                <div class="bg-brand-darkGray p-6 rounded-3xl max-w-md w-full space-y-4 border border-white/10 text-white shadow-2xl max-h-[80vh] overflow-y-auto">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                        <h5 class="font-bold text-brand-gold text-sm">ANGWA Client Portal</h5>
+                        <button onclick="closeClientZone()" class="text-gray-400 hover:text-white text-xs">Close</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-black/40 p-4 rounded-xl">
+                            <div class="text-gray-400 text-[10px] uppercase">Welcome,</div>
+                            <div class="font-bold text-white text-lg">${{user.name}}</div>
+                            <div class="text-xs text-gray-300">${{user.email}}</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm mb-2">📦 Recent orders</div>
+                            ${{ordersHtml || "<div class='text-gray-500'>No orders yet.</div>"}}
+                        </div>
+                        <button onclick="logout()" class="w-full glossy-black text-white py-2 rounded-full font-bold text-[10px] uppercase tracking-wider">Sign out</button>
+                    </div>
+                </div>
+            `;
+            
+            const container = document.getElementById('clientzone-modal');
+            container.innerHTML = dashboardHtml;
+            container.classList.remove('hidden');
+        }} catch (err) {{
+            alertModal("Could not load dashboard: " + err.message);
+        }}
+    }}
+
+    function logout() {{
+        setAuthToken(null);
+        closeClientZone();
+        alertModal("You have been logged out.");
+    }}
+
+    function triggerClientZone() {{
+        if (isAuthenticated()) {{
+            loadUserDashboard();
+        }} else {{
+            // Show login form (already exists in the modal)
+            const modalDiv = document.getElementById('clientzone-modal');
+            // If modal content was replaced, restore login form
+            if (modalDiv.innerHTML.includes('Recent orders')) {{
+                modalDiv.innerHTML = `
+                    <div class="bg-brand-slateBlack text-white p-6 rounded-3xl max-w-sm w-full space-y-6 border border-white/10 relative z-10">
+                        <div class="text-center space-y-2">
+                            <div class="h-12 w-12 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div>
+                            <h4 class="font-bold text-lg text-white">ANGWA ClientZone</h4>
+                            <p class="text-xs text-gray-400">Sign in to manage your services</p>
+                        </div>
+                        <div class="space-y-4 text-xs">
+                            <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Email address</label><input type="email" id="cz-email" placeholder="client@example.com" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white"></div>
+                            <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Password</label><input type="password" id="cz-password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white"></div>
+                            <button onclick="submitClientZone()" class="w-full glossy-gold text-brand-black py-3 rounded-full font-bold uppercase tracking-wider text-xs">Sign in</button>
+                            <div class="text-center text-[9px] text-gray-500">No account? <button onclick="closeClientZone(); openRegisterModal()" class="text-brand-gold hover:underline">Create one</button></div>
+                        </div>
+                    </div>
+                `;
+            }}
+            modalDiv.classList.remove('hidden');
+        }}
+    }}
+
+    async function submitClientZone() {{
+        const email = document.getElementById("cz-email")?.value.trim();
+        const password = document.getElementById("cz-password")?.value;
+        if (!email || !password) {{
+            alertModal("Please enter email and password.");
+            return;
+        }}
+        try {{
+            await loginUser(email, password);
+            closeClientZone();
+            await loadUserDashboard();
+        }} catch (err) {{
+            alertModal(err.message);
+        }}
+    }}
+
+    function openRegisterModal() {{
+        document.getElementById('register-modal').classList.remove('hidden');
+    }}
+
+    function closeRegisterModal() {{
+        document.getElementById('register-modal').classList.add('hidden');
+    }}
+
+    function closeClientZone() {{
+        const modal = document.getElementById('clientzone-modal');
+        modal.classList.add('hidden');
+        // Reset to login form for next time
+        modal.innerHTML = `
+            <div class="bg-brand-slateBlack text-white p-6 rounded-3xl max-w-sm w-full space-y-6 border border-white/10 relative z-10">
+                <div class="text-center space-y-2">
+                    <div class="h-12 w-12 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div>
+                    <h4 class="font-bold text-lg text-white">ANGWA ClientZone</h4>
+                    <p class="text-xs text-gray-400">Sign in to manage your services</p>
+                </div>
+                <div class="space-y-4 text-xs">
+                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Email address</label><input type="email" id="cz-email" placeholder="client@example.com" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white"></div>
+                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Password</label><input type="password" id="cz-password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-brand-darkGray border border-white/10 rounded-xl text-white"></div>
+                    <button onclick="submitClientZone()" class="w-full glossy-gold text-brand-black py-3 rounded-full font-bold uppercase tracking-wider text-xs">Sign in</button>
+                    <div class="text-center text-[9px] text-gray-500">No account? <button onclick="closeClientZone(); openRegisterModal()" class="text-brand-gold hover:underline">Create one</button></div>
+                </div>
+            </div>
+        `;
+    }}
+
     // ==================== GLOBAL VARIABLES ====================
     let cart = [];
     let currentFNO = 'all';
@@ -1234,12 +1437,106 @@ html_content = f"""
 
     function toggleFaq(btn) {{ const containerBox = btn.nextElementSibling; const indicatorIcon = btn.querySelector('i'); if(containerBox.classList.contains('hidden')) {{ containerBox.classList.remove('hidden'); indicatorIcon.className = "fa-solid fa-chevron-up transition-transform text-brand-gold"; }} else {{ containerBox.classList.add('hidden'); indicatorIcon.className = "fa-solid fa-chevron-down transition-transform"; }} }}
 
-    // Checkout modal functions
-    function openCheckoutModal() {{ if(cart.length===0) {{ alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!"); return; }} currentModalStep=2; updateModalStepsUI(); let totalVal=0; const summaryContainer=document.getElementById('modal-verification-summary'); summaryContainer.innerHTML=''; cart.forEach(item=>{{ let itemTotal=item.price; let addonTexts=[]; if(item.type==='host') {{ if(item.addons.router){{ itemTotal+=129; addonTexts.push("Wi-Fi 6 Router Upgrade (+R129)"); }} if(item.addons.ip){{ itemTotal+=64; addonTexts.push("Static IP Allocation (+R64)"); }} }} else {{ if(item.addons.router){{ itemTotal+=259; addonTexts.push("High-Performance Hosting (+R259)"); }} if(item.addons.ip){{ itemTotal+=325; addonTexts.push("Custom Domain Acquisition (+R325)"); }} }} totalVal+=itemTotal; const row=document.createElement('div'); row.className="flex justify-between items-start text-xs border-b border-white/5 pb-2 last:border-b-0"; row.innerHTML=`<div><span class="font-bold text-white block">${{item.name}}</span><span class="text-[8px] text-gray-500">${{addonTexts.join(' / ') || 'No Addons Selected'}}</span></div><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}.00</span>`; summaryContainer.appendChild(row); }}); document.getElementById('modal-footer-price').innerText=`R${{totalVal}}.00`; document.getElementById('summary-total-price').innerText=`R${{totalVal}}.00`; document.getElementById('signup-modal').classList.remove('hidden'); }}
-    function updateModalStepsUI() {{ document.getElementById('modal-step-2').classList.add('hidden'); document.getElementById('modal-step-3').classList.add('hidden'); document.getElementById(`modal-step-${{currentModalStep}}`).classList.remove('hidden'); const backBtn=document.getElementById('modal-back-btn'); if(currentModalStep===2) backBtn.classList.add('hidden'); else backBtn.classList.remove('hidden'); let totalVal=0; cart.forEach(item=>{{ let itemTotal=item.price; if(item.type==='host'){{ if(item.addons.router) itemTotal+=129; if(item.addons.ip) itemTotal+=64; }} else {{ if(item.addons.router) itemTotal+=259; if(item.addons.ip) itemTotal+=325; }} totalVal+=itemTotal; }}); let checkoutLink=`https://sandbox.polar.sh/checkout/new?org=angwa&amount=${{totalVal}}`; const nextBtnContainer=document.getElementById('modal-next-btn-container'); if(currentModalStep===3) {{ nextBtnContainer.innerHTML=`<a href="${{checkoutLink}}" id="modal-next-btn" data-polar-checkout data-polar-checkout-theme="dark" class="glossy-green text-white px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-1.5 cursor-pointer no-underline select-none"><span>Pay with Polar</span> <i class="fa-solid fa-shield-halved text-brand-gold text-[10px]"></i></a>`; if(window.PolarEmbedCheckout) setTimeout(()=>window.PolarEmbedCheckout.init(),60); }} else {{ nextBtnContainer.innerHTML=`<button id="modal-next-btn" onclick="nextStep()" class="glossy-gold text-brand-black px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md">Continue <i class="fa-solid fa-chevron-right ml-1"></i></button>`; }} const ind2=document.getElementById('step-indicator-2'); const ind3=document.getElementById('step-indicator-3'); if(currentModalStep===2) {{ ind2.className="text-brand-gold flex items-center gap-1.5"; ind2.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black"; ind3.className="text-gray-500 flex items-center gap-1.5"; ind3.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px]"; }} else {{ ind2.className="text-brand-green flex items-center gap-1.5"; ind2.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center text-[9px] font-black"; ind3.className="text-brand-gold flex items-center gap-1.5"; ind3.querySelector('span').className="h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black"; }} }}
+    // Checkout modal functions with auth check
+    function openCheckoutModal() {{
+        if (!isAuthenticated()) {{
+            alertModal("Please log in to proceed with checkout.");
+            triggerClientZone();
+            return;
+        }}
+        if (cart.length === 0) {{
+            alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!");
+            return;
+        }}
+        currentModalStep = 2;
+        updateModalStepsUI();
+        let totalVal = 0;
+        const summaryContainer = document.getElementById('modal-verification-summary');
+        summaryContainer.innerHTML = '';
+        cart.forEach(item => {{
+            let itemTotal = item.price;
+            let addonTexts = [];
+            if (item.type === 'host') {{
+                if (item.addons.router) {{ itemTotal += 129; addonTexts.push("Wi-Fi 6 Router Upgrade (+R129)"); }}
+                if (item.addons.ip) {{ itemTotal += 64; addonTexts.push("Static IP Allocation (+R64)"); }}
+            }} else {{
+                if (item.addons.router) {{ itemTotal += 259; addonTexts.push("High-Performance Hosting (+R259)"); }}
+                if (item.addons.ip) {{ itemTotal += 325; addonTexts.push("Custom Domain Acquisition (+R325)"); }}
+            }}
+            totalVal += itemTotal;
+            const row = document.createElement('div');
+            row.className = "flex justify-between items-start text-xs border-b border-white/5 pb-2 last:border-b-0";
+            row.innerHTML = `<div><span class="font-bold text-white block">${{item.name}}</span><span class="text-[8px] text-gray-500">${{addonTexts.join(' / ') || 'No Addons Selected'}}</span></div><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}.00</span>`;
+            summaryContainer.appendChild(row);
+        }});
+        document.getElementById('modal-footer-price').innerText = `R${{totalVal}}.00`;
+        document.getElementById('summary-total-price').innerText = `R${{totalVal}}.00`;
+        document.getElementById('signup-modal').classList.remove('hidden');
+    }}
+
+    function updateModalStepsUI() {{
+        document.getElementById('modal-step-2').classList.add('hidden');
+        document.getElementById('modal-step-3').classList.add('hidden');
+        document.getElementById(`modal-step-${{currentModalStep}}`).classList.remove('hidden');
+        const backBtn = document.getElementById('modal-back-btn');
+        if (currentModalStep === 2) backBtn.classList.add('hidden');
+        else backBtn.classList.remove('hidden');
+        let totalVal = 0;
+        cart.forEach(item => {{
+            let itemTotal = item.price;
+            if (item.type === 'host') {{ if (item.addons.router) itemTotal += 129; if (item.addons.ip) itemTotal += 64; }}
+            else {{ if (item.addons.router) itemTotal += 259; if (item.addons.ip) itemTotal += 325; }}
+            totalVal += itemTotal;
+        }});
+        let checkoutLink = `https://sandbox.polar.sh/checkout/new?org=angwa&amount=${{totalVal}}`;
+        const nextBtnContainer = document.getElementById('modal-next-btn-container');
+        if (currentModalStep === 3) {{
+            nextBtnContainer.innerHTML = `<a href="${{checkoutLink}}" id="modal-next-btn" data-polar-checkout data-polar-checkout-theme="dark" class="glossy-green text-white px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md inline-flex items-center gap-1.5 cursor-pointer no-underline select-none"><span>Pay with Polar</span> <i class="fa-solid fa-shield-halved text-brand-gold text-[10px]"></i></a>`;
+            if (window.PolarEmbedCheckout) setTimeout(() => window.PolarEmbedCheckout.init(), 60);
+        }} else {{
+            nextBtnContainer.innerHTML = `<button id="modal-next-btn" onclick="nextStep()" class="glossy-gold text-brand-black px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md">Continue <i class="fa-solid fa-chevron-right ml-1"></i></button>`;
+        }}
+        const ind2 = document.getElementById('step-indicator-2');
+        const ind3 = document.getElementById('step-indicator-3');
+        if (currentModalStep === 2) {{
+            ind2.className = "text-brand-gold flex items-center gap-1.5";
+            ind2.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black";
+            ind3.className = "text-gray-500 flex items-center gap-1.5";
+            ind3.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-white/5 text-gray-500 flex items-center justify-center text-[9px]";
+        }} else {{
+            ind2.className = "text-brand-green flex items-center gap-1.5";
+            ind2.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center text-[9px] font-black";
+            ind3.className = "text-brand-gold flex items-center gap-1.5";
+            ind3.querySelector('span').className = "h-4.5 w-4.5 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center text-[9px] font-black";
+        }}
+    }}
+
     function closeModal() {{ document.getElementById('signup-modal').classList.add('hidden'); }}
-    function nextStep() {{ if(currentModalStep===2) {{ const nameInput=document.getElementById('cust-name').value.trim(); const emailInput=document.getElementById('cust-email').value.trim(); const addrInput=document.getElementById('cust-address').value.trim(); if(!nameInput||!emailInput||!addrInput) {{ alertModal("Please complete all setup destination fields before progressing."); return; }} currentModalStep=3; updateModalStepsUI(); }} else if(currentModalStep===3) {{ closeModal(); showOrderToast(); clearCart(); }} }}
-    function prevStep() {{ if(currentModalStep>2) {{ currentModalStep--; updateModalStepsUI(); }} }}
+
+    function nextStep() {{
+        if (currentModalStep === 2) {{
+            const nameInput = document.getElementById('cust-name').value.trim();
+            const emailInput = document.getElementById('cust-email').value.trim();
+            const addrInput = document.getElementById('cust-address').value.trim();
+            if (!nameInput || !emailInput || !addrInput) {{
+                alertModal("Please complete all setup destination fields before progressing.");
+                return;
+            }}
+            currentModalStep = 3;
+            updateModalStepsUI();
+        }} else if (currentModalStep === 3) {{
+            closeModal();
+            showOrderToast();
+            clearCart();
+        }}
+    }}
+
+    function prevStep() {{
+        if (currentModalStep > 2) {{
+            currentModalStep--;
+            updateModalStepsUI();
+        }}
+    }}
 
     function alertModal(msg) {{ const alertBox=document.createElement('div'); alertBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; alertBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div><h4 class="font-bold text-sm tracking-wide">Action Required</h4><p class="text-[11px] text-gray-400 leading-relaxed">${{msg}}</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`; document.body.appendChild(alertBox); }}
     function triggerLeadershipNotice() {{ const noticeBox=document.createElement('div'); noticeBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; noticeBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-users"></i></div><h4 class="font-bold text-sm tracking-wide">ANGWA Executive Board</h4><p class="text-[11px] text-gray-400 leading-relaxed">Our comprehensive Board bios & investor portfolio records are securely archived on page. Reach out to our direct support desk to get a copy.</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`; document.body.appendChild(noticeBox); }}
@@ -1248,10 +1545,6 @@ html_content = f"""
 
     function triggerCloudSync(provider) {{ const cloudIcon=document.getElementById('cloud-icon'); const statusText=document.getElementById('cloud-sync-status'); const progress=document.getElementById('cloud-progress-bar'); const timer=document.getElementById('cloud-timer-val'); const panelRate=document.getElementById('panel-sync-rate'); const panelProgress=document.getElementById('panel-progress-bar'); const panelStatus=document.getElementById('panel-sync-status'); const panelTimer=document.getElementById('panel-sync-timer'); if(provider==='dropbox') {{ if(cloudIcon) cloudIcon.className="fa-brands fa-dropbox text-blue-400"; if(statusText) statusText.innerText="Connecting to Dropbox Fibre pipeline..."; panelStatus.innerText="Splicing optical connection to Dropbox central nodes..."; }} else {{ if(cloudIcon) cloudIcon.className="fa-brands fa-google-drive text-green-400"; if(statusText) statusText.innerText="Connecting to Google Drive high-speed backup system..."; panelStatus.innerText="Securing direct cloud handshake with Google clusters..."; }} document.getElementById('cloud-sync-modal').classList.remove('hidden'); panelRate.innerText="1,000 Mbps"; let width=0; if(progress) progress.style.width='0%'; panelProgress.style.width='0%'; if(timer) timer.innerText="6.2 seconds remaining"; panelTimer.innerText="6.2s left"; const interval=setInterval(()=>{{ width+=10; if(progress) progress.style.width=`${{width}}%`; panelProgress.style.width=`${{width}}%`; const timeLeft=Math.max(0,((100-width)/15).toFixed(1)); if(timer) timer.innerText=`${{timeLeft}} seconds remaining`; panelTimer.innerText=`${{timeLeft}}s left`; if(width===40) {{ if(statusText) statusText.innerText="Encrypting file systems with symmetrical light speed..."; panelStatus.innerText="Sending secure multi-threaded file chunks..."; }} else if(width===80) {{ if(statusText) statusText.innerText="Finalizing cloud handshake metrics..."; panelStatus.innerText="Assembling directory structures on destination server..."; }} if(width>=100) {{ clearInterval(interval); if(statusText) statusText.innerText="Sync complete! 50GB file database successfully uploaded in 0.8 seconds."; panelStatus.innerText="Upload complete! 50GB mapped successfully in 0.8s."; if(timer) timer.innerText="Success - 0.0 seconds remaining"; panelTimer.innerText="Success"; panelRate.innerText="0 Mbps (Idle)"; }} }},250); }}
     function closeCloudModal() {{ document.getElementById('cloud-sync-modal').classList.add('hidden'); }}
-
-    function triggerClientZone() {{ document.getElementById('clientzone-modal').classList.remove('hidden'); }}
-    function closeClientZone() {{ document.getElementById('clientzone-modal').classList.add('hidden'); }}
-    function submitClientZoneMock() {{ closeClientZone(); const welcomeBox=document.createElement('div'); welcomeBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; welcomeBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-md w-full space-y-4 border border-white/10 text-white shadow-2xl"><div class="flex justify-between items-center border-b border-white/5 pb-3"><h5 class="font-bold text-brand-gold text-sm">ANGWA Active Client Portal</h5><button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white text-xs">Close</button></div><div class="space-y-3.5 text-xs"><div class="flex justify-between items-center p-3 bg-black/40 rounded-xl border border-white/5"><div><span class="text-gray-400 block text-[9px] uppercase font-bold">Active Subscribed Line</span><span class="font-bold text-white text-xs">Vumatel 500/500 Mbps</span></div><span class="text-[9px] bg-brand-green/20 text-brand-green font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Online</span></div><div class="grid grid-cols-2 gap-2.5"><div class="p-3 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-[9px] uppercase">Data Transferred</span><span class="font-extrabold text-white">4.12 TB (Uncapped)</span></div><div class="p-3 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-[9px] uppercase">Next Billing Cycle</span><span class="font-extrabold text-brand-gold">July 1, 2026</span></div></div></div></div>`; document.body.appendChild(welcomeBox); }}
 
     function triggerBlogsModal() {{ document.getElementById('blogs-modal').classList.remove('hidden'); }}
     function closeBlogsModal() {{ document.getElementById('blogs-modal').classList.add('hidden'); }}

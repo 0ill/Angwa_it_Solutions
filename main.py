@@ -1,348 +1,269 @@
-import streamlit as st
-import streamlit.components.v1 as components
+import os
+import json
+from datetime import datetime, timedelta
+from typing import List, Optional
+from contextlib import contextmanager
 
-st.set_page_config(
-    page_title="Afrihost Premium | Elite Connectivity",
-    page_icon="👑",
-    layout="wide",
-    initial_sidebar_state="expanded"
+from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel, EmailStr
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+import libsql_client
+
+# ---------- Configuration ----------
+TURSO_URL = os.environ["TURSO_URL"]
+TURSO_TOKEN = os.environ["TURSO_TOKEN"]
+SECRET_KEY = os.environ["SECRET_KEY"]          # generate with: openssl rand -hex 32
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7     # 7 days
+
+# ---------- Database connection ----------
+@contextmanager
+def get_db():
+    client = libsql_client.create_client_sync(TURSO_URL, auth_token=TURSO_TOKEN)
+    try:
+        yield client
+    finally:
+        client.close()
+
+# ---------- Password hashing ----------
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+# ---------- JWT ----------
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: int = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    with get_db() as client:
+        rows = client.execute("SELECT id, name, email FROM users WHERE id = ?", [user_id]).rows
+        if not rows:
+            raise credentials_exception
+        row = rows[0]
+        return {"id": row[0], "name": row[1], "email": row[2]}
+
+# ---------- Pydantic models ----------
+class UserRegister(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+class UserOut(BaseModel):
+    id: int
+    name: str
+    email: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class OrderItem(BaseModel):
+    cartId: str
+    type: str
+    id: str
+    name: str
+    price: int
+    addons: dict
+
+class OrderCreate(BaseModel):
+    items: List[OrderItem]
+    total: int
+
+class OrderOut(BaseModel):
+    id: int
+    items: str
+    total: int
+    status: str
+    created_at: str
+
+# ---------- FastAPI app ----------
+app = FastAPI(title="ANGWA Backend API")
+
+# CORS – allow your Streamlit frontend URL (change when deployed)
+origins = [
+    "http://localhost:8501",          # local Streamlit
+    "https://your-streamlit-app.herokuapp.com",  # replace with your actual frontend URL
+    "*"  # for development only – restrict in production
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-brand_css = """
-<style>
-    /* Import Inter font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+# ---------- Public endpoints ----------
+@app.get("/products")
+def get_all_products():
+    """Return all products grouped by type (host, cloud, design) like the frontend expects."""
+    with get_db() as client:
+        # Host
+        host_rows = client.execute("SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'").rows
+        host_products = []
+        for row in host_rows:
+            host_products.append({
+                "id": row[0],
+                "provider": row[1],
+                "name": row[2],
+                "down": row[3],
+                "up": row[4],
+                "price": row[5] // 100,
+                "isPopular": bool(row[6]),
+                "description": row[7]
+            })
+        # Cloud
+        cloud_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'cloud'").rows
+        cloud_products = []
+        for row in cloud_rows:
+            storage = row[1].split('(')[-1].replace(')', '') if '(' in row[1] else ""
+            cloud_products.append({
+                "id": row[0],
+                "name": row[1],
+                "storage": storage,
+                "price": row[2] // 100,
+                "isPopular": bool(row[3]),
+                "description": row[4]
+            })
+        # Design – simplified, but you can return full design data if needed
+        design_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'").rows
+        design_products = []
+        for row in design_rows:
+            design_products.append({
+                "id": row[0],
+                "name": row[1],
+                "price": row[2] // 100,
+                "isPopular": bool(row[3]),
+                "description": row[4]
+            })
+        # Addons
+        addon_rows = client.execute("SELECT product_type, name, price FROM addons").rows
+        addons = {}
+        for row in addon_rows:
+            ptype = row[0]
+            addons.setdefault(ptype, []).append({"name": row[1], "price": row[2] // 100})
 
-    :root {
-        --brand-green: #064e3b;
-        --brand-gold: #d4af37;
-        --brand-black: #111827;
-        --brand-gray: #f3f4f6;
-    }
+        return {
+            "host": host_products,
+            "cloud": cloud_products,
+            "design": design_products,
+            "addons": addons
+        }
 
-    /* Hide standard Streamlit header/footer for a cleaner look */
-    header {visibility: visible;}
-    footer {visibility: hidden;}
-    #MainMenu {visibility: hidden;}
-    .stApp {
-        background-color: white;
-        font-family: 'Inter', sans-serif;
-    }
+@app.get("/coverage")
+def get_coverage():
+    with get_db() as client:
+        rows = client.execute("""
+            SELECT area_name, city, province, status, provider, max_speed, infrastructure_ready, estimated_date
+            FROM coverage_areas
+            ORDER BY 
+                CASE status 
+                    WHEN 'available' THEN 1 
+                    WHEN 'coming_soon' THEN 2 
+                    WHEN 'planned' THEN 3 
+                END, area_name
+        """).rows
+        coverage = []
+        for row in rows:
+            coverage.append({
+                "name": row[0],
+                "city": row[1],
+                "province": row[2],
+                "status": row[3],
+                "provider": row[4],
+                "max_speed": row[5],
+                "infrastructure_ready": bool(row[6]) if row[6] is not None else False,
+                "estimated_date": row[7]
+            })
+        return coverage
 
-    /* Custom Nav Bar */
-    .nav-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 5%;
-        background: rgba(255, 255, 255, 0.95);
-        border-bottom: 2px solid var(--brand-gold);
-        position: sticky;
-        top: 0;
-        z-index: 999;
-    }
+# ---------- Authentication endpoints ----------
+@app.post("/register", response_model=Token)
+def register(user: UserRegister):
+    with get_db() as client:
+        # Check if email already exists
+        existing = client.execute("SELECT id FROM users WHERE email = ?", [user.email]).rows
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        hashed = get_password_hash(user.password)
+        client.execute(
+            "INSERT INTO users (name, email, hashed_password) VALUES (?, ?, ?)",
+            [user.name, user.email, hashed]
+        )
+        # Get the new user id
+        new_user = client.execute("SELECT id FROM users WHERE email = ?", [user.email]).rows[0]
+        user_id = new_user[0]
+        access_token = create_access_token(data={"sub": str(user_id)})
+        return {"access_token": access_token, "token_type": "bearer"}
 
-    .logo-box {
-        background: var(--brand-green);
-        color: var(--brand-gold);
-        padding: 5px 15px;
-        border-radius: 8px;
-        font-weight: 900;
-        font-size: 24px;
-        border: 1px solid var(--brand-gold);
-    }
+@app.post("/login", response_model=Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    with get_db() as client:
+        rows = client.execute("SELECT id, email, hashed_password FROM users WHERE email = ?", [form_data.username]).rows
+        if not rows:
+            raise HTTPException(status_code=401, detail="Incorrect email or password")
+        user_id, email, hashed = rows[0]
+        if not verify_password(form_data.password, hashed):
+            raise HTTPException(status_code=401, detail="Incorrect email or password")
+        access_token = create_access_token(data={"sub": str(user_id)})
+        return {"access_token": access_token, "token_type": "bearer"}
 
-    /* Hero Section */
-    .hero-block {
-        background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
-        padding: 100px 5%;
-        color: white;
-        border-radius: 0 0 50px 50px;
-        text-align: center;
-        margin-bottom: 50px;
-        border-bottom: 5px solid var(--brand-gold);
-    }
+@app.get("/me", response_model=UserOut)
+def get_me(current_user: dict = Depends(get_current_user)):
+    return current_user
 
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        line-height: 1.1;
-    }
+# ---------- Orders ----------
+@app.get("/orders")
+def get_orders(current_user: dict = Depends(get_current_user)):
+    with get_db() as client:
+        rows = client.execute(
+            "SELECT id, items, total, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
+            [current_user["id"]]
+        ).rows
+        orders = []
+        for row in rows:
+            orders.append({
+                "id": row[0],
+                "items": row[1],
+                "total": row[2] // 100,
+                "status": row[3],
+                "date": row[4]
+            })
+        return orders
 
-    .gold-text {
-        color: var(--brand-gold);
-    }
-
-    /* Premium Product Cards */
-    .product-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 24px;
-        border: 1px solid #eee;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-        text-align: center;
-        height: 100%;
-    }
-
-    .product-card:hover {
-        transform: translateY(-10px);
-        border-color: var(--brand-gold);
-        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
-    }
-
-    .price-tag {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--brand-green);
-    }
-
-    .cta-button {
-        display: inline-block;
-        background: var(--brand-gold);
-        color: var(--brand-green);
-        padding: 12px 30px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 1rem;
-        transition: 0.3s;
-    }
-
-    .cta-button:hover {
-        background: var(--brand-black);
-        color: white;
-    }
-
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-""" 
-st.markdown(brand_css, unsafe_allow_html=True)
-
-with st.sidebar:
-    st.title("Navigation")
-    st.write("Navigate to the different sections of the website.")
-    with st.expander("1. SBIHME"):
-        with st.expander("1.1 SBIWLD"):
-            with st.expander("1.1.1 SBIOCN"):
-                st.write("Navigate to the different sections of the website.")
-            with st.expander("1.1.2 SBINAC"):
-                st.write("Navigate to the different sections of the website.")
-            with st.expander("1.1.3 SBIERP"):
-                st.write("Navigate to the different sections of the website.")
-            with st.expander("1.1.4 SBISAC"):
-                st.write("Navigate to the different sections of the website.")
-            with st.expander("1.1.5 SBIASA"):
-                st.write("Navigate to the different sections of the website.")
-            
-            with st.expander("1.1.6 SBIAFR"):
-                with st.expander("1.1.6.1 AFFRHME"):
-                    st.write("Navigate to the different sections of the website.")
-                with st.expander("1.1.6.2 AFRABT"): 
-                    st.write("Navigate to the different sections of the website.")
-                with st.expander("1.1.6.3 AFRSCT"):
-                    st.write("Navigate to the different sections of the website.")
-                
-                with st.expander("1.1.6.4 AFRRCRM"):
-                    with st.expander("1.1.6.4.1 AFRNAS"):
-                        st.write("Navigate to the different sections of the website.")
-                    with st.expander("1.1.6.4.2 AFREAC"):
-                        st.write("Navigate to the different sections of the website.")
-                    with st.expander("1.1.6.4.3 AFRWAS"):
-                        st.write("Navigate to the different sections of the website.")
-                    with st.expander("1.1.6.4.4 AFRSAS"):
-                        with st.expander("1.1.6.4.4.1 AFRRSA"):
-                            with st.expander("1.1.6.4.4.1.1 RSAHME"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.2 RSADBD"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.3 RSAABT"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.4 RSASCT"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.5 RSACRM"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.6 RSAPMS"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.7 RSACSI"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.8 RSABLG"):
-                                st.write("Navigate to the different sections of the website.")
-                            with st.expander("1.1.6.4.4.1.9 RSACMC"):
-                                st.write("Navigate to the different sections of the website.")
-
-                        
-                    
-                    
-                    with st.expander("1.1.6.4.5 AFRCAS"):
-                        st.write("Navigate to the different sections of the website.")
-
-
-
-
-        with st.expander("1.2 SBIDBD"):
-            st.write("Navigate to the different sections of the website.")
-
-
-
-
-    with st.expander("2. SBIABT"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("3. SBISCT"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("4. SBICRM"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("5. SBIPMS"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("6. SBICSI"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("7. SBICRE"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("8. SBIBLG"):
-        st.write("Navigate to the different sections of the website.")
-    with st.expander("9. SBICMS"):
-        st.write("Navigate to the different sections of the website.")
-
-
-st.markdown(f"""
-    <div class="nav-container">
-        <div style="display: flex; align-items: center;">
-            <div class="logo-box">A</div>
-            <span style="margin-left: 10px; font-weight: 800; color: var(--brand-green); font-size: 1.5rem;">ANGWA</span>
-        </div>
-        <div style="display: flex; gap: 25px; align-items: center; font-weight: 600; font-size: 0.9rem;">
-            <a href="#" style="color: var(--brand-black); text-decoration: none;">FIBRE</a>
-            <a href="#" style="color: var(--brand-black); text-decoration: none;">MOBILE</a>
-            <a href="#" style="color: var(--brand-black); text-decoration: none;">HOSTING</a>
-            <a href="#" style="color: var(--brand-gold); text-decoration: none; border: 2px solid var(--brand-gold); padding: 5px 20px; border-radius: 20px;">CLIENTZONE</a>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-    <div class="hero-block">
-        <p style="text-transform: uppercase; letter-spacing: 3px; font-weight: 700; color: #d4af37; margin-bottom: 20px;">The Gold Standard of Internet</p>
-        <h1 class="hero-title">Elite Connectivity.<br><span class="gold-text">Unrivaled Performance.</span></h1>
-        <p style="font-size: 1.2rem; opacity: 0.8; max-width: 700px; margin: 0 auto 40px auto;">
-            Experience the internet as it was meant to be. Pure speed, dedicated support, and the premium reliability of South Africa's most decorated ISP.
-        </p>
-        <div style="display: flex; gap: 15px; justify-content: center;">
-            <a href="#" class="cta-button">Check Availability</a>
-            <a href="#" class="cta-button" style="background: transparent; color: white; border: 2px solid white;">View Packages</a>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
-
-st.markdown("<h2 style='text-align: center; font-weight: 800; color: #111827; margin-bottom: 40px;'>Select Your Premium Experience</h2>", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-        <div class="product-card">
-            <i class="fas fa-bolt" style="font-size: 3rem; color: #d4af37; margin-bottom: 1.5rem;"></i>
-            <h3 style="font-weight: 800; margin-bottom: 0.5rem;">PURE FIBRE</h3>
-            <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">The ultimate home & business link. 100% Uncapped.</p>
-            <div class="price-tag">R499<span style="font-size: 1rem; color: #999;">/pm</span></div>
-            <ul style="text-align: left; list-style: none; padding: 0; margin: 1.5rem 0; font-size: 0.9rem; color: #444;">
-                <li><i class="fas fa-check gold-text"></i> Low Latency Gaming</li>
-                <li><i class="fas fa-check gold-text"></i> Wi-Fi 6 Router Included</li>
-                <li><i class="fas fa-check gold-text"></i> Free Installation</li>
-            </ul>
-            <a href="#" class="cta-button" style="width: 100%;">Order Now</a>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-        <div class="product-card" style="border: 2px solid #d4af37; position: relative;">
-            <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #d4af37; color: #064e3b; padding: 2px 15px; border-radius: 10px; font-size: 0.7rem; font-weight: 800;">MOST POPULAR</div>
-            <i class="fas fa-tower-cell" style="font-size: 3rem; color: #d4af37; margin-bottom: 1.5rem;"></i>
-            <h3 style="font-weight: 800; margin-bottom: 0.5rem;">FIXED LTE</h3>
-            <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">Instant plug-and-play connectivity anywhere.</p>
-            <div class="price-tag">R299<span style="font-size: 1rem; color: #999;">/pm</span></div>
-            <ul style="text-align: left; list-style: none; padding: 0; margin: 1.5rem 0; font-size: 0.9rem; color: #444;">
-                <li><i class="fas fa-check gold-text"></i> Nationwide 5G Ready</li>
-                <li><i class="fas fa-check gold-text"></i> No Contracts</li>
-                <li><i class="fas fa-check gold-text"></i> Next-Day Delivery</li>
-            </ul>
-            <a href="#" class="cta-button" style="width: 100%;">Get Started</a>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-        <div class="product-card">
-            <i class="fas fa-server" style="font-size: 3rem; color: #d4af37; margin-bottom: 1.5rem;"></i>
-            <h3 style="font-weight: 800; margin-bottom: 0.5rem;">CLOUD HOSTING</h3>
-            <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">Enterprise-grade security for your digital assets.</p>
-            <div class="price-tag">R149<span style="font-size: 1rem; color: #999;">/pm</span></div>
-            <ul style="text-align: left; list-style: none; padding: 0; margin: 1.5rem 0; font-size: 0.9rem; color: #444;">
-                <li><i class="fas fa-check gold-text"></i> Free .co.za Domain</li>
-                <li><i class="fas fa-check gold-text"></i> Daily Cloud Backups</li>
-                <li><i class="fas fa-check gold-text"></i> SSL Certificate</li>
-            </ul>
-            <a href="#" class="cta-button" style="width: 100%;">Host Now</a>
-        </div>
-    """, unsafe_allow_html=True)
-
-st.write("---")
-st.markdown("<h3 style='color: var(--brand-green); font-weight: 800;'>Premium Network Status</h3>", unsafe_allow_html=True)
-col_a, col_b = st.columns([2, 1])
-
-with col_a:
-    st.info("💡 **Network Intelligence:** Our global backbone is currently operating at **99.99%** efficiency. No major outages reported in the last 24 hours.")
-
-with col_b:
-    search_query = st.text_input("Check your area coverage", placeholder="Enter your suburb...")
-    if search_query:
-        st.success(f"Excellent! {search_query} is fully compatible with our **Gold Standard Fibre**.")
-
-st.markdown(f"""
-    <div style="background: var(--brand-black); color: white; padding: 60px 5% 20px 5%; margin-top: 100px; border-top: 4px solid var(--brand-gold);">
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 40px;">
-            <div>
-                <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                    <div class="logo-box" style="font-size: 18px; padding: 2px 10px;">A</div>
-                    <span style="margin-left: 10px; font-weight: 800; color: white;">AFRIHOST</span>
-                </div>
-                <p style="font-size: 0.8rem; color: #888; line-height: 1.6;">
-                    South Africa's leading ISP, providing award-winning internet services since 1999.
-                </p>
-            </div>
-            <div>
-                <h4 style="color: var(--brand-gold); font-size: 0.9rem; margin-bottom: 20px;">SOLUTIONS</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem; color: #ccc;">
-                    <span>Pure Fibre</span>
-                    <span>Fixed LTE</span>
-                    <span>Mobile Data</span>
-                    <span>AirMobile</span>
-                </div>
-            </div>
-            <div>
-                <h4 style="color: var(--brand-gold); font-size: 0.9rem; margin-bottom: 20px;">SUPPORT</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem; color: #ccc;">
-                    <span>Help Centre</span>
-                    <span>Network Status</span>
-                    <span>ClientZone</span>
-                    <span>Contact Us</span>
-                </div>
-            </div>
-            <div>
-                <h4 style="color: var(--brand-gold); font-size: 0.9rem; margin-bottom: 20px;">STAY CONNECTED</h4>
-                <div style="display: flex; gap: 15px; font-size: 1.2rem; color: var(--brand-gold);">
-                    <i class="fab fa-facebook"></i>
-                    <i class="fab fa-twitter"></i>
-                    <i class="fab fa-instagram"></i>
-                    <i class="fab fa-linkedin"></i>
-                </div>
-            </div>
-        </div>
-        <div style="border-top: 1px solid #333; pt-20px; text-align: center; font-size: 0.7rem; color: #666; padding-top: 20px;">
-            © 2024 AFRIHOST (PTY) LTD. ALL RIGHTS RESERVED. THE GOLD STANDARD OF INTERNET.
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+@app.post("/orders")
+def create_order(order: OrderCreate, current_user: dict = Depends(get_current_user)):
+    items_json = json.dumps([item.dict() for item in order.items])
+    total_cents = order.total * 100
+    with get_db() as client:
+        client.execute(
+            "INSERT INTO orders (user_id, items, total, status) VALUES (?, ?, ?, ?)",
+            [current_user["id"], items_json, total_cents, "pending"]
+        )
+        # Return the new order (optional)
+        new_order = client.execute("SELECT last_insert_rowid()").rows[0][0]
+        return {"id": new_order, "status": "created"}
