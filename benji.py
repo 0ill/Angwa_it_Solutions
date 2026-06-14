@@ -297,70 +297,50 @@ html_content = f"""
         @keyframes bounce-small {{ 0%,100% {{ transform: scale(1); }} 50% {{ transform: scale(1.2); }} }}
         .cart-bounce {{ animation: bounce-small 0.4s ease-in-out; }}
         
-        /* Mobile Navigation Styles */
-        .mobile-nav-menu {{
-            position: fixed;
-            top: 64px;
-            left: 0;
-            right: 0;
-            background: rgba(13, 13, 14, 0.98);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 45;
-            padding: 1rem;
-            border-radius: 0 0 1.5rem 1.5rem;
+        /* Responsive Navigation */
+        @media (max-width: 1024px) {{
+            .nav-gap {{
+                gap: 0.75rem !important;
+            }}
+            .nav-btn {{
+                padding: 0.5rem !important;
+                font-size: 0.7rem !important;
+            }}
+            .nav-btn i {{
+                font-size: 0.8rem !important;
+            }}
         }}
-        .mobile-nav-menu.open {{
-            transform: translateY(0);
+        @media (max-width: 768px) {{
+            .nav-gap {{
+                gap: 0.5rem !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }}
+            .nav-btn {{
+                padding: 0.4rem 0.6rem !important;
+                font-size: 0.65rem !important;
+            }}
+            .nav-btn i {{
+                font-size: 0.75rem !important;
+            }}
+            .header-container {{
+                flex-wrap: wrap !important;
+                height: auto !important;
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }}
         }}
-        .mobile-nav-item {{
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.875rem 1rem;
-            border-radius: 1rem;
-            transition: all 0.2s ease;
-            color: #9ca3af;
-        }}
-        .mobile-nav-item:hover, .mobile-nav-item.active {{
-            background: rgba(212, 175, 55, 0.1);
-            color: #D4AF37;
-        }}
-        .mobile-nav-item i {{
-            width: 1.5rem;
-            font-size: 1.1rem;
-        }}
-        @media (min-width: 768px) {{
-            .mobile-nav-toggle {{
+        @media (max-width: 640px) {{
+            .nav-btn span {{
                 display: none !important;
             }}
-            .desktop-nav {{
-                display: flex !important;
+            .nav-btn i {{
+                margin-right: 0 !important;
+                font-size: 1rem !important;
             }}
-            .mobile-nav-menu {{
-                display: none !important;
+            .nav-btn {{
+                padding: 0.5rem !important;
             }}
-        }}
-        @media (max-width: 767px) {{
-            .desktop-nav {{
-                display: none !important;
-            }}
-            .mobile-nav-toggle {{
-                display: flex !important;
-            }}
-        }}
-        .menu-icon-btn {{
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 0.625rem;
-            transition: all 0.2s ease;
-        }}
-        .menu-icon-btn:hover {{
-            border-color: rgba(212, 175, 55, 0.3);
-            color: #D4AF37;
         }}
     </style>
 </head>
@@ -441,8 +421,8 @@ html_content = f"""
 
 <!-- Apple style Navigation Header -->
 <header class="sticky top-0 z-40 bg-brand-slateBlack/90 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <div class="flex items-center gap-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 header-container flex items-center justify-between">
+        <div class="flex items-center gap-3 shrink-0">
             <button onclick="toggleSidebar()" class="text-white hover:text-brand-gold transition-colors focus:outline-none h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner"><i class="fa-solid fa-bars text-lg"></i></button>
             <a href="#home-hero" class="flex items-center gap-2 group">
                 <div class="h-8 w-8 bg-gradient-to-b from-brand-goldLight via-brand-gold to-brand-goldDark rounded-lg flex items-center justify-center text-brand-black font-black text-lg tracking-tight shadow-md transition-transform group-hover:rotate-6 shrink-0">A</div>
@@ -450,14 +430,14 @@ html_content = f"""
             </a>
         </div>
         
-        <!-- Desktop Navigation -->
-        <nav class="desktop-nav hidden md:flex items-center gap-4 lg:gap-6 text-xs text-white font-extrabold uppercase tracking-widest">
-            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-house text-brand-gold"></i><span>Home</span></button>
-            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-server text-brand-gold"></i><span>HOST</span></button>
-            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-pen-nib text-brand-gold"></i><span>DESIGN</span></button>
-            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-2"><i class="fa-solid fa-cloud text-brand-gold"></i><span>CLOUD</span></button>
+        <!-- Responsive Navigation (always visible, wraps on mobile) -->
+        <nav class="flex items-center gap-3 lg:gap-5 text-xs text-white font-extrabold uppercase tracking-widest nav-gap">
+            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-house text-brand-gold text-sm"></i><span>Home</span></button>
+            <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-server text-brand-gold text-sm"></i><span>HOST</span></button>
+            <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-pen-nib text-brand-gold text-sm"></i><span>DESIGN</span></button>
+            <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-cloud text-brand-gold text-sm"></i><span>CLOUD</span></button>
             <div class="relative group">
-                <button class="flex items-center gap-2 hover:text-brand-gold transition-colors focus:outline-none py-2 uppercase"><i class="fa-solid fa-ellipsis-h text-brand-gold"></i><span>MORE</span><i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i></button>
+                <button class="flex items-center gap-1.5 hover:text-brand-gold transition-colors focus:outline-none py-2 uppercase nav-btn"><i class="fa-solid fa-ellipsis-h text-brand-gold"></i><span>MORE</span><i class="fa-solid fa-chevron-down text-[9px] text-gray-500"></i></button>
                 <div class="absolute left-0 mt-1 w-64 rounded-xl glass-dark shadow-2xl py-2 border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50 normal-case">
                     <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all flex items-center gap-2"><i class="fa-solid fa-microchip text-brand-gold"></i> Engineers</button>
                     <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.');" class="w-full text-left px-4 py-2 text-[10px] text-white hover:bg-white/10 hover:text-brand-gold transition-all flex items-center gap-2"><i class="fa-solid fa-draw-polygon text-brand-gold"></i> architect</button>
@@ -469,12 +449,7 @@ html_content = f"""
             </div>
         </nav>
         
-        <!-- Mobile Menu Toggle Button -->
-        <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="mobile-nav-toggle menu-icon-btn text-white hover:text-brand-gold transition-all">
-            <i id="mobile-menu-icon" class="fa-solid fa-bars text-lg"></i>
-        </button>
-        
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 shrink-0">
             <div class="relative">
                 <button onclick="toggleNotificationDropdown(event)" class="text-white hover:text-brand-gold transition-colors h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner"><i class="fa-solid fa-bell text-sm"></i><span id="notify-pulse-dot" class="absolute top-2.5 right-2.5 h-2 w-2 bg-brand-green rounded-full shadow-[0_0_8px_#30D158] animate-pulse"></span></button>
                 <div id="notify-dropdown-panel" class="hidden absolute right-0 mt-3.5 w-76 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50">
@@ -493,23 +468,6 @@ html_content = f"""
                 </div>
             </div>
             <button onclick="triggerClientZone()" class="glossy-gold text-brand-black px-4 lg:px-5 py-2 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-user-shield"></i><span class="hidden sm:inline">ClientZone</span><span class="sm:hidden"><i class="fa-solid fa-user-shield"></i></span></button>
-        </div>
-    </div>
-    
-    <!-- Mobile Navigation Menu Dropdown -->
-    <div id="mobile-nav-menu" class="mobile-nav-menu">
-        <div class="flex flex-col gap-1">
-            <button onclick="mobileNavClick('home')" id="mobile-nav-home" class="mobile-nav-item"><i class="fa-solid fa-house"></i><span>Home</span></button>
-            <button onclick="mobileNavClick('host')" id="mobile-nav-host" class="mobile-nav-item"><i class="fa-solid fa-server"></i><span>Host</span></button>
-            <button onclick="mobileNavClick('design')" id="mobile-nav-design" class="mobile-nav-item"><i class="fa-solid fa-pen-nib"></i><span>Design</span></button>
-            <button onclick="mobileNavClick('cloud')" id="mobile-nav-cloud" class="mobile-nav-item"><i class="fa-solid fa-cloud"></i><span>Cloud</span></button>
-            <div class="border-t border-white/10 my-2"></div>
-            <button onclick="alertModal('Engineers workspace, database access, and analytics dashboard loaded.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-microchip"></i><span>Engineers</span></button>
-            <button onclick="alertModal('Architect blueprint environment and 3D schematic rendering pipeline initialized.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-draw-polygon"></i><span>Architect</span></button>
-            <button onclick="alertModal('Occupational health & safety safety logs and regulatory compliance checklists loaded.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-helmet-safety"></i><span>Safety</span></button>
-            <button onclick="alertModal('Social facilitators outreach campaign metrics and community alignment matrix opened.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-handshake"></i><span>Social Facilitators</span></button>
-            <button onclick="alertModal('Quantity surveyors cost-estimation engine and project billing ledger updated.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-calculator"></i><span>Quantity Surveyors</span></button>
-            <button onclick="alertModal('Developer repository sync-state, cloud hosting cluster, and SLA logs active.'); toggleMobileMenu()" class="mobile-nav-item"><i class="fa-solid fa-code"></i><span>Developer</span></button>
         </div>
     </div>
 </header>
@@ -879,42 +837,6 @@ html_content = f"""
     const designData = {design_json};
     const addonData = {addon_json};
     const coverageAreas = {coverage_json};
-
-    // ==================== MOBILE MENU FUNCTIONS ====================
-    let mobileMenuOpen = false;
-    
-    function toggleMobileMenu() {{
-        const menu = document.getElementById('mobile-nav-menu');
-        const icon = document.getElementById('mobile-menu-icon');
-        mobileMenuOpen = !mobileMenuOpen;
-        if (mobileMenuOpen) {{
-            menu.classList.add('open');
-            icon.className = 'fa-solid fa-xmark text-lg';
-        }} else {{
-            menu.classList.remove('open');
-            icon.className = 'fa-solid fa-bars text-lg';
-        }}
-    }}
-    
-    function mobileNavClick(pageName) {{
-        showPage(pageName);
-        toggleMobileMenu();
-    }}
-    
-    // Update active state in mobile menu
-    function updateMobileActiveNav(pageName) {{
-        const items = document.querySelectorAll('.mobile-nav-item');
-        items.forEach(item => item.classList.remove('active'));
-        const activeItem = document.getElementById(`mobile-nav-${{pageName}}`);
-        if (activeItem) activeItem.classList.add('active');
-    }}
-    
-    // Override showPage to update mobile nav
-    const originalShowPage = showPage;
-    showPage = function(pageName) {{
-        originalShowPage(pageName);
-        updateMobileActiveNav(pageName);
-    }};
 
     // ==================== COVERAGE SEARCH FUNCTIONS ====================
     function searchCoverage(searchTerm) {{
