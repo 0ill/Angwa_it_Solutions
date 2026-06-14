@@ -103,11 +103,12 @@ class OrderOut(BaseModel):
 # ---------- FastAPI app ----------
 app = FastAPI(title="ANGWA Backend API")
 
-# CORS – allow your Streamlit frontend URL (change when deployed)
+# CORS – allow your Streamlit frontend URL (set environment variable or use wildcard for dev)
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set this to your Streamlit app URL in production
 origins = [
-    "http://localhost:8501",          # local Streamlit
-    "https://your-streamlit-app.herokuapp.com",  # replace with your actual frontend URL
-    "*"  # for development only – restrict in production
+    FRONTEND_URL,
+    "http://localhost:8501",  # local Streamlit
+    "https://*.streamlit.app", # Streamlit Cloud default
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -120,7 +121,7 @@ app.add_middleware(
 # ---------- Public endpoints ----------
 @app.get("/products")
 def get_all_products():
-    """Return all products grouped by type (host, cloud, design) like the frontend expects."""
+    """Return all products grouped by type – optional, if you want to fetch from backend instead of direct Turso."""
     with get_db() as client:
         # Host
         host_rows = client.execute("SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'").rows
@@ -149,7 +150,7 @@ def get_all_products():
                 "isPopular": bool(row[3]),
                 "description": row[4]
             })
-        # Design – simplified, but you can return full design data if needed
+        # Design – simplified
         design_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'").rows
         design_products = []
         for row in design_rows:
@@ -205,7 +206,6 @@ def get_coverage():
 @app.post("/register", response_model=Token)
 def register(user: UserRegister):
     with get_db() as client:
-        # Check if email already exists
         existing = client.execute("SELECT id FROM users WHERE email = ?", [user.email]).rows
         if existing:
             raise HTTPException(status_code=400, detail="Email already registered")
@@ -214,7 +214,6 @@ def register(user: UserRegister):
             "INSERT INTO users (name, email, hashed_password) VALUES (?, ?, ?)",
             [user.name, user.email, hashed]
         )
-        # Get the new user id
         new_user = client.execute("SELECT id FROM users WHERE email = ?", [user.email]).rows[0]
         user_id = new_user[0]
         access_token = create_access_token(data={"sub": str(user_id)})
@@ -264,6 +263,9 @@ def create_order(order: OrderCreate, current_user: dict = Depends(get_current_us
             "INSERT INTO orders (user_id, items, total, status) VALUES (?, ?, ?, ?)",
             [current_user["id"], items_json, total_cents, "pending"]
         )
-        # Return the new order (optional)
-        new_order = client.execute("SELECT last_insert_rowid()").rows[0][0]
-        return {"id": new_order, "status": "created"}
+        return {"id": client.execute("SELECT last_insert_rowid()").rows[0][0], "status": "created"}
+
+# Health check endpoint (useful for Render)
+@app.get("/health")
+def health():
+    return {"status": "ok"}

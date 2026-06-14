@@ -149,6 +149,9 @@ design_json = json.dumps(design_data)
 addon_json = json.dumps(addon_data)
 coverage_json = json.dumps(coverage_data)
 
+# Backend API URL (from secrets, fallback to placeholder)
+api_base_url = st.secrets.get("API_BASE_URL", "https://your-app.koyeb.app")
+
 # ---------- Streamlit Page Config ----------
 st.set_page_config(
     page_title="ANGWA | Symmetrical Pure Light Fibre",
@@ -200,7 +203,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ---------- Full HTML with Escaped Braces ----------
+# ---------- Full HTML with Escaped Braces and dynamic API_BASE ----------
 html_content = f"""
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -843,6 +846,9 @@ html_content = f"""
     const addonData = {addon_json};
     const coverageAreas = {coverage_json};
 
+    // ==================== BACKEND API URL ====================
+    const API_BASE = "{api_base_url}";
+
     // ==================== COVERAGE SEARCH FUNCTIONS ====================
     function searchCoverage(searchTerm) {{
         if (!searchTerm || searchTerm.trim() === '') return [];
@@ -1138,8 +1144,6 @@ html_content = f"""
     }}
 
     // ==================== AUTHENTICATION ====================
-    const API_BASE = "http://localhost:8000";
-
     function getAuthToken() {{
         return localStorage.getItem("access_token");
     }}
@@ -1474,6 +1478,43 @@ html_content = f"""
         document.getElementById('signup-modal').classList.remove('hidden');
     }}
 
+    async function createOrder() {{
+        if (!isAuthenticated()) return;
+        const items = cart.map(item => ({{
+            cartId: item.cartId,
+            type: item.type,
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            addons: item.addons
+        }}));
+        let total = 0;
+        cart.forEach(item => {{
+            let itemTotal = item.price;
+            if (item.type === 'host') {{
+                if (item.addons.router) itemTotal += 129;
+                if (item.addons.ip) itemTotal += 64;
+            }} else {{
+                if (item.addons.router) itemTotal += 259;
+                if (item.addons.ip) itemTotal += 325;
+            }}
+            total += itemTotal;
+        }});
+        try {{
+            const response = await authenticatedFetch("/orders", {{
+                method: "POST",
+                body: JSON.stringify({{ items, total }})
+            }});
+            if (response.ok) {{
+                console.log("Order created successfully");
+            }} else {{
+                console.error("Failed to create order");
+            }}
+        }} catch (err) {{
+            console.error(err);
+        }}
+    }}
+
     function updateModalStepsUI() {{
         document.getElementById('modal-step-2').classList.add('hidden');
         document.getElementById('modal-step-3').classList.add('hidden');
@@ -1513,7 +1554,7 @@ html_content = f"""
 
     function closeModal() {{ document.getElementById('signup-modal').classList.add('hidden'); }}
 
-    function nextStep() {{
+    async function nextStep() {{
         if (currentModalStep === 2) {{
             const nameInput = document.getElementById('cust-name').value.trim();
             const emailInput = document.getElementById('cust-email').value.trim();
@@ -1526,6 +1567,7 @@ html_content = f"""
             updateModalStepsUI();
         }} else if (currentModalStep === 3) {{
             closeModal();
+            await createOrder();
             showOrderToast();
             clearCart();
         }}
