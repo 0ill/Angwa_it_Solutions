@@ -42,7 +42,7 @@ def fetch_products():
             "description": row[4]
         })
     
-    # Design templates
+    # Design templates (original for custom design)
     design_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'").rows
     design_data = {}
     for row in design_rows:
@@ -699,18 +699,39 @@ html_content = f"""
         <div class="inline-flex items-center gap-2 bg-brand-gold/10 border border-brand-gold/20 px-4 py-2 rounded-full text-brand-goldDark text-xs font-medium tracking-widest uppercase mb-6">Premium Web Design</div>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Bespoke Digital <span class="text-brand-goldDark">Experiences</span></h1>
         <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Hand-coded, performance-optimized websites tailored to your brand. Choose from luxury dark themes, neon tech designs, or clean minimal layouts. Each package includes SEO, responsive fluid grids, and rapid delivery.</p>
-        <div class="flex flex-wrap justify-center gap-4 mt-8"><a href="#design-suite" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Explore Templates</a><a href="#why-angwa" class="glossy-black text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Learn More</a></div>
+        <div class="flex flex-wrap justify-center gap-4 mt-8"><a href="#design-products" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Explore Products</a><a href="#why-angwa" class="glossy-black text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Learn More</a></div>
     </div>
 </section>
 
-<!-- Custom Design Sandbox Suite Section -->
+<!-- Our Product Range for Design -->
+<section id="design-products" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Our Product Range</span>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">Website & eCommerce Solutions</h2>
+            <p class="text-gray-500 text-sm">From custom hand-coded designs to powerful eCommerce platforms and easy-to-use site builders — get your perfect online presence.</p>
+        </div>
+        <!-- Design Category Tabs -->
+        <div class="flex flex-col items-center gap-6 mb-12">
+            <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-3xl">
+                <button onclick="setDesignCategory('design')" id="design-tab-design" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">Design</button>
+                <button onclick="setDesignCategory('ecom')" id="design-tab-ecom" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Design eCom</button>
+                <button onclick="setDesignCategory('sitebuilder')" id="design-tab-sitebuilder" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">SiteBuilder</button>
+            </div>
+        </div>
+        <!-- Products Container for Design -->
+        <div id="design-products-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </div>
+</section>
+
+<!-- Custom Design Sandbox Suite Section (only visible when Design category is selected) -->
 <section id="design-suite" class="py-20 bg-brand-slateBlack text-white overflow-hidden relative border-t border-b border-white/10">
     <div class="absolute inset-0 opacity-10 pointer-events-none"><div class="absolute top-0 right-0 w-96 h-96 bg-brand-gold rounded-full filter blur-[120px]"></div><div class="absolute bottom-0 left-10 w-96 h-96 bg-brand-green rounded-full filter blur-[120px]"></div></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Service 02: Responsive Web Designing</span>
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Custom Web Design Packages</h2>
-            <p class="text-gray-400 text-sm">Select different premium web aesthetics and pricing models below. Watch our interactive web builder mockup container change layouts, structural grids, color metrics, and typography instantly.</p>
+            <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Live Preview Sandbox</span>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Interactive Design Mockup</h2>
+            <p class="text-gray-400 text-sm">Select a design tier below to see the layout transform in real-time. Experience our premium themes before you buy.</p>
         </div>
         <div class="grid lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-5 space-y-4">
@@ -833,7 +854,7 @@ html_content = f"""
 
 <!-- Footer -->
 <footer class="bg-brand-black text-gray-500 py-16 border-t border-white/10 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8"><div class="col-span-2 space-y-4"><a href="#" class="flex items-center gap-2"><div class="h-7 w-7 bg-brand-gold rounded-md flex items-center justify-center text-brand-black font-black text-sm shadow-md">A</div><span class="text-lg font-bold text-white tracking-wider">ANGWA.</span></a><p class="leading-relaxed text-gray-400">ANGWA is a licensed provider of optical fibre connections and digital bespoke web environments in South Africa. Operating across the main national carrier frameworks to bring symmetrical speeds directly to you.</p><div class="flex items-center gap-3 pt-2 text-gray-400"><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-facebook"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-instagram"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin"></i></a></div></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Hosting Products</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('shared')" class="hover:text-white transition-colors">Shared Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('cloudhosting')" class="hover:text-white transition-colors">Cloud Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('reseller')" class="hover:text-white transition-colors">Reseller Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('dedicated')" class="hover:text-white transition-colors">Dedicated Servers</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Domains & Emails</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('domains'); setSubCategory('domains')" class="hover:text-white transition-colors">Domain Registration</a></li><li><a href="#packages" onclick="setMainCategory('domains'); setSubCategory('pointing')" class="hover:text-white transition-colors">Domain Pointing</a></li><li><a href="#packages" onclick="setMainCategory('emails'); setSubCategory('emails')" class="hover:text-white transition-colors">Email Hosting</a></li><li><a href="#packages" onclick="setMainCategory('emails'); setSubCategory('free_domain')" class="hover:text-white transition-colors">Free Domain Offer</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Support & Care</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Client Zone Login</a></li><li><a href="#" class="hover:text-white transition-colors">Help Centre</a></li><li><a href="#" class="hover:text-white transition-colors">Network Status Map</a></li><li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li></ul></div></div><div class="mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-gray-600 space-y-2"><p>© 2026 ANGWA Proprietary Limited. All rights reserved. Registered ICASA carrier frameworks.</p><p>Designed for maximum speed simulation based on physical optical fibre networks locally deployed.</p></div></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8"><div class="col-span-2 space-y-4"><a href="#" class="flex items-center gap-2"><div class="h-7 w-7 bg-brand-gold rounded-md flex items-center justify-center text-brand-black font-black text-sm shadow-md">A</div><span class="text-lg font-bold text-white tracking-wider">ANGWA.</span></a><p class="leading-relaxed text-gray-400">ANGWA is a licensed provider of optical fibre connections and digital bespoke web environments in South Africa. Operating across the main national carrier frameworks to bring symmetrical speeds directly to you.</p><div class="flex items-center gap-3 pt-2 text-gray-400"><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-facebook"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-instagram"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin"></i></a></div></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Hosting Products</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('shared')" class="hover:text-white transition-colors">Shared Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('cloudhosting')" class="hover:text-white transition-colors">Cloud Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('reseller')" class="hover:text-white transition-colors">Reseller Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('dedicated')" class="hover:text-white transition-colors">Dedicated Servers</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Design Products</h5><ul class="space-y-2"><li><a href="#design-products" onclick="setDesignCategory('design')" class="hover:text-white transition-colors">Custom Design</a></li><li><a href="#design-products" onclick="setDesignCategory('ecom')" class="hover:text-white transition-colors">eCommerce Design</a></li><li><a href="#design-products" onclick="setDesignCategory('sitebuilder')" class="hover:text-white transition-colors">SiteBuilder</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Support & Care</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Client Zone Login</a></li><li><a href="#" class="hover:text-white transition-colors">Help Centre</a></li><li><a href="#" class="hover:text-white transition-colors">Network Status Map</a></li><li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li></ul></div></div><div class="mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-gray-600 space-y-2"><p>© 2026 ANGWA Proprietary Limited. All rights reserved. Registered ICASA carrier frameworks.</p><p>Designed for maximum speed simulation based on physical optical fibre networks locally deployed.</p></div></div>
 </footer>
 
 <script>
@@ -848,7 +869,7 @@ html_content = f"""
     const API_BASE = "{api_base_url}";
 
     // ==================== CUSTOM PRODUCTS ====================
-    // Hosting products (Shared, Cloud, Reseller, Dedicated, Rack, WHMCS)
+    // Hosting products (Shared, Cloud, Reseller, Dedicated, Rack, WHMCS) - same as before
     const hostingProducts = {{
         shared: [
             {{ id: "shared_1", name: "Starter Shared", description: "Perfect for small websites and blogs. Includes free SSL, 10GB SSD, and cPanel.", price: 99, features: ["10 GB SSD", "Free SSL", "cPanel", "10k monthly visits"], isPopular: false, category: "shared", type: "hosting" }},
@@ -905,6 +926,25 @@ html_content = f"""
         ],
         free_domain: [
             {{ id: "free_domain_offer", name: "Free Domain for 1 Year", description: "Get a free .com, .co.za, or .net domain when you sign up for any annual hosting plan.", price: 0, features: ["Free .COM/.CO.ZA/.NET", "Free Privacy Protection", "DNS Management", "Auto-renewal optional"], isPopular: true, type: "email", isPromo: true }}
+        ]
+    }};
+
+    // Design products for the new "Our Product Range" section
+    const designProducts = {{
+        design: [
+            {{ id: "design_luxe", name: "Luxe Obsidian", description: "Ultra-premium dark luxury theme with gold accents. 10 pages, 99 Speed Index.", price: 11699, features: ["10 Pages", "99 Speed Index", "SEO Optimized", "Mobile Responsive", "5 Revisions"], isPopular: true, type: "design", category: "design" }},
+            {{ id: "design_emerald", name: "Emerald Neo", description: "High-tech neon layout with green highlights. Perfect for tech brands.", price: 7149, features: ["5 Pages", "Clean Code", "Neon Effects", "Fast Loading", "3 Revisions"], isPopular: false, type: "design", category: "design" }},
+            {{ id: "design_minimal", name: "Minimal Alabaster", description: "Ultra-clean light theme with crisp typography. Great for blogs and e-commerce.", price: 5199, features: ["3 Pages", "Fluid Grid", "Typography Focus", "Mobile First", "2 Revisions"], isPopular: false, type: "design", category: "design" }}
+        ],
+        ecom: [
+            {{ id: "ecom_starter", name: "eCommerce Starter", description: "Complete online store with product catalog, cart, and checkout.", price: 8999, features: ["Up to 50 Products", "Payment Gateway", "Order Management", "Inventory Tracking", "Email Notifications"], isPopular: true, type: "design", category: "ecom" }},
+            {{ id: "ecom_pro", name: "eCommerce Pro", description: "Advanced store with multi-currency, discounts, and analytics.", price: 14999, features: ["Unlimited Products", "Multi-Currency", "Discount Codes", "Analytics Dashboard", "Abandoned Cart Recovery"], isPopular: false, type: "design", category: "ecom" }},
+            {{ id: "ecom_enterprise", name: "eCommerce Enterprise", description: "Full-featured marketplace solution with multi-vendor support.", price: 24999, features: ["Multi-Vendor", "API Access", "Custom Workflows", "Dedicated Support", "High Volume Ready"], isPopular: false, type: "design", category: "ecom" }}
+        ],
+        sitebuilder: [
+            {{ id: "builder_basic", name: "SiteBuilder Basic", description: "Drag-and-drop website builder with 10 templates.", price: 199, features: ["10 Templates", "Drag-and-Drop", "Mobile Editor", "Free Hosting", "5 Pages"], isPopular: false, type: "design", category: "sitebuilder", period: "month" }},
+            {{ id: "builder_pro", name: "SiteBuilder Pro", description: "50+ templates, custom domain, and eCommerce features.", price: 399, features: ["50+ Templates", "Custom Domain", "eCommerce Tools", "Analytics", "Unlimited Pages"], isPopular: true, type: "design", category: "sitebuilder", period: "month" }},
+            {{ id: "builder_agency", name: "SiteBuilder Agency", description: "White-label builder for agencies. Client management and team collaboration.", price: 999, features: ["White-Label", "Client Management", "Team Collaboration", "Advanced SEO", "Priority Support"], isPopular: false, type: "design", category: "sitebuilder", period: "month" }}
         ]
     }};
 
@@ -1193,7 +1233,6 @@ html_content = f"""
     }}
 
     function autoSelectProvider(providerName) {{
-        // Not used for hosting, but keep for compatibility
         setMainCategory('hostings');
         setSubCategory('shared');
         showPage('host');
@@ -1397,6 +1436,7 @@ html_content = f"""
     let cart = [];
     let currentMainCategory = 'all';
     let currentSubCategory = 'all';
+    let currentDesignCategory = 'design'; // for design page product range
     let currentModalStep = 2;
 
     // ==================== HELPER FUNCTIONS ====================
@@ -1458,6 +1498,38 @@ html_content = f"""
                     break;
                 }}
             }}
+        }}
+        // Search in design products
+        if (!itemObject) {{
+            for (let cat in designProducts) {{
+                const found = designProducts[cat].find(p => p.id == itemId);
+                if (found) {{
+                    itemObject = {{ 
+                        cartId: 'design-'+itemId+'-'+Date.now(), 
+                        type: 'design', 
+                        id: found.id, 
+                        name: found.name, 
+                        price: found.price, 
+                        category: found.category,
+                        period: found.period || 'once',
+                        addons: {{}}
+                    }};
+                    break;
+                }}
+            }}
+        }}
+        // Also check original designData for legacy design products
+        if (!itemObject && designData[itemId]) {{
+            const design = designData[itemId];
+            itemObject = {{ 
+                cartId: 'design-'+itemId+'-'+Date.now(), 
+                type: 'design', 
+                id: itemId, 
+                name: "Design Layout: "+design.logoText.replace('.',''), 
+                price: design.price, 
+                category: 'design',
+                addons: {{ extra_storage: false, priority: false }}
+            }};
         }}
         if(itemObject) {{ 
             cart.push(itemObject); 
@@ -1541,8 +1613,11 @@ html_content = f"""
                     addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400 text-center">Per user / month</div>`;
                 }}
             }}
+            else if(item.type==='design') {{
+                addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400 text-center">${{item.period === 'month' ? 'Monthly subscription' : 'Once-off'}}</div>`;
+            }}
             subtotal+=itemTotal;
-            html+=`<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between"><div class="flex justify-between items-start gap-2"><div class="text-left"><span class="font-bold text-white block truncate max-w-[150px]">${{item.name}}</span><span class="text-[8px] text-gray-500 uppercase block tracking-wider">${{item.type==='host'?'Hosting':(item.type==='domain'?'Domain':'Email')}}</span></div><div class="flex items-center gap-2"><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}</span><button onclick="removeFromCart('${{item.cartId}}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button></div></div>${{addoneSection}}</div>`;
+            html+=`<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between"><div class="flex justify-between items-start gap-2"><div class="text-left"><span class="font-bold text-white block truncate max-w-[150px]">${{item.name}}</span><span class="text-[8px] text-gray-500 uppercase block tracking-wider">${{item.type==='host'?'Hosting':(item.type==='domain'?'Domain':(item.type==='email'?'Email':'Design'))}}</span></div><div class="flex items-center gap-2"><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}</span><button onclick="removeFromCart('${{item.cartId}}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button></div></div>${{addoneSection}}</div>`;
         }});
         html+=`</div><div class="border-t border-white/10 pt-3 mt-3 space-y-3.5"><div class="flex justify-between text-xs font-bold"><span>Cart Subtotal:</span><span class="text-brand-gold text-sm font-black">R${{subtotal}}.00</span></div><button onclick="openCheckoutModal()" class="w-full text-center glossy-gold text-brand-black py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider shadow-md">Proceed to Checkout</button></div>`;
         content.className="text-[10px] text-gray-300 text-left"; 
@@ -1577,9 +1652,11 @@ html_content = f"""
         if(activeBtn) activeBtn.classList.add('text-brand-gold');
         window.scrollTo(0,0);
         if(pageName === 'host') renderProducts();
+        if(pageName === 'design') {{ renderDesignProducts(); setDesignCategory('design'); }}
         if(pageName === 'cloud') renderCloudPlans();
     }}
 
+    // HOST page functions
     function setMainCategory(category) {{
         currentMainCategory = category;
         currentSubCategory = 'all';
@@ -1587,7 +1664,6 @@ html_content = f"""
         const activeTab = document.getElementById(`tab-${{category}}`);
         if(activeTab) activeTab.className = "main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
         
-        // Update subcategory filters based on main category
         const subFiltersDiv = document.getElementById('subcategory-filters');
         if (!subFiltersDiv) return;
         
@@ -1614,7 +1690,6 @@ html_content = f"""
             subFiltersDiv.innerHTML = `<div class="text-xs text-gray-400">Select a product category above to filter</div>`;
         }}
         
-        // Highlight all sub filter if none selected
         if (currentSubCategory === 'all') {{
             setSubCategory('all');
         }} else {{
@@ -1625,7 +1700,6 @@ html_content = f"""
     
     function setSubCategory(subCat) {{
         currentSubCategory = subCat;
-        // Update active state on sub-filter buttons
         document.querySelectorAll('.sub-filter-btn').forEach(btn => {{
             btn.className = "sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm";
         }});
@@ -1641,7 +1715,6 @@ html_content = f"""
         let products = [];
         
         if (currentMainCategory === 'all') {{
-            // Show all products from all categories
             for (let cat in hostingProducts) {{
                 products.push(...hostingProducts[cat]);
             }}
@@ -1693,6 +1766,48 @@ html_content = f"""
             else typeLabel = 'Product';
             
             const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-black/5 shadow-sm">${{popBadge}}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${{typeLabel}}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">${{plan.features ? plan.features.length : 3}} Features</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${{plan.name}}</h3><div class="mt-2"><span class="text-2xl font-black text-brand-black tracking-tight">R${{plan.price}}</span><span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider ml-1">/${{priceSuffix}}</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[60px]">${{plan.description}}</p><ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">${{plan.features ? plan.features.map(f => `<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> ${{f}}</li>`).join('') : '<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> Full feature set included</li>'}}</ul></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('${{plan.type === 'hosting' ? 'host' : (plan.type === 'domain' ? 'domain' : 'email')}}', '${{plan.id}}')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('${{plan.type === 'hosting' ? 'host' : (plan.type === 'domain' ? 'domain' : 'email')}}', '${{plan.id}}')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
+            container.innerHTML += cardHtml;
+        }});
+    }}
+
+    // DESIGN page functions
+    function setDesignCategory(category) {{
+        currentDesignCategory = category;
+        document.querySelectorAll('.design-cat-tab').forEach(tab => tab.className = "design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50");
+        const activeTab = document.getElementById(`design-tab-${{category}}`);
+        if (activeTab) activeTab.className = "design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
+        
+        renderDesignProducts();
+    }}
+    
+    function renderDesignProducts() {{
+        const container = document.getElementById('design-products-container');
+        if(!container) return;
+        container.innerHTML = '';
+        
+        let products = [];
+        if (currentDesignCategory === 'design') {{
+            products = designProducts.design;
+        }} else if (currentDesignCategory === 'ecom') {{
+            products = designProducts.ecom;
+        }} else if (currentDesignCategory === 'sitebuilder') {{
+            products = designProducts.sitebuilder;
+        }}
+        
+        if(products.length===0) {{ 
+            container.innerHTML=`<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner"><i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i><p class="font-bold text-brand-black text-sm">No products found.</p><p class="text-xs text-gray-400 mt-1">Please select a different category.</p></div>`; 
+            return; 
+        }}
+        
+        products.forEach(plan => {{
+            const period = plan.period === 'month' ? '/month' : 'once-off';
+            const popBadge = plan.isPopular ? `<div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">Most Popular</div>` : '';
+            let categoryName = '';
+            if (currentDesignCategory === 'design') categoryName = 'Custom Design';
+            else if (currentDesignCategory === 'ecom') categoryName = 'eCommerce';
+            else categoryName = 'SiteBuilder';
+            
+            const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-black/5 shadow-sm">${{popBadge}}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${{categoryName}}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">${{plan.features.length}} Features</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${{plan.name}}</h3><div class="mt-2"><span class="text-2xl font-black text-brand-black tracking-tight">R${{plan.price}}</span><span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider ml-1">/${{period}}</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[60px]">${{plan.description}}</p><ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">${{plan.features.map(f => `<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> ${{f}}</li>`).join('')}}</ul></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('design', '${{plan.id}}')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('design', '${{plan.id}}')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
             container.innerHTML += cardHtml;
         }});
     }}
@@ -2025,10 +2140,11 @@ html_content = f"""
             const divAgent=document.createElement('div'); 
             divAgent.className="bg-brand-darkGray/60 p-3 rounded-2xl border border-white/5 text-gray-300 max-w-[85%] mb-2.5 leading-relaxed"; 
             const lowerInput=userMsg.toLowerCase(); 
-            if(lowerInput.includes('price')||lowerInput.includes('cost')||lowerInput.includes('rand')) divAgent.innerText="Our hosting plans start from R99/m for shared hosting. Dedicated servers from R1999/m. Domains from R89/year. Which product are you interested in?"; 
+            if(lowerInput.includes('price')||lowerInput.includes('cost')||lowerInput.includes('rand')) divAgent.innerText="Our hosting plans start from R99/m for shared hosting. Dedicated servers from R1999/m. Domains from R89/year. Design packages from R199/m. Which product are you interested in?"; 
             else if(lowerInput.includes('domain')) divAgent.innerText="We offer .com, .co.za, .org, .net domains starting from R89/year. Would you like to check availability for a specific domain?"; 
             else if(lowerInput.includes('email')) divAgent.innerText="Professional email hosting from R29/user/month. Includes webmail, mobile sync, and anti-spam protection."; 
-            else divAgent.innerText="I can help you find the right product. Tell me if you need hosting, a domain, or email services."; 
+            else if(lowerInput.includes('design')) divAgent.innerText="Our design products include custom hand-coded designs (from R5,199), eCommerce solutions (from R8,999), and SiteBuilder plans (from R199/m). Which are you interested in?"; 
+            else divAgent.innerText="I can help you find the right product. Tell me if you need hosting, a domain, email, or website design services."; 
             chatMessagesContainer.appendChild(divAgent); 
             chatMessagesContainer.scrollTop=chatMessagesContainer.scrollHeight; 
         }},1100); 
@@ -2044,7 +2160,8 @@ html_content = f"""
                     let htmlContent = ''; 
                     if(id==='home-hero') htmlContent = `ANGWA<span class="text-brand-gold">.</span>`; 
                     else if(id==='packages') htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`; 
-                    else if(id==='design-suite') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`; 
+                    else if(id==='design-products') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`; 
+                    else if(id==='design-suite') htmlContent = `ANGWA SANDBOX<span class="text-brand-gold">.</span>`; 
                     else if(id==='cloud-filling') htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`; 
                     if(badgeEl) {{ 
                         badgeEl.style.opacity='0'; 
@@ -2058,18 +2175,20 @@ html_content = f"""
                 }} 
             }}); 
         }}, observerOptions); 
-        document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => observer.observe(section)); 
+        document.querySelectorAll('#home-hero, #packages, #design-products, #design-suite, #cloud-filling').forEach(section => observer.observe(section)); 
     }}
 
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {{
         showPage('home');
         renderProducts();
+        renderDesignProducts();
         renderCloudPlans();
         setupSearchAutocomplete();
         setupScrollSpy();
         selectWebDesign('luxe');
         setMainCategory('all');
+        setDesignCategory('design');
     }});
 </script>
 
