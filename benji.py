@@ -42,7 +42,7 @@ def fetch_products():
             "description": row[4]
         })
     
-    # Design templates (original for custom design)
+    # Design templates (original)
     design_rows = client.execute("SELECT id, name, price, is_popular, description FROM products WHERE type = 'design'").rows
     design_data = {}
     for row in design_rows:
@@ -435,7 +435,7 @@ html_content = f"""
         
         <!-- Responsive Navigation (always visible, wraps on mobile) -->
         <nav class="flex items-center gap-3 lg:gap-5 text-xs text-white font-extrabold uppercase tracking-widest nav-gap">
-            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-house text-brand-gold text-sm"></i><span>Home</span></button>
+            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-house text-brand-gold text-sm"></i><span>HOME</span></button>
             <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-server text-brand-gold text-sm"></i><span>HOST</span></button>
             <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-pen-nib text-brand-gold text-sm"></i><span>DESIGN</span></button>
             <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-cloud text-brand-gold text-sm"></i><span>CLOUD</span></button>
@@ -467,7 +467,7 @@ html_content = f"""
                 <button id="cart-btn" onclick="toggleCartDropdown(event)" class="text-white hover:text-brand-gold transition-colors h-10 w-10 rounded-xl border border-white/10 hover:border-brand-gold/30 flex items-center justify-center bg-white/5 shadow-inner"><i class="fa-solid fa-bag-shopping text-sm"></i><span id="header-cart-badge" class="absolute -top-1 -right-1 h-4.5 w-4.5 bg-brand-gold text-brand-black rounded-full text-[9px] font-black flex items-center justify-center hidden">0</span></button>
                 <div id="cart-dropdown-panel" class="hidden absolute right-0 mt-3.5 w-80 rounded-2xl glass-dark shadow-2xl p-4 border border-white/10 z-50 text-white">
                     <h5 class="text-[10px] font-black text-brand-gold tracking-widest uppercase mb-3 flex items-center justify-between"><span>Your Configured Bag</span><button onclick="clearCart()" class="text-gray-400 hover:text-red-400 text-[8px] tracking-normal font-bold">Clear All</button></h5>
-                    <div id="cart-dropdown-content" class="text-[10px] text-gray-400 text-center py-4 space-y-3"><i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span></div>
+                    <div id="cart-dropdown-content" class="text-[10px] text-gray-400 text-center py-4 space-y-3"><i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No products added yet.</span></div>
                 </div>
             </div>
             <button onclick="triggerClientZone()" class="glossy-gold text-brand-black px-4 lg:px-5 py-2 rounded-full font-bold text-xs shadow-md flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-user-shield"></i><span class="hidden sm:inline">ClientZone</span><span class="sm:hidden"><i class="fa-solid fa-user-shield"></i></span></button>
@@ -703,57 +703,47 @@ html_content = f"""
     </div>
 </section>
 
-<!-- Our Product Range for Design -->
-<section id="design-products" class="py-20 bg-white">
+<!-- ==================== NEW: OUR PRODUCT RANGE FOR DESIGN ==================== -->
+<section id="design-products" class="py-20 bg-brand-lightBg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Our Product Range</span>
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">Website & eCommerce Solutions</h2>
-            <p class="text-gray-500 text-sm">From custom hand-coded designs to powerful eCommerce platforms and easy-to-use site builders — get your perfect online presence.</p>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">Web Design & Development Solutions</h2>
+            <p class="text-gray-500 text-sm">Choose from custom-coded designs, eCommerce platforms, or our drag-and-drop site builder. All include responsive layouts, SEO optimization, and fast delivery.</p>
         </div>
         <!-- Design Category Tabs -->
         <div class="flex flex-col items-center gap-6 mb-12">
-            <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-3xl">
-                <button onclick="setDesignCategory('design')" id="design-tab-design" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">Design</button>
+            <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-2xl">
+                <button onclick="setDesignCategory('all')" id="design-tab-all" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">All Products</button>
+                <button onclick="setDesignCategory('design')" id="design-tab-design" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Design</button>
                 <button onclick="setDesignCategory('ecom')" id="design-tab-ecom" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Design eCom</button>
                 <button onclick="setDesignCategory('sitebuilder')" id="design-tab-sitebuilder" class="design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">SiteBuilder</button>
             </div>
         </div>
-        <!-- Products Container for Design -->
+        <!-- Design Products Container -->
         <div id="design-products-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div class="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden sheen-effect">
+            <div class="flex items-center gap-5 z-10"><div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl"><i class="fa-solid fa-pen-ruler"></i></div><div><h4 class="text-lg font-bold text-brand-black">Need a custom design?</h4><p class="text-xs text-gray-500">Contact our design team for a fully bespoke website tailored to your exact requirements.</p></div></div>
+            <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">Request a Quote</a>
+        </div>
     </div>
 </section>
 
-<!-- Custom Design Sandbox Suite Section (only visible when Design category is selected) -->
+<!-- Custom Design Sandbox Suite Section (kept for live preview) -->
 <section id="design-suite" class="py-20 bg-brand-slateBlack text-white overflow-hidden relative border-t border-b border-white/10">
     <div class="absolute inset-0 opacity-10 pointer-events-none"><div class="absolute top-0 right-0 w-96 h-96 bg-brand-gold rounded-full filter blur-[120px]"></div><div class="absolute bottom-0 left-10 w-96 h-96 bg-brand-green rounded-full filter blur-[120px]"></div></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span class="text-brand-gold uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Live Preview Sandbox</span>
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Interactive Design Mockup</h2>
-            <p class="text-gray-400 text-sm">Select a design tier below to see the layout transform in real-time. Experience our premium themes before you buy.</p>
+            <p class="text-gray-400 text-sm">Select any design product below to see a live preview. Customize colors, typography, and layout in real-time.</p>
         </div>
         <div class="grid lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-5 space-y-4">
                 <h3 class="text-xl font-bold text-white mb-2">Select Design Tier</h3>
                 <p class="text-xs text-gray-400 leading-relaxed mb-6">Every plan is completely hand-coded, SEO optimized, integrated with ultra-fast light hosting, and customizable to your exact requirements.</p>
-                <div id="card-design-luxe" onclick="selectWebDesign('luxe')" class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/60 border-brand-gold/40 shadow-lg hover:border-brand-gold transition-all duration-300 relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-brand-gold tracking-widest uppercase flex items-center gap-2"><i class="fa-solid fa-gem"></i> Luxe Obsidian</span><span class="text-[9px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded font-bold uppercase tracking-wider">Most Popular</span></div>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-3">A spectacular ultra-premium dark theme featuring warm golden highlights, glassmorphism layers, and cinematic depth.</p>
-                    <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5"><div class="flex items-center justify-between"><div><span class="text-xl font-extrabold text-white">R11,699</span><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span></div></div><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('design', 'luxe'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i></button><button onclick="addToCart('design', 'luxe'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i></button></div></div>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3"><span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 10 Pages</span><span><i class="fa-solid fa-gauge-high text-brand-green mr-1"></i> 99 Speed Index</span></div>
-                </div>
-                <div id="card-design-emerald" onclick="selectWebDesign('emerald')" class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-green/50 transition-all duration-300 relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-brand-green tracking-widest uppercase flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Emerald Neo</span><span class="text-[9px] bg-brand-green/10 text-brand-green px-2 py-0.5 rounded font-bold uppercase tracking-wider">High Tech</span></div>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-3">Bright neon green highlights paired with deep carbon structures. Tailored for software, gaming networks, and modern tech brands.</p>
-                    <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5"><div class="flex items-center justify-between"><div><span class="text-xl font-extrabold text-white">R7,149</span><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span></div></div><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('design', 'emerald'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i></button><button onclick="addToCart('design', 'emerald'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i></button></div></div>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3"><span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 5 Pages</span><span><i class="fa-solid fa-code text-brand-green mr-1"></i> Clean Code</span></div>
-                </div>
-                <div id="card-design-minimal" onclick="selectWebDesign('minimal')" class="design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2"><i class="fa-solid fa-seedling"></i> Minimal Alabaster</span><span class="text-[9px] bg-white/10 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Clean Minimal</span></div>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-3">Ultra-clean, crisp white typography structured over soft gray backdrops. Excellent layout clarity for e-commerce or blogs.</p>
-                    <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5"><div class="flex items-center justify-between"><div><span class="text-xl font-extrabold text-white">R5,199</span><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span></div></div><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('design', 'minimal'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i></button><button onclick="addToCart('design', 'minimal'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i></button></div></div>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3"><span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> 3 Pages</span><span><i class="fa-solid fa-mobile text-white mr-1"></i> Fluid Grid</span></div>
+                <div id="design-selector-cards">
+                    <!-- Dynamic design selector cards will be populated by JS -->
                 </div>
             </div>
             <div class="lg:col-span-7">
@@ -854,7 +844,7 @@ html_content = f"""
 
 <!-- Footer -->
 <footer class="bg-brand-black text-gray-500 py-16 border-t border-white/10 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8"><div class="col-span-2 space-y-4"><a href="#" class="flex items-center gap-2"><div class="h-7 w-7 bg-brand-gold rounded-md flex items-center justify-center text-brand-black font-black text-sm shadow-md">A</div><span class="text-lg font-bold text-white tracking-wider">ANGWA.</span></a><p class="leading-relaxed text-gray-400">ANGWA is a licensed provider of optical fibre connections and digital bespoke web environments in South Africa. Operating across the main national carrier frameworks to bring symmetrical speeds directly to you.</p><div class="flex items-center gap-3 pt-2 text-gray-400"><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-facebook"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-instagram"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin"></i></a></div></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Hosting Products</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('shared')" class="hover:text-white transition-colors">Shared Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('cloudhosting')" class="hover:text-white transition-colors">Cloud Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('reseller')" class="hover:text-white transition-colors">Reseller Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('dedicated')" class="hover:text-white transition-colors">Dedicated Servers</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Design Products</h5><ul class="space-y-2"><li><a href="#design-products" onclick="setDesignCategory('design')" class="hover:text-white transition-colors">Custom Design</a></li><li><a href="#design-products" onclick="setDesignCategory('ecom')" class="hover:text-white transition-colors">eCommerce Design</a></li><li><a href="#design-products" onclick="setDesignCategory('sitebuilder')" class="hover:text-white transition-colors">SiteBuilder</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Support & Care</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Client Zone Login</a></li><li><a href="#" class="hover:text-white transition-colors">Help Centre</a></li><li><a href="#" class="hover:text-white transition-colors">Network Status Map</a></li><li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li></ul></div></div><div class="mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-gray-600 space-y-2"><p>© 2026 ANGWA Proprietary Limited. All rights reserved. Registered ICASA carrier frameworks.</p><p>Designed for maximum speed simulation based on physical optical fibre networks locally deployed.</p></div></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8"><div class="col-span-2 space-y-4"><a href="#" class="flex items-center gap-2"><div class="h-7 w-7 bg-brand-gold rounded-md flex items-center justify-center text-brand-black font-black text-sm shadow-md">A</div><span class="text-lg font-bold text-white tracking-wider">ANGWA.</span></a><p class="leading-relaxed text-gray-400">ANGWA is a licensed provider of optical fibre connections and digital bespoke web environments in South Africa. Operating across the main national carrier frameworks to bring symmetrical speeds directly to you.</p><div class="flex items-center gap-3 pt-2 text-gray-400"><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-facebook"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-instagram"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin"></i></a></div></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Hosting Products</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('shared')" class="hover:text-white transition-colors">Shared Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('cloudhosting')" class="hover:text-white transition-colors">Cloud Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('reseller')" class="hover:text-white transition-colors">Reseller Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('dedicated')" class="hover:text-white transition-colors">Dedicated Servers</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Domains & Emails</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('domains'); setSubCategory('domains')" class="hover:text-white transition-colors">Domain Registration</a></li><li><a href="#packages" onclick="setMainCategory('domains'); setSubCategory('pointing')" class="hover:text-white transition-colors">Domain Pointing</a></li><li><a href="#packages" onclick="setMainCategory('emails'); setSubCategory('emails')" class="hover:text-white transition-colors">Email Hosting</a></li><li><a href="#packages" onclick="setMainCategory('emails'); setSubCategory('free_domain')" class="hover:text-white transition-colors">Free Domain Offer</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Support & Care</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Client Zone Login</a></li><li><a href="#" class="hover:text-white transition-colors">Help Centre</a></li><li><a href="#" class="hover:text-white transition-colors">Network Status Map</a></li><li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li></ul></div></div><div class="mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-gray-600 space-y-2"><p>© 2026 ANGWA Proprietary Limited. All rights reserved. Registered ICASA carrier frameworks.</p><p>Designed for maximum speed simulation based on physical optical fibre networks locally deployed.</p></div></div>
 </footer>
 
 <script>
@@ -869,7 +859,7 @@ html_content = f"""
     const API_BASE = "{api_base_url}";
 
     // ==================== CUSTOM PRODUCTS ====================
-    // Hosting products (Shared, Cloud, Reseller, Dedicated, Rack, WHMCS) - same as before
+    // Hosting products (Shared, Cloud, Reseller, Dedicated, Rack, WHMCS)
     const hostingProducts = {{
         shared: [
             {{ id: "shared_1", name: "Starter Shared", description: "Perfect for small websites and blogs. Includes free SSL, 10GB SSD, and cPanel.", price: 99, features: ["10 GB SSD", "Free SSL", "cPanel", "10k monthly visits"], isPopular: false, category: "shared", type: "hosting" }},
@@ -929,22 +919,22 @@ html_content = f"""
         ]
     }};
 
-    // Design products for the new "Our Product Range" section
+    // ==================== NEW DESIGN PRODUCTS ====================
     const designProducts = {{
-        design: [
-            {{ id: "design_luxe", name: "Luxe Obsidian", description: "Ultra-premium dark luxury theme with gold accents. 10 pages, 99 Speed Index.", price: 11699, features: ["10 Pages", "99 Speed Index", "SEO Optimized", "Mobile Responsive", "5 Revisions"], isPopular: true, type: "design", category: "design" }},
-            {{ id: "design_emerald", name: "Emerald Neo", description: "High-tech neon layout with green highlights. Perfect for tech brands.", price: 7149, features: ["5 Pages", "Clean Code", "Neon Effects", "Fast Loading", "3 Revisions"], isPopular: false, type: "design", category: "design" }},
-            {{ id: "design_minimal", name: "Minimal Alabaster", description: "Ultra-clean light theme with crisp typography. Great for blogs and e-commerce.", price: 5199, features: ["3 Pages", "Fluid Grid", "Typography Focus", "Mobile First", "2 Revisions"], isPopular: false, type: "design", category: "design" }}
+        custom: [
+            {{ id: "design_luxe", name: "Luxe Obsidian", description: "Ultra-premium dark luxury theme with golden highlights, glassmorphism layers, and cinematic depth.", price: 11699, features: ["10 Pages", "99 Speed Index", "Glassmorphism", "Cinematic Layout"], isPopular: true, type: "design", previewKey: "luxe" }},
+            {{ id: "design_emerald", name: "Emerald Neo", description: "High-tech neon layout with bright green highlights, deep carbon structures, clean code.", price: 7149, features: ["5 Pages", "Clean Code", "Neon Effects", "Tech Focused"], isPopular: false, type: "design", previewKey: "emerald" }},
+            {{ id: "design_minimal", name: "Minimal Alabaster", description: "Ultra-clean light theme with crisp typography, soft gray backdrops, fluid grid.", price: 5199, features: ["3 Pages", "Fluid Grid", "Typography Focus", "E-commerce Ready"], isPopular: false, type: "design", previewKey: "minimal" }}
         ],
         ecom: [
-            {{ id: "ecom_starter", name: "eCommerce Starter", description: "Complete online store with product catalog, cart, and checkout.", price: 8999, features: ["Up to 50 Products", "Payment Gateway", "Order Management", "Inventory Tracking", "Email Notifications"], isPopular: true, type: "design", category: "ecom" }},
-            {{ id: "ecom_pro", name: "eCommerce Pro", description: "Advanced store with multi-currency, discounts, and analytics.", price: 14999, features: ["Unlimited Products", "Multi-Currency", "Discount Codes", "Analytics Dashboard", "Abandoned Cart Recovery"], isPopular: false, type: "design", category: "ecom" }},
-            {{ id: "ecom_enterprise", name: "eCommerce Enterprise", description: "Full-featured marketplace solution with multi-vendor support.", price: 24999, features: ["Multi-Vendor", "API Access", "Custom Workflows", "Dedicated Support", "High Volume Ready"], isPopular: false, type: "design", category: "ecom" }}
+            {{ id: "ecom_basic", name: "eCommerce Basic", description: "Fully functional online store with product catalog, cart, and secure checkout.", price: 8999, features: ["Up to 50 Products", "Payment Gateway", "Inventory Management", "Order Tracking"], isPopular: true, type: "ecom" }},
+            {{ id: "ecom_pro", name: "eCommerce Pro", description: "Advanced eCommerce solution with multi-currency, abandoned cart recovery, and analytics.", price: 14999, features: ["Unlimited Products", "Multi-Currency", "Abandoned Cart", "Analytics Dashboard"], isPopular: false, type: "ecom" }},
+            {{ id: "ecom_enterprise", name: "eCommerce Enterprise", description: "Scalable enterprise platform with custom workflows, API access, and dedicated support.", price: 29999, features: ["Custom Workflows", "API Access", "Dedicated Support", "High Volume"], isPopular: false, type: "ecom" }}
         ],
         sitebuilder: [
-            {{ id: "builder_basic", name: "SiteBuilder Basic", description: "Drag-and-drop website builder with 10 templates.", price: 199, features: ["10 Templates", "Drag-and-Drop", "Mobile Editor", "Free Hosting", "5 Pages"], isPopular: false, type: "design", category: "sitebuilder", period: "month" }},
-            {{ id: "builder_pro", name: "SiteBuilder Pro", description: "50+ templates, custom domain, and eCommerce features.", price: 399, features: ["50+ Templates", "Custom Domain", "eCommerce Tools", "Analytics", "Unlimited Pages"], isPopular: true, type: "design", category: "sitebuilder", period: "month" }},
-            {{ id: "builder_agency", name: "SiteBuilder Agency", description: "White-label builder for agencies. Client management and team collaboration.", price: 999, features: ["White-Label", "Client Management", "Team Collaboration", "Advanced SEO", "Priority Support"], isPopular: false, type: "design", category: "sitebuilder", period: "month" }}
+            {{ id: "builder_starter", name: "SiteBuilder Starter", description: "Drag-and-drop website builder with 50+ templates, mobile responsive, and free SSL.", price: 199, features: ["50+ Templates", "Drag & Drop", "Free SSL", "Mobile Responsive"], isPopular: false, type: "sitebuilder", period: "month" }},
+            {{ id: "builder_pro", name: "SiteBuilder Pro", description: "Advanced builder with custom domains, eCommerce tools, and priority support.", price: 399, features: ["Custom Domains", "eCommerce Tools", "Priority Support", "Analytics"], isPopular: true, type: "sitebuilder", period: "month" }},
+            {{ id: "builder_business", name: "SiteBuilder Business", description: "Unlimited sites, team collaboration, white-label options, and premium templates.", price: 799, features: ["Unlimited Sites", "Team Collaboration", "White-label", "Premium Templates"], isPopular: false, type: "sitebuilder", period: "month" }}
         ]
     }};
 
@@ -1233,6 +1223,7 @@ html_content = f"""
     }}
 
     function autoSelectProvider(providerName) {{
+        // Not used for hosting, but keep for compatibility
         setMainCategory('hostings');
         setSubCategory('shared');
         showPage('host');
@@ -1436,7 +1427,7 @@ html_content = f"""
     let cart = [];
     let currentMainCategory = 'all';
     let currentSubCategory = 'all';
-    let currentDesignCategory = 'design'; // for design page product range
+    let currentDesignCategory = 'all';
     let currentModalStep = 2;
 
     // ==================== HELPER FUNCTIONS ====================
@@ -1510,26 +1501,12 @@ html_content = f"""
                         id: found.id, 
                         name: found.name, 
                         price: found.price, 
-                        category: found.category,
-                        period: found.period || 'once',
+                        category: found.type,
                         addons: {{}}
                     }};
                     break;
                 }}
             }}
-        }}
-        // Also check original designData for legacy design products
-        if (!itemObject && designData[itemId]) {{
-            const design = designData[itemId];
-            itemObject = {{ 
-                cartId: 'design-'+itemId+'-'+Date.now(), 
-                type: 'design', 
-                id: itemId, 
-                name: "Design Layout: "+design.logoText.replace('.',''), 
-                price: design.price, 
-                category: 'design',
-                addons: {{ extra_storage: false, priority: false }}
-            }};
         }}
         if(itemObject) {{ 
             cart.push(itemObject); 
@@ -1614,7 +1591,7 @@ html_content = f"""
                 }}
             }}
             else if(item.type==='design') {{
-                addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400 text-center">${{item.period === 'month' ? 'Monthly subscription' : 'Once-off'}}</div>`;
+                addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400 text-center">Once-off payment, includes source code</div>`;
             }}
             subtotal+=itemTotal;
             html+=`<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between"><div class="flex justify-between items-start gap-2"><div class="text-left"><span class="font-bold text-white block truncate max-w-[150px]">${{item.name}}</span><span class="text-[8px] text-gray-500 uppercase block tracking-wider">${{item.type==='host'?'Hosting':(item.type==='domain'?'Domain':(item.type==='email'?'Email':'Design'))}}</span></div><div class="flex items-center gap-2"><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}</span><button onclick="removeFromCart('${{item.cartId}}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button></div></div>${{addoneSection}}</div>`;
@@ -1652,11 +1629,11 @@ html_content = f"""
         if(activeBtn) activeBtn.classList.add('text-brand-gold');
         window.scrollTo(0,0);
         if(pageName === 'host') renderProducts();
-        if(pageName === 'design') {{ renderDesignProducts(); setDesignCategory('design'); }}
+        if(pageName === 'design') renderDesignProducts();
         if(pageName === 'cloud') renderCloudPlans();
     }}
 
-    // HOST page functions
+    // Host page functions
     function setMainCategory(category) {{
         currentMainCategory = category;
         currentSubCategory = 'all';
@@ -1664,6 +1641,7 @@ html_content = f"""
         const activeTab = document.getElementById(`tab-${{category}}`);
         if(activeTab) activeTab.className = "main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
         
+        // Update subcategory filters based on main category
         const subFiltersDiv = document.getElementById('subcategory-filters');
         if (!subFiltersDiv) return;
         
@@ -1690,6 +1668,7 @@ html_content = f"""
             subFiltersDiv.innerHTML = `<div class="text-xs text-gray-400">Select a product category above to filter</div>`;
         }}
         
+        // Highlight all sub filter if none selected
         if (currentSubCategory === 'all') {{
             setSubCategory('all');
         }} else {{
@@ -1700,6 +1679,7 @@ html_content = f"""
     
     function setSubCategory(subCat) {{
         currentSubCategory = subCat;
+        // Update active state on sub-filter buttons
         document.querySelectorAll('.sub-filter-btn').forEach(btn => {{
             btn.className = "sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm";
         }});
@@ -1770,44 +1750,90 @@ html_content = f"""
         }});
     }}
 
-    // DESIGN page functions
+    // Design page functions
     function setDesignCategory(category) {{
         currentDesignCategory = category;
         document.querySelectorAll('.design-cat-tab').forEach(tab => tab.className = "design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50");
         const activeTab = document.getElementById(`design-tab-${{category}}`);
-        if (activeTab) activeTab.className = "design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
-        
+        if(activeTab) activeTab.className = "design-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
         renderDesignProducts();
     }}
-    
+
     function renderDesignProducts() {{
         const container = document.getElementById('design-products-container');
         if(!container) return;
         container.innerHTML = '';
-        
         let products = [];
-        if (currentDesignCategory === 'design') {{
-            products = designProducts.design;
+        
+        if (currentDesignCategory === 'all') {{
+            for (let cat in designProducts) {{
+                products.push(...designProducts[cat]);
+            }}
+        }} else if (currentDesignCategory === 'design') {{
+            products = [...designProducts.custom];
         }} else if (currentDesignCategory === 'ecom') {{
-            products = designProducts.ecom;
+            products = [...designProducts.ecom];
         }} else if (currentDesignCategory === 'sitebuilder') {{
-            products = designProducts.sitebuilder;
+            products = [...designProducts.sitebuilder];
+        }}
+        
+        // Also add the design selector cards for the sandbox (from original designData)
+        const selectorCardsDiv = document.getElementById('design-selector-cards');
+        if (selectorCardsDiv) {{
+            // Create selector cards for custom design products only
+            selectorCardsDiv.innerHTML = '';
+            designProducts.custom.forEach(plan => {{
+                const previewKey = plan.previewKey;
+                const isSelected = (previewKey === 'luxe');
+                const borderClass = isSelected ? (previewKey === 'luxe' ? 'border-brand-gold/40' : (previewKey === 'emerald' ? 'border-brand-green/40' : 'border-white/30')) : 'border-white/5';
+                const bgClass = isSelected ? 'bg-brand-darkGray/60' : 'bg-brand-darkGray/20';
+                const priceDisplay = plan.price.toLocaleString();
+                const card = `
+                    <div id="card-design-${{previewKey}}" onclick="selectWebDesign('${{previewKey}}')" class="design-selector-card cursor-pointer p-5 rounded-2xl border ${{bgClass}} ${{borderClass}} shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold ${{previewKey === 'luxe' ? 'text-brand-gold' : (previewKey === 'emerald' ? 'text-brand-green' : 'text-white')}} tracking-widest uppercase flex items-center gap-2">
+                                <i class="fa-solid ${{previewKey === 'luxe' ? 'fa-gem' : (previewKey === 'emerald' ? 'fa-bolt' : 'fa-seedling')}}"></i> ${{plan.name}}
+                            </span>
+                            ${{plan.isPopular ? '<span class="text-[9px] bg-brand-gold/15 text-brand-gold px-2.5 py-0.5 rounded font-bold uppercase tracking-wider">Most Popular</span>' : ''}}
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-3">${{plan.description.substring(0, 80)}}...</p>
+                        <div class="border-t border-white/5 pt-3 mt-3 flex flex-col gap-2.5">
+                            <div class="flex items-center justify-between">
+                                <div><span class="text-xl font-extrabold text-white">R${{priceDisplay}}</span><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider block">Once-off Setup</span></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <button onclick="directBuy('design', '${{plan.id}}'); event.stopPropagation();" class="glossy-gold text-brand-black text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5">
+                                    <span>Buy Now</span> <i class="fa-solid fa-bolt text-[8px]"></i>
+                                </button>
+                                <button onclick="addToCart('design', '${{plan.id}}'); event.stopPropagation();" class="glossy-black text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-full shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold">
+                                    <span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[8px] text-brand-gold"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 text-[9px] text-gray-500 font-semibold uppercase mt-3">
+                            ${{plan.features.map(f => `<span><i class="fa-solid fa-circle-check text-brand-green mr-1"></i> ${{f}}</span>`).join('')}}
+                        </div>
+                    </div>
+                `;
+                selectorCardsDiv.innerHTML += card;
+            }});
         }}
         
         if(products.length===0) {{ 
-            container.innerHTML=`<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner"><i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i><p class="font-bold text-brand-black text-sm">No products found.</p><p class="text-xs text-gray-400 mt-1">Please select a different category.</p></div>`; 
+            container.innerHTML=`<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner"><i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i><p class="font-bold text-brand-black text-sm">No design products found.</p><p class="text-xs text-gray-400 mt-1">Please select a different category.</p></div>`; 
             return; 
         }}
         
         products.forEach(plan => {{
-            const period = plan.period === 'month' ? '/month' : 'once-off';
+            const isOneTime = plan.period !== 'month';
+            const priceSuffix = isOneTime ? 'once-off' : '/month';
             const popBadge = plan.isPopular ? `<div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">Most Popular</div>` : '';
-            let categoryName = '';
-            if (currentDesignCategory === 'design') categoryName = 'Custom Design';
-            else if (currentDesignCategory === 'ecom') categoryName = 'eCommerce';
-            else categoryName = 'SiteBuilder';
+            let typeLabel = '';
+            if (plan.type === 'design') typeLabel = 'Custom Design';
+            else if (plan.type === 'ecom') typeLabel = 'eCommerce';
+            else if (plan.type === 'sitebuilder') typeLabel = 'SiteBuilder';
             
-            const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-black/5 shadow-sm">${{popBadge}}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${{categoryName}}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">${{plan.features.length}} Features</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${{plan.name}}</h3><div class="mt-2"><span class="text-2xl font-black text-brand-black tracking-tight">R${{plan.price}}</span><span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider ml-1">/${{period}}</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[60px]">${{plan.description}}</p><ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">${{plan.features.map(f => `<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> ${{f}}</li>`).join('')}}</ul></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('design', '${{plan.id}}')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('design', '${{plan.id}}')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
+            const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-black/5 shadow-sm">${{popBadge}}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${{typeLabel}}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">${{plan.features ? plan.features.length : 3}} Features</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${{plan.name}}</h3><div class="mt-2"><span class="text-2xl font-black text-brand-black tracking-tight">R${{plan.price.toLocaleString()}}</span><span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider ml-1">/${{priceSuffix}}</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[60px]">${{plan.description}}</p><ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">${{plan.features ? plan.features.map(f => `<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> ${{f}}</li>`).join('') : '<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> Full feature set included</li>'}}</ul></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('design', '${{plan.id}}')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('design', '${{plan.id}}')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
             container.innerHTML += cardHtml;
         }});
     }}
@@ -2140,11 +2166,10 @@ html_content = f"""
             const divAgent=document.createElement('div'); 
             divAgent.className="bg-brand-darkGray/60 p-3 rounded-2xl border border-white/5 text-gray-300 max-w-[85%] mb-2.5 leading-relaxed"; 
             const lowerInput=userMsg.toLowerCase(); 
-            if(lowerInput.includes('price')||lowerInput.includes('cost')||lowerInput.includes('rand')) divAgent.innerText="Our hosting plans start from R99/m for shared hosting. Dedicated servers from R1999/m. Domains from R89/year. Design packages from R199/m. Which product are you interested in?"; 
+            if(lowerInput.includes('price')||lowerInput.includes('cost')||lowerInput.includes('rand')) divAgent.innerText="Our hosting plans start from R99/m for shared hosting. Dedicated servers from R1999/m. Domains from R89/year. Which product are you interested in?"; 
             else if(lowerInput.includes('domain')) divAgent.innerText="We offer .com, .co.za, .org, .net domains starting from R89/year. Would you like to check availability for a specific domain?"; 
             else if(lowerInput.includes('email')) divAgent.innerText="Professional email hosting from R29/user/month. Includes webmail, mobile sync, and anti-spam protection."; 
-            else if(lowerInput.includes('design')) divAgent.innerText="Our design products include custom hand-coded designs (from R5,199), eCommerce solutions (from R8,999), and SiteBuilder plans (from R199/m). Which are you interested in?"; 
-            else divAgent.innerText="I can help you find the right product. Tell me if you need hosting, a domain, email, or website design services."; 
+            else divAgent.innerText="I can help you find the right product. Tell me if you need hosting, a domain, or email services."; 
             chatMessagesContainer.appendChild(divAgent); 
             chatMessagesContainer.scrollTop=chatMessagesContainer.scrollHeight; 
         }},1100); 
@@ -2161,7 +2186,6 @@ html_content = f"""
                     if(id==='home-hero') htmlContent = `ANGWA<span class="text-brand-gold">.</span>`; 
                     else if(id==='packages') htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`; 
                     else if(id==='design-products') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`; 
-                    else if(id==='design-suite') htmlContent = `ANGWA SANDBOX<span class="text-brand-gold">.</span>`; 
                     else if(id==='cloud-filling') htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`; 
                     if(badgeEl) {{ 
                         badgeEl.style.opacity='0'; 
@@ -2175,7 +2199,7 @@ html_content = f"""
                 }} 
             }}); 
         }}, observerOptions); 
-        document.querySelectorAll('#home-hero, #packages, #design-products, #design-suite, #cloud-filling').forEach(section => observer.observe(section)); 
+        document.querySelectorAll('#home-hero, #packages, #design-products, #cloud-filling').forEach(section => observer.observe(section)); 
     }}
 
     // Initialization
@@ -2188,7 +2212,7 @@ html_content = f"""
         setupScrollSpy();
         selectWebDesign('luxe');
         setMainCategory('all');
-        setDesignCategory('design');
+        setDesignCategory('all');
     }});
 </script>
 
