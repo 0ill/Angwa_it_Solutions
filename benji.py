@@ -13,7 +13,7 @@ def get_turso_connection():
 def fetch_products():
     client = get_turso_connection()
     
-    # Host packages
+    # Host packages (fibre - keep for reference but not used in new HOST page)
     host_rows = client.execute("SELECT id, provider, name, speed_down, speed_up, price, is_popular, description FROM products WHERE type = 'host'").rows
     package_data = []
     for row in host_rows:
@@ -150,7 +150,7 @@ addon_json = json.dumps(addon_data)
 coverage_json = json.dumps(coverage_data)
 
 # Backend API URL (from secrets, fallback to placeholder)
-api_base_url = st.secrets.get("API_BASE_URL", "https://your-app.koyeb.app")
+api_base_url = st.secrets.get("API_BASE_URL", "https://your-app.onrender.com")
 
 # ---------- Streamlit Page Config ----------
 st.set_page_config(
@@ -652,40 +652,38 @@ html_content = f"""
 <!-- Host Hero Section -->
 <section class="relative bg-gradient-to-br from-brand-slateBlack to-brand-black text-white overflow-hidden py-20 border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-brand-gold text-xs font-medium tracking-widest uppercase mb-6">Symmetrical Fibre Hosting</div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Ultra-Fast, <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldLight">Symmetrical Speeds</span></h1>
-        <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Choose from leading network providers, uncapped, month-to-month, with free Wi-Fi 6 router and installation. No contracts, no hidden fees.</p>
-        <div class="flex flex-wrap justify-center gap-4 mt-8"><a href="#packages" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Browse Packages</a><a href="#coverage" class="glossy-black text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Check Coverage</a></div>
+        <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-brand-gold text-xs font-medium tracking-widest uppercase mb-6">Premium Web Services</div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Complete <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldLight">Hosting & Domain Suite</span></h1>
+        <p class="mt-4 text-gray-400 max-w-2xl mx-auto">From powerful hosting plans to domain registration and professional email — all in one place. 24/7 support, 99.99% uptime, and free migration.</p>
+        <div class="flex flex-wrap justify-center gap-4 mt-8"><a href="#services" class="glossy-gold text-brand-black px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Browse All Products</a><a href="#coverage" class="glossy-black text-white px-7 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-md">Check Availability</a></div>
     </div>
 </section>
 
-<!-- Hosting / Packages Section -->
+<!-- Products Section -->
 <div id="services">
     <section id="packages" class="py-20 bg-brand-lightBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Service 01: Symmetrical Hosting</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">Choose Your Symmetrical Connection</h2>
-                <p class="text-gray-500 text-sm">Select by individual Network Provider, or segment speed tiers ideal for heavy streaming, cloud management, zero-ping online gaming, or massive smart home suites.</p>
+                <span class="text-brand-goldDark uppercase font-black tracking-widest text-xs px-3.5 py-1 bg-brand-gold/10 rounded-full">Our Product Range</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-brand-black">Everything Your Online Business Needs</h2>
+                <p class="text-gray-500 text-sm">Choose from hosting, domains, emails — or bundle and save. All products include our signature support and reliability.</p>
             </div>
+            <!-- Main Category Tabs -->
             <div class="flex flex-col items-center gap-6 mb-12">
-                <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-2xl">
-                    <button onclick="setFNO('all')" id="tab-all" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">All Networks</button>
-                    <button onclick="setFNO('vuma')" id="tab-vuma" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Vumatel</button>
-                    <button onclick="setFNO('open')" id="tab-open" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Openserve</button>
-                    <button onclick="setFNO('frog')" id="tab-frog" class="fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Frogfoot</button>
+                <div class="bg-brand-darkGray/5 p-1 rounded-2xl shadow-inner border border-black/5 flex flex-wrap justify-center gap-1 w-full max-w-3xl">
+                    <button onclick="setMainCategory('all')" id="tab-all" class="main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm">All Products</button>
+                    <button onclick="setMainCategory('hostings')" id="tab-hostings" class="main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Hostings</button>
+                    <button onclick="setMainCategory('domains')" id="tab-domains" class="main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Domains</button>
+                    <button onclick="setMainCategory('emails')" id="tab-emails" class="main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50">Emails</button>
                 </div>
-                <div class="flex flex-wrap justify-center gap-2">
-                    <button onclick="filterSpeedRange('all')" id="btn-speed-all" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm">All Speeds</button>
-                    <button onclick="filterSpeedRange('budget')" id="btn-speed-budget" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Casual (30M - 50M)</button>
-                    <button onclick="filterSpeedRange('medium')" id="btn-speed-medium" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Active House (100M - 200M)</button>
-                    <button onclick="filterSpeedRange('pro')" id="btn-speed-pro" class="speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Pro Tier (500M - 1G)</button>
-                </div>
+                <!-- Sub-category filters (dynamic based on main category) -->
+                <div id="subcategory-filters" class="flex flex-wrap justify-center gap-2"></div>
             </div>
+            <!-- Products Container -->
             <div id="packages-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             <div class="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden sheen-effect">
-                <div class="flex items-center gap-5 z-10"><div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl"><i class="fa-solid fa-globe"></i></div><div><h4 class="text-lg font-bold text-brand-black">Confused by different network setup terms?</h4><p class="text-xs text-gray-500">Run a manual coverage analysis. We'll automatically identify the cheapest option for your home.</p></div></div>
-                <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">Compare Network Prices</a>
+                <div class="flex items-center gap-5 z-10"><div class="h-14 w-14 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-goldDark text-2xl"><i class="fa-solid fa-life-ring"></i></div><div><h4 class="text-lg font-bold text-brand-black">Not sure what to choose?</h4><p class="text-xs text-gray-500">Our experts are ready to help you find the perfect solution for your needs.</p></div></div>
+                <a href="#coverage" class="glossy-gold text-brand-black px-6 py-3 rounded-full font-bold text-xs tracking-wider uppercase shadow-md z-10">Talk to an Expert</a>
             </div>
         </div>
     </section>
@@ -835,7 +833,7 @@ html_content = f"""
 
 <!-- Footer -->
 <footer class="bg-brand-black text-gray-500 py-16 border-t border-white/10 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8"><div class="col-span-2 space-y-4"><a href="#" class="flex items-center gap-2"><div class="h-7 w-7 bg-brand-gold rounded-md flex items-center justify-center text-brand-black font-black text-sm shadow-md">A</div><span class="text-lg font-bold text-white tracking-wider">ANGWA.</span></a><p class="leading-relaxed text-gray-400">ANGWA is a licensed provider of optical fibre connections and digital bespoke web environments in South Africa. Operating across the main national carrier frameworks to bring symmetrical speeds directly to you.</p><div class="flex items-center gap-3 pt-2 text-gray-400"><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-facebook"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-instagram"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin"></i></a></div></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Speed Products</h5><ul class="space-y-2"><li><a href="#packages" class="hover:text-white transition-colors">Vumatel Packages</a></li><li><a href="#packages" class="hover:text-white transition-colors">Openserve Packages</a></li><li><a href="#packages" class="hover:text-white transition-colors">Frogfoot Packages</a></li><li><a href="#" class="hover:text-white transition-colors">Gigabit Power Fibre</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Support & Care</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Client Zone Login</a></li><li><a href="#" class="hover:text-white transition-colors">Help Centre</a></li><li><a href="#" class="hover:text-white transition-colors">Network Status Map</a></li><li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Legal Framework</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Terms of Agreement</a></li><li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li><li><a href="#" class="hover:text-white transition-colors">Fibre SLA Policies</a></li></ul></div></div><div class="mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-gray-600 space-y-2"><p>© 2026 ANGWA Proprietary Limited. All rights reserved. Registered ICASA carrier frameworks.</p><p>Designed for maximum speed simulation based on physical optical fibre networks locally deployed.</p></div></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8"><div class="col-span-2 space-y-4"><a href="#" class="flex items-center gap-2"><div class="h-7 w-7 bg-brand-gold rounded-md flex items-center justify-center text-brand-black font-black text-sm shadow-md">A</div><span class="text-lg font-bold text-white tracking-wider">ANGWA.</span></a><p class="leading-relaxed text-gray-400">ANGWA is a licensed provider of optical fibre connections and digital bespoke web environments in South Africa. Operating across the main national carrier frameworks to bring symmetrical speeds directly to you.</p><div class="flex items-center gap-3 pt-2 text-gray-400"><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-facebook"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-instagram"></i></a><a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin"></i></a></div></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Hosting Products</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('shared')" class="hover:text-white transition-colors">Shared Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('cloudhosting')" class="hover:text-white transition-colors">Cloud Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('reseller')" class="hover:text-white transition-colors">Reseller Hosting</a></li><li><a href="#packages" onclick="setMainCategory('hostings'); setSubCategory('dedicated')" class="hover:text-white transition-colors">Dedicated Servers</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Domains & Emails</h5><ul class="space-y-2"><li><a href="#packages" onclick="setMainCategory('domains'); setSubCategory('domains')" class="hover:text-white transition-colors">Domain Registration</a></li><li><a href="#packages" onclick="setMainCategory('domains'); setSubCategory('pointing')" class="hover:text-white transition-colors">Domain Pointing</a></li><li><a href="#packages" onclick="setMainCategory('emails'); setSubCategory('emails')" class="hover:text-white transition-colors">Email Hosting</a></li><li><a href="#packages" onclick="setMainCategory('emails'); setSubCategory('free_domain')" class="hover:text-white transition-colors">Free Domain Offer</a></li></ul></div><div><h5 class="text-white text-[10px] font-bold uppercase tracking-wider mb-4">Support & Care</h5><ul class="space-y-2"><li><a href="#" class="hover:text-white transition-colors">Client Zone Login</a></li><li><a href="#" class="hover:text-white transition-colors">Help Centre</a></li><li><a href="#" class="hover:text-white transition-colors">Network Status Map</a></li><li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li></ul></div></div><div class="mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-gray-600 space-y-2"><p>© 2026 ANGWA Proprietary Limited. All rights reserved. Registered ICASA carrier frameworks.</p><p>Designed for maximum speed simulation based on physical optical fibre networks locally deployed.</p></div></div>
 </footer>
 
 <script>
@@ -848,6 +846,67 @@ html_content = f"""
 
     // ==================== BACKEND API URL ====================
     const API_BASE = "{api_base_url}";
+
+    // ==================== CUSTOM PRODUCTS ====================
+    // Hosting products (Shared, Cloud, Reseller, Dedicated, Rack, WHMCS)
+    const hostingProducts = {{
+        shared: [
+            {{ id: "shared_1", name: "Starter Shared", description: "Perfect for small websites and blogs. Includes free SSL, 10GB SSD, and cPanel.", price: 99, features: ["10 GB SSD", "Free SSL", "cPanel", "10k monthly visits"], isPopular: false, category: "shared", type: "hosting" }},
+            {{ id: "shared_2", name: "Business Shared", description: "Ideal for growing businesses with higher traffic. 50GB SSD, daily backups, and priority support.", price: 199, features: ["50 GB SSD", "Daily Backups", "Priority Support", "50k monthly visits"], isPopular: true, category: "shared", type: "hosting" }},
+            {{ id: "shared_3", name: "Pro Shared", description: "High-performance shared hosting with 100GB SSD, advanced caching, and free CDN.", price: 299, features: ["100 GB SSD", "Free CDN", "Advanced Caching", "200k monthly visits"], isPopular: false, category: "shared", type: "hosting" }}
+        ],
+        cloudhosting: [
+            {{ id: "cloud_1", name: "Cloud Starter", description: "Scalable cloud hosting with 2 vCPU, 4GB RAM, and 50GB SSD. Pay-as-you-grow.", price: 399, features: ["2 vCPU", "4 GB RAM", "50 GB SSD", "Auto-scaling"], isPopular: false, category: "cloudhosting", type: "hosting" }},
+            {{ id: "cloud_2", name: "Cloud Business", description: "Enterprise-grade cloud with 4 vCPU, 8GB RAM, 100GB SSD, and load balancing.", price: 699, features: ["4 vCPU", "8 GB RAM", "100 GB SSD", "Load Balancer"], isPopular: true, category: "cloudhosting", type: "hosting" }},
+            {{ id: "cloud_3", name: "Cloud Enterprise", description: "Maximum performance: 8 vCPU, 16GB RAM, 250GB SSD, dedicated environment.", price: 1299, features: ["8 vCPU", "16 GB RAM", "250 GB SSD", "Dedicated Environment"], isPopular: false, category: "cloudhosting", type: "hosting" }}
+        ],
+        reseller: [
+            {{ id: "reseller_1", name: "Reseller Lite", description: "Start your hosting business. 50GB storage, white-label cPanel, and free WHMCS.", price: 499, features: ["50 GB Storage", "White-label cPanel", "WHMCS Included", "100 cPanel accounts"], isPopular: false, category: "reseller", type: "hosting" }},
+            {{ id: "reseller_2", name: "Reseller Pro", description: "Grow with 200GB storage, branded nameservers, and priority support.", price: 899, features: ["200 GB Storage", "Branded Nameservers", "Priority Support", "500 cPanel accounts"], isPopular: true, category: "reseller", type: "hosting" }},
+            {{ id: "reseller_3", name: "Reseller Ultimate", description: "Unlimited storage, free client management tools, and dedicated account manager.", price: 1499, features: ["Unlimited Storage", "Client Management", "Dedicated Manager", "Unlimited accounts"], isPopular: false, category: "reseller", type: "hosting" }}
+        ],
+        dedicated: [
+            {{ id: "dedicated_1", name: "Dedicated X1", description: "Entry-level dedicated server: Intel Xeon E-2234, 16GB RAM, 2x480GB SSD.", price: 1999, features: ["Intel Xeon E-2234", "16 GB RAM", "2x480 GB SSD", "1 Gbps Unmetered"], isPopular: false, category: "dedicated", type: "hosting" }},
+            {{ id: "dedicated_2", name: "Dedicated X2", description: "Mid-range power: Intel Xeon Silver, 32GB RAM, 2x1TB NVMe, hardware RAID.", price: 3499, features: ["Intel Xeon Silver", "32 GB RAM", "2x1 TB NVMe", "Hardware RAID"], isPopular: true, category: "dedicated", type: "hosting" }},
+            {{ id: "dedicated_3", name: "Dedicated X3", description: "Ultimate performance: Dual Xeon Gold, 64GB RAM, 4x1TB NVMe, 10Gbps uplink.", price: 5999, features: ["Dual Xeon Gold", "64 GB RAM", "4x1 TB NVMe", "10 Gbps Uplink"], isPopular: false, category: "dedicated", type: "hosting" }}
+        ],
+        rack: [
+            {{ id: "rack_1", name: "Rack 1U", description: "Colocation: 1U rack space, 1A power, 1Gbps port, 5TB transfer.", price: 1499, features: ["1U Rack Space", "1A Power", "1 Gbps Port", "5 TB Transfer"], isPopular: false, category: "rack", type: "hosting" }},
+            {{ id: "rack_2", name: "Rack 2U", description: "2U rack space, 2A power, 10Gbps port, unmetered bandwidth, remote hands.", price: 2999, features: ["2U Rack Space", "2A Power", "10 Gbps Port", "Unmetered Bandwidth"], isPopular: true, category: "rack", type: "hosting" }},
+            {{ id: "rack_3", name: "Rack Cabinet", description: "Full 42U cabinet, 10A power, 10Gbps fiber, 24/7 onsite support, SLA.", price: 7999, features: ["42U Cabinet", "10A Power", "10 Gbps Fiber", "24/7 Onsite Support"], isPopular: false, category: "rack", type: "hosting" }}
+        ],
+        whmcs: [
+            {{ id: "whmcs_1", name: "WHMCS Starter", description: "Billing automation for up to 250 clients. Includes support and updates.", price: 1599, features: ["250 Clients", "Invoicing", "Support System", "Monthly Updates"], isPopular: false, category: "whmcs", type: "hosting", isOneTime: true }},
+            {{ id: "whmcs_2", name: "WHMCS Professional", description: "Unlimited clients, automated provisioning, mobile app, and 24/7 priority support.", price: 2999, features: ["Unlimited Clients", "Auto Provisioning", "Mobile App", "Priority Support"], isPopular: true, category: "whmcs", type: "hosting", isOneTime: true }},
+            {{ id: "whmcs_3", name: "WHMCS Enterprise", description: "Full suite including custom modules, dedicated onboarding, and API access.", price: 5999, features: ["Custom Modules", "Dedicated Onboarding", "API Access", "SLA"], isPopular: false, category: "whmcs", type: "hosting", isOneTime: true }}
+        ]
+    }};
+
+    // Domain products
+    const domainProducts = {{
+        domains: [
+            {{ id: "domain_com", name: ".COM Domain", description: "The most popular domain extension worldwide. Includes free privacy protection.", price: 129, features: ["Free WHOIS Privacy", "DNS Management", "Email Forwarding", "Auto-renewal"], isPopular: true, type: "domain", period: "year" }},
+            {{ id: "domain_coza", name: ".CO.ZA Domain", description: "South Africa's trusted domain for local businesses.", price: 89, features: ["Local Presence", "Free Privacy", "DNS Management", "Transfer Support"], isPopular: true, type: "domain", period: "year" }},
+            {{ id: "domain_org", name: ".ORG Domain", description: "Perfect for non-profits, communities, and open source projects.", price: 99, features: ["Global Recognition", "Free Privacy", "DNS Management", "Secure"], isPopular: false, type: "domain", period: "year" }},
+            {{ id: "domain_net", name: ".NET Domain", description: "Ideal for networking, tech, and infrastructure companies.", price: 109, features: ["Tech Focused", "Free Privacy", "DNS Management", "Reliable"], isPopular: false, type: "domain", period: "year" }}
+        ],
+        pointing: [
+            {{ id: "pointing_basic", name: "Domain Pointing Basic", description: "Forward your domain to any existing website. Includes 5 forwarding rules.", price: 49, features: ["5 Forwarding Rules", "Masking Option", "Email Notifications", "99.9% Uptime"], isPopular: true, type: "domain", period: "year" }},
+            {{ id: "pointing_pro", name: "Domain Pointing Pro", description: "Advanced domain forwarding with analytics and geo-targeting.", price: 99, features: ["Unlimited Rules", "Geo-Targeting", "Analytics Dashboard", "SSL Redirect"], isPopular: false, type: "domain", period: "year" }}
+        ]
+    }};
+
+    // Email products
+    const emailProducts = {{
+        emails: [
+            {{ id: "email_basic", name: "Email Lite", description: "Professional email hosting with 5GB storage per mailbox.", price: 29, features: ["5 GB Storage", "Webmail Access", "Mobile Sync", "Anti-Spam"], isPopular: false, type: "email", perUser: true, period: "month" }},
+            {{ id: "email_pro", name: "Email Pro", description: "10GB storage, calendar, contacts, and advanced collaboration tools.", price: 49, features: ["10 GB Storage", "Calendar & Contacts", "Collaboration Tools", "24/7 Support"], isPopular: true, type: "email", perUser: true, period: "month" }},
+            {{ id: "email_business", name: "Email Business", description: "Unlimited storage, archiving, eDiscovery, and compliance features.", price: 99, features: ["Unlimited Storage", "Archiving", "eDiscovery", "Compliance Tools"], isPopular: false, type: "email", perUser: true, period: "month" }}
+        ],
+        free_domain: [
+            {{ id: "free_domain_offer", name: "Free Domain for 1 Year", description: "Get a free .com, .co.za, or .net domain when you sign up for any annual hosting plan.", price: 0, features: ["Free .COM/.CO.ZA/.NET", "Free Privacy Protection", "DNS Management", "Auto-renewal optional"], isPopular: true, type: "email", isPromo: true }}
+        ]
+    }};
 
     // ==================== COVERAGE SEARCH FUNCTIONS ====================
     function searchCoverage(searchTerm) {{
@@ -1134,11 +1193,9 @@ html_content = f"""
     }}
 
     function autoSelectProvider(providerName) {{
-        const simpleName = providerName.toLowerCase();
-        if (simpleName.includes('vuma')) setFNO('vuma');
-        else if (simpleName.includes('open')) setFNO('open');
-        else if (simpleName.includes('frog')) setFNO('frog');
-        else setFNO('all');
+        // Not used for hosting, but keep for compatibility
+        setMainCategory('hostings');
+        setSubCategory('shared');
         showPage('host');
         document.getElementById('packages').scrollIntoView({{ behavior: 'smooth' }});
     }}
@@ -1270,9 +1327,7 @@ html_content = f"""
         if (isAuthenticated()) {{
             loadUserDashboard();
         }} else {{
-            // Show login form (already exists in the modal)
             const modalDiv = document.getElementById('clientzone-modal');
-            // If modal content was replaced, restore login form
             if (modalDiv.innerHTML.includes('Recent orders')) {{
                 modalDiv.innerHTML = `
                     <div class="bg-brand-slateBlack text-white p-6 rounded-3xl max-w-sm w-full space-y-6 border border-white/10 relative z-10">
@@ -1321,7 +1376,6 @@ html_content = f"""
     function closeClientZone() {{
         const modal = document.getElementById('clientzone-modal');
         modal.classList.add('hidden');
-        // Reset to login form for next time
         modal.innerHTML = `
             <div class="bg-brand-slateBlack text-white p-6 rounded-3xl max-w-sm w-full space-y-6 border border-white/10 relative z-10">
                 <div class="text-center space-y-2">
@@ -1341,8 +1395,8 @@ html_content = f"""
 
     // ==================== GLOBAL VARIABLES ====================
     let cart = [];
-    let currentFNO = 'all';
-    let currentSpeedRange = 'all';
+    let currentMainCategory = 'all';
+    let currentSubCategory = 'all';
     let currentModalStep = 2;
 
     // ==================== HELPER FUNCTIONS ====================
@@ -1352,69 +1406,296 @@ html_content = f"""
 
     function addToCart(type, itemId) {{
         let itemObject = null;
-        if(type === 'host') {{ const pkg = packageData.find(p => p.id == itemId); if(pkg) itemObject = {{ cartId: 'host-'+itemId+'-'+Date.now(), type: 'host', id: pkg.id, name: pkg.name, price: pkg.price, provider: pkg.provider, addons: {{ router: false, ip: false }} }}; }}
-        else if(type === 'design') {{ const design = designData[itemId]; if(design) itemObject = {{ cartId: 'design-'+itemId+'-'+Date.now(), type: 'design', id: itemId, name: "Design Layout: "+design.logoText.replace('.',''), price: design.price, addons: {{ router: false, ip: false }} }}; }}
-        else if(type === 'cloud') {{ const plan = cloudStorageData.find(p => p.id == itemId); if(plan) itemObject = {{ cartId: 'cloud-'+itemId+'-'+Date.now(), type: 'cloud', id: plan.id, name: plan.name+' ('+plan.storage+')', price: plan.price, addons: {{ router: false, ip: false }} }}; }}
-        if(itemObject) {{ cart.push(itemObject); updateCartUI(); animateCartIcon(); showPreorderToast(itemObject.name + " Added to Cart!"); }}
+        // Search in hosting products
+        for (let cat in hostingProducts) {{
+            const found = hostingProducts[cat].find(p => p.id == itemId);
+            if (found) {{
+                itemObject = {{ 
+                    cartId: 'host-'+itemId+'-'+Date.now(), 
+                    type: 'host', 
+                    id: found.id, 
+                    name: found.name, 
+                    price: found.price, 
+                    category: found.category,
+                    addons: {{ extra_storage: false, priority: false }}
+                }};
+                break;
+            }}
+        }}
+        // Search in domain products
+        if (!itemObject) {{
+            for (let cat in domainProducts) {{
+                const found = domainProducts[cat].find(p => p.id == itemId);
+                if (found) {{
+                    itemObject = {{ 
+                        cartId: 'domain-'+itemId+'-'+Date.now(), 
+                        type: 'domain', 
+                        id: found.id, 
+                        name: found.name, 
+                        price: found.price, 
+                        category: found.type,
+                        period: found.period || 'year',
+                        addons: {{}}
+                    }};
+                    break;
+                }}
+            }}
+        }}
+        // Search in email products
+        if (!itemObject) {{
+            for (let cat in emailProducts) {{
+                const found = emailProducts[cat].find(p => p.id == itemId);
+                if (found) {{
+                    itemObject = {{ 
+                        cartId: 'email-'+itemId+'-'+Date.now(), 
+                        type: 'email', 
+                        id: found.id, 
+                        name: found.name, 
+                        price: found.price, 
+                        category: found.type,
+                        addons: {{}}
+                    }};
+                    break;
+                }}
+            }}
+        }}
+        if(itemObject) {{ 
+            cart.push(itemObject); 
+            updateCartUI(); 
+            animateCartIcon(); 
+            showPreorderToast(itemObject.name + " Added to Cart!"); 
+        }}
     }}
-    function directBuy(type, itemId) {{ cart = []; addToCart(type, itemId); openCheckoutModal(); }}
-    function removeFromCart(cartId) {{ cart = cart.filter(item => item.cartId !== cartId); updateCartUI(); }}
-    function clearCart() {{ cart = []; updateCartUI(); }}
-    function toggleCartAddon(cartId, addonKey, checked) {{ const item = cart.find(i => i.cartId === cartId); if(item) {{ item.addons[addonKey] = checked; updateCartUI(); }} }}
-    function animateCartIcon() {{ const btn = document.getElementById('cart-btn'); if(btn) {{ btn.classList.add('cart-bounce','border-brand-gold'); setTimeout(() => btn.classList.remove('cart-bounce'),400); }} }}
-    function showPreorderToast(message) {{ const toast = document.getElementById('order-toast'); const toastText = toast.querySelector('p'); const toastHeader = toast.querySelector('h5'); toastHeader.innerText = "Shopping Bag Updated"; toastText.innerText = message; toast.classList.remove('hidden'); setTimeout(() => toast.classList.add('hidden'),5000); }}
+    
+    function directBuy(type, itemId) {{ 
+        cart = []; 
+        addToCart(type, itemId); 
+        openCheckoutModal(); 
+    }}
+    
+    function removeFromCart(cartId) {{ 
+        cart = cart.filter(item => item.cartId !== cartId); 
+        updateCartUI(); 
+    }}
+    
+    function clearCart() {{ 
+        cart = []; 
+        updateCartUI(); 
+    }}
+    
+    function toggleCartAddon(cartId, addonKey, checked) {{ 
+        const item = cart.find(i => i.cartId === cartId); 
+        if(item) {{ 
+            item.addons[addonKey] = checked; 
+            updateCartUI(); 
+        }} 
+    }}
+    
+    function animateCartIcon() {{ 
+        const btn = document.getElementById('cart-btn'); 
+        if(btn) {{ 
+            btn.classList.add('cart-bounce','border-brand-gold'); 
+            setTimeout(() => btn.classList.remove('cart-bounce'),400); 
+        }} 
+    }}
+    
+    function showPreorderToast(message) {{ 
+        const toast = document.getElementById('order-toast'); 
+        const toastText = toast.querySelector('p'); 
+        const toastHeader = toast.querySelector('h5'); 
+        toastHeader.innerText = "Shopping Bag Updated"; 
+        toastText.innerText = message; 
+        toast.classList.remove('hidden'); 
+        setTimeout(() => toast.classList.add('hidden'),5000); 
+    }}
     
     function updateCartUI() {{
-        const badge = document.getElementById('header-cart-badge'); const content = document.getElementById('cart-dropdown-content');
-        if(cart.length===0) {{ badge.classList.add('hidden'); badge.innerText='0'; content.className="text-[10px] text-gray-400 text-center py-4 space-y-3"; content.innerHTML=`<i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No active package or web design selected.</span>`; return; }}
-        badge.classList.remove('hidden'); badge.innerText=cart.length; let html=`<div class="max-h-76 overflow-y-auto space-y-3.5 pr-1.5 scrollbar-thin">`; let subtotal=0;
+        const badge = document.getElementById('header-cart-badge'); 
+        const content = document.getElementById('cart-dropdown-content');
+        if(cart.length===0) {{ 
+            badge.classList.add('hidden'); 
+            badge.innerText='0'; 
+            content.className="text-[10px] text-gray-400 text-center py-4 space-y-3"; 
+            content.innerHTML=`<i class="fa-solid fa-basket-shopping text-2xl text-gray-600 block"></i><span>No products added yet.</span>`; 
+            return; 
+        }}
+        badge.classList.remove('hidden'); 
+        badge.innerText=cart.length; 
+        let html=`<div class="max-h-76 overflow-y-auto space-y-3.5 pr-1.5 scrollbar-thin">`; 
+        let subtotal=0;
         cart.forEach(item => {{
-            let itemTotal=item.price; let addoneSection='';
-            if(item.type==='host') {{ if(item.addons.router) itemTotal+=129; if(item.addons.ip) itemTotal+=64; addoneSection=`<div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400"><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${{item.cartId}}', 'router', this.checked)" ${{item.addons.router ? 'checked' : ''}} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Wi-Fi 6 (+R129)</span></label><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${{item.cartId}}', 'ip', this.checked)" ${{item.addons.ip ? 'checked' : ''}} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Static IP (+R64)</span></label></div>`; }}
-            else {{ if(item.addons.router) itemTotal+=259; if(item.addons.ip) itemTotal+=325; addoneSection=`<div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400"><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${{item.cartId}}', 'router', this.checked)" ${{item.addons.router ? 'checked' : ''}} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Hosting (+R259)</span></label><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${{item.cartId}}', 'ip', this.checked)" ${{item.addons.ip ? 'checked' : ''}} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Domain (+R325)</span></label></div>`; }}
+            let itemTotal=item.price; 
+            let addoneSection='';
+            if(item.type==='host') {{ 
+                if(item.addons.extra_storage) itemTotal+=129; 
+                if(item.addons.priority) itemTotal+=64; 
+                addoneSection=`<div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400"><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${{item.cartId}}', 'extra_storage', this.checked)" ${{item.addons.extra_storage ? 'checked' : ''}} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Extra Storage (+R129)</span></label><label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" onchange="toggleCartAddon('${{item.cartId}}', 'priority', this.checked)" ${{item.addons.priority ? 'checked' : ''}} class="h-3 w-3 bg-brand-slateBlack border-white/10 rounded accent-brand-gold text-brand-black"><span>Priority Support (+R64)</span></label></div>`; 
+            }}
+            else if(item.type==='domain') {{
+                addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400 text-center">${{item.period ? 'Billed annually' : 'One-time'}}</div>`;
+            }}
+            else if(item.type==='email') {{
+                if(item.price === 0) {{
+                    addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-brand-green text-center">✓ Promotional Offer - Limited Time</div>`;
+                }} else {{
+                    addoneSection = `<div class="mt-2 pt-2 border-t border-white/5 text-[8px] text-gray-400 text-center">Per user / month</div>`;
+                }}
+            }}
             subtotal+=itemTotal;
-            html+=`<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between"><div class="flex justify-between items-start gap-2"><div class="text-left"><span class="font-bold text-white block truncate max-w-[150px]">${{item.name}}</span><span class="text-[8px] text-gray-500 uppercase block tracking-wider">${{item.type==='host'?'Fibre Line':'Web Custom Design'}}</span></div><div class="flex items-center gap-2"><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}</span><button onclick="removeFromCart('${{item.cartId}}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button></div></div>${{addoneSection}}</div>`;
+            html+=`<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col justify-between"><div class="flex justify-between items-start gap-2"><div class="text-left"><span class="font-bold text-white block truncate max-w-[150px]">${{item.name}}</span><span class="text-[8px] text-gray-500 uppercase block tracking-wider">${{item.type==='host'?'Hosting':(item.type==='domain'?'Domain':'Email')}}</span></div><div class="flex items-center gap-2"><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}</span><button onclick="removeFromCart('${{item.cartId}}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button></div></div>${{addoneSection}}</div>`;
         }});
         html+=`</div><div class="border-t border-white/10 pt-3 mt-3 space-y-3.5"><div class="flex justify-between text-xs font-bold"><span>Cart Subtotal:</span><span class="text-brand-gold text-sm font-black">R${{subtotal}}.00</span></div><button onclick="openCheckoutModal()" class="w-full text-center glossy-gold text-brand-black py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider shadow-md">Proceed to Checkout</button></div>`;
-        content.className="text-[10px] text-gray-300 text-left"; content.innerHTML=html;
+        content.className="text-[10px] text-gray-300 text-left"; 
+        content.innerHTML=html;
     }}
 
-    function toggleSidebar() {{ const drawer = document.getElementById('sidebar-drawer'); const backdrop = document.getElementById('sidebar-backdrop'); if(drawer.classList.contains('-translate-x-full')) {{ drawer.classList.remove('-translate-x-full'); backdrop.classList.remove('hidden'); setTimeout(()=>backdrop.classList.add('opacity-100'),50); }} else {{ drawer.classList.add('-translate-x-full'); backdrop.classList.remove('opacity-100'); setTimeout(()=>backdrop.classList.add('hidden'),300); }} }}
+    function toggleSidebar() {{ 
+        const drawer = document.getElementById('sidebar-drawer'); 
+        const backdrop = document.getElementById('sidebar-backdrop'); 
+        if(drawer.classList.contains('-translate-x-full')) {{ 
+            drawer.classList.remove('-translate-x-full'); 
+            backdrop.classList.remove('hidden'); 
+            setTimeout(()=>backdrop.classList.add('opacity-100'),50); 
+        }} else {{ 
+            drawer.classList.add('-translate-x-full'); 
+            backdrop.classList.remove('opacity-100'); 
+            setTimeout(()=>backdrop.classList.add('hidden'),300); 
+        }} 
+    }}
 
     const PAGES = ['home', 'host', 'design', 'cloud'];
     function showPage(pageName) {{
-        PAGES.forEach(p => {{ const el = document.getElementById('page-'+p); if(el) el.classList.add('hidden'); const btn = document.getElementById('nav-'+p); if(btn) btn.classList.remove('text-brand-gold'); }});
-        const target = document.getElementById('page-'+pageName); if(target) target.classList.remove('hidden');
-        const activeBtn = document.getElementById('nav-'+pageName); if(activeBtn) activeBtn.classList.add('text-brand-gold');
+        PAGES.forEach(p => {{ 
+            const el = document.getElementById('page-'+p); 
+            if(el) el.classList.add('hidden'); 
+            const btn = document.getElementById('nav-'+p); 
+            if(btn) btn.classList.remove('text-brand-gold'); 
+        }});
+        const target = document.getElementById('page-'+pageName); 
+        if(target) target.classList.remove('hidden');
+        const activeBtn = document.getElementById('nav-'+pageName); 
+        if(activeBtn) activeBtn.classList.add('text-brand-gold');
         window.scrollTo(0,0);
-        if(pageName === 'host') renderPackages();
+        if(pageName === 'host') renderProducts();
         if(pageName === 'cloud') renderCloudPlans();
     }}
 
-    function renderPackages() {{
+    function setMainCategory(category) {{
+        currentMainCategory = category;
+        currentSubCategory = 'all';
+        document.querySelectorAll('.main-cat-tab').forEach(tab => tab.className = "main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50");
+        const activeTab = document.getElementById(`tab-${{category}}`);
+        if(activeTab) activeTab.className = "main-cat-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm";
+        
+        // Update subcategory filters based on main category
+        const subFiltersDiv = document.getElementById('subcategory-filters');
+        if (!subFiltersDiv) return;
+        
+        if (category === 'hostings') {{
+            subFiltersDiv.innerHTML = `
+                <button onclick="setSubCategory('shared')" id="sub-shared" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Shared</button>
+                <button onclick="setSubCategory('cloudhosting')" id="sub-cloudhosting" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Cloud</button>
+                <button onclick="setSubCategory('reseller')" id="sub-reseller" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Reseller Hosting</button>
+                <button onclick="setSubCategory('dedicated')" id="sub-dedicated" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Dedicated Hosting</button>
+                <button onclick="setSubCategory('rack')" id="sub-rack" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Rack Hosting</button>
+                <button onclick="setSubCategory('whmcs')" id="sub-whmcs" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">WHMCS</button>
+            `;
+        }} else if (category === 'domains') {{
+            subFiltersDiv.innerHTML = `
+                <button onclick="setSubCategory('domains')" id="sub-domains" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Domains</button>
+                <button onclick="setSubCategory('pointing')" id="sub-pointing" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Pointing</button>
+            `;
+        }} else if (category === 'emails') {{
+            subFiltersDiv.innerHTML = `
+                <button onclick="setSubCategory('emails')" id="sub-emails" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Emails</button>
+                <button onclick="setSubCategory('free_domain')" id="sub-free_domain" class="sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm">Free domains for 1 year</button>
+            `;
+        }} else if (category === 'all') {{
+            subFiltersDiv.innerHTML = `<div class="text-xs text-gray-400">Select a product category above to filter</div>`;
+        }}
+        
+        // Highlight all sub filter if none selected
+        if (currentSubCategory === 'all') {{
+            setSubCategory('all');
+        }} else {{
+            setSubCategory(currentSubCategory);
+        }}
+        renderProducts();
+    }}
+    
+    function setSubCategory(subCat) {{
+        currentSubCategory = subCat;
+        // Update active state on sub-filter buttons
+        document.querySelectorAll('.sub-filter-btn').forEach(btn => {{
+            btn.className = "sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm";
+        }});
+        const activeBtn = document.getElementById(`sub-${{subCat}}`);
+        if (activeBtn) activeBtn.className = "sub-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm";
+        renderProducts();
+    }}
+    
+    function renderProducts() {{
         const container = document.getElementById('packages-container');
         if(!container) return;
-        container.innerHTML='';
-        let filtered = packageData;
-        if(currentFNO!=='all') filtered = filtered.filter(p=>p.provider===currentFNO);
-        if(currentSpeedRange!=='all') {{
-            if(currentSpeedRange==='budget') filtered=filtered.filter(p=>p.down>=30&&p.down<=50);
-            else if(currentSpeedRange==='medium') filtered=filtered.filter(p=>p.down>=100&&p.down<=200);
-            else if(currentSpeedRange==='pro') filtered=filtered.filter(p=>p.down>=500);
+        container.innerHTML = '';
+        let products = [];
+        
+        if (currentMainCategory === 'all') {{
+            // Show all products from all categories
+            for (let cat in hostingProducts) {{
+                products.push(...hostingProducts[cat]);
+            }}
+            for (let cat in domainProducts) {{
+                products.push(...domainProducts[cat]);
+            }}
+            for (let cat in emailProducts) {{
+                products.push(...emailProducts[cat]);
+            }}
+        }} else if (currentMainCategory === 'hostings') {{
+            if (currentSubCategory === 'all') {{
+                for (let cat in hostingProducts) {{
+                    products.push(...hostingProducts[cat]);
+                }}
+            }} else if (hostingProducts[currentSubCategory]) {{
+                products = [...hostingProducts[currentSubCategory]];
+            }}
+        }} else if (currentMainCategory === 'domains') {{
+            if (currentSubCategory === 'all') {{
+                for (let cat in domainProducts) {{
+                    products.push(...domainProducts[cat]);
+                }}
+            }} else if (domainProducts[currentSubCategory]) {{
+                products = [...domainProducts[currentSubCategory]];
+            }}
+        }} else if (currentMainCategory === 'emails') {{
+            if (currentSubCategory === 'all') {{
+                for (let cat in emailProducts) {{
+                    products.push(...emailProducts[cat]);
+                }}
+            }} else if (emailProducts[currentSubCategory]) {{
+                products = [...emailProducts[currentSubCategory]];
+            }}
         }}
-        if(filtered.length===0) {{ container.innerHTML=`<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner"><i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i><p class="font-bold text-brand-black text-sm">No Symmetrical Packages Found.</p><p class="text-xs text-gray-400 mt-1">Try resetting the carrier selection tab.</p></div>`; return; }}
-        filtered.forEach(pkg => {{
-            const isVuma = pkg.provider==='vuma'; const isFrog = pkg.provider==='frog';
-            const providerName = isVuma ? 'Vumatel Network' : (isFrog ? 'Frogfoot Network' : 'Openserve Network');
-            const cardAccentBorder = pkg.isPopular ? 'gold-sheen-border' : 'border border-black/5 shadow-sm';
-            const popBadge = pkg.isPopular ? `<div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">Top Symmetrical Pick</div>` : '';
-            const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ${{cardAccentBorder}}">${{popBadge}}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${{providerName}}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">Uncapped</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${{pkg.name}}</h3><div class="flex items-baseline gap-1.5 mt-2"><span class="text-3xl font-black text-brand-black tracking-tight">${{pkg.down}}</span><span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mbps Down & Up Symmetrical</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[48px]">${{pkg.description}}</p><div class="space-y-2.5 border-t border-black/5 pt-5 text-xs text-gray-600"><div class="flex items-center gap-2.5"><i class="fa-solid fa-infinity text-brand-gold"></i><span>Uncapped & Unshaped Pure Bandwidth</span></div><div class="flex items-center gap-2.5"><i class="fa-solid fa-box text-brand-gold"></i><span>Pre-configured Wi-Fi 6 Router Included</span></div><div class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-brand-green"></i><span>Free Installation & Connection SLA</span></div></div></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="flex items-center justify-between"><div><span class="text-2xl font-black text-brand-black tracking-tight">R${{pkg.price}}</span><span class="text-[9px] text-gray-400 font-bold uppercase block tracking-wider">per month</span></div></div><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('host', ${{pkg.id}})" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('host', ${{pkg.id}})" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
+        
+        if(products.length===0) {{ 
+            container.innerHTML=`<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-black/5 shadow-inner"><i class="fa-solid fa-triangle-exclamation text-4xl text-brand-gold mb-4"></i><p class="font-bold text-brand-black text-sm">No products found.</p><p class="text-xs text-gray-400 mt-1">Please select a different category.</p></div>`; 
+            return; 
+        }}
+        
+        products.forEach(plan => {{
+            const isOneTime = plan.isOneTime || false;
+            const priceSuffix = isOneTime ? 'once-off' : (plan.period === 'year' ? '/year' : (plan.perUser ? '/user/month' : '/month'));
+            const popBadge = plan.isPopular ? `<div class="absolute -top-3.5 left-6 bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark text-brand-black text-[9px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">Most Popular</div>` : '';
+            let typeLabel = '';
+            if (plan.type === 'hosting' || (plan.category && hostingProducts[plan.category])) typeLabel = 'Hosting';
+            else if (plan.type === 'domain') typeLabel = 'Domain';
+            else if (plan.type === 'email') typeLabel = 'Email';
+            else typeLabel = 'Product';
+            
+            const cardHtml = `<div class="bg-white rounded-3xl p-7 relative flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-black/5 shadow-sm">${{popBadge}}<div class="space-y-4"><div class="flex items-center justify-between"><span class="text-[10px] font-bold uppercase tracking-wider text-brand-goldDark flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_6px_#D4AF37]"></span>${{typeLabel}}</span><span class="text-[9px] uppercase font-bold bg-brand-lightBg px-3 py-1 rounded-full text-gray-500">${{plan.features ? plan.features.length : 3}} Features</span></div><div><h3 class="text-lg font-extrabold text-brand-black tracking-tight">${{plan.name}}</h3><div class="mt-2"><span class="text-2xl font-black text-brand-black tracking-tight">R${{plan.price}}</span><span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider ml-1">/${{priceSuffix}}</span></div></div><p class="text-xs text-gray-500 leading-relaxed min-h-[60px]">${{plan.description}}</p><ul class="space-y-2 text-xs text-gray-600 border-t border-black/5 pt-4">${{plan.features ? plan.features.map(f => `<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> ${{f}}</li>`).join('') : '<li class="flex items-center gap-2"><i class="fa-regular fa-circle-check text-brand-green text-[10px]"></i> Full feature set included</li>'}}</ul></div><div class="mt-8 pt-5 border-t border-black/5 flex flex-col gap-3"><div class="grid grid-cols-2 gap-2 mt-1"><button onclick="directBuy('${{plan.type === 'hosting' ? 'host' : (plan.type === 'domain' ? 'domain' : 'email')}}', '${{plan.id}}')" class="glossy-gold text-brand-black py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5"><span>Buy Now</span> <i class="fa-solid fa-bolt text-[9px]"></i></button><button onclick="addToCart('${{plan.type === 'hosting' ? 'host' : (plan.type === 'domain' ? 'domain' : 'email')}}', '${{plan.id}}')" class="glossy-black text-white py-2.5 rounded-full font-bold text-[10px] tracking-wider uppercase shadow-md flex items-center justify-center gap-1.5 hover:text-brand-gold"><span>Add to Bag</span> <i class="fa-solid fa-bag-shopping text-[9px] text-brand-gold"></i></button></div></div></div>`;
             container.innerHTML += cardHtml;
         }});
     }}
-
-    function setFNO(provider) {{ currentFNO = provider; document.querySelectorAll('.fno-tab').forEach(tab => tab.className = "fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-gray-500 hover:bg-white/50"); const activeTab = document.getElementById(`tab-${{provider}}`); if(activeTab) activeTab.className = "fno-tab flex-1 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all text-brand-goldDark bg-white shadow-sm"; renderPackages(); }}
-    function filterSpeedRange(range) {{ currentSpeedRange = range; document.querySelectorAll('.speed-filter-btn').forEach(btn => btn.className = "speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-black/10 bg-white text-gray-600 hover:border-brand-gold transition-all shadow-sm"); const activeBtn = document.getElementById(`btn-speed-${{range}}`); if(activeBtn) activeBtn.className = "speed-filter-btn px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border border-brand-black bg-brand-black text-white transition-all shadow-sm"; renderPackages(); }}
 
     function renderCloudPlans() {{
         const container = document.getElementById('cloud-plans-container');
@@ -1436,10 +1717,50 @@ html_content = f"""
         }});
     }}
 
-    function selectWebDesign(themeKey) {{ const data = designData[themeKey]; if(!data) return; document.querySelectorAll('.design-selector-card').forEach(card => {{ card.className = "design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden"; }}); const activeCard = document.getElementById(`card-design-${{themeKey}}`); if(activeCard) {{ const borderClass = themeKey==='luxe' ? 'border-brand-gold/40' : (themeKey==='emerald' ? 'border-brand-green/40' : 'border-white/30'); activeCard.className = `design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/60 ${{borderClass}} shadow-lg transition-all duration-300 relative overflow-hidden`; }} const viewport = document.getElementById('live-web-viewport'); viewport.className = `${{data.viewportBg}} p-6 sm:p-10 rounded-2xl min-h-[420px] flex flex-col justify-between transition-all duration-500 relative overflow-hidden`; const logoEl = document.getElementById('mockup-logo'); logoEl.className = `text-xs font-black tracking-tight flex items-center gap-1.5 ${{data.logoClass}}`; logoEl.innerHTML = `<span class="h-5 w-5 bg-gradient-to-r ${{themeKey==='luxe' ? 'from-brand-gold to-brand-goldDark text-brand-black' : (themeKey==='emerald' ? 'from-brand-green to-brand-greenDark text-white' : 'from-white to-gray-400 text-brand-black')}} rounded-md flex items-center justify-center text-[10px] font-black">${{themeKey.substring(0,1).toUpperCase()}}</span> <span>${{data.logoText}}</span>`; const badgeEl = document.getElementById('mockup-badge'); badgeEl.innerText = data.badgeText; badgeEl.className = `inline-block text-[8px] tracking-widest font-bold uppercase px-2.5 py-1 rounded-full ${{data.badgeClass}}`; document.getElementById('mockup-title').innerHTML = data.title; document.getElementById('mockup-desc').innerText = data.desc; document.getElementById('mockup-time').innerText = data.timeText; const btnEl = document.getElementById('mockup-btn'); btnEl.className = `${{data.btnClass}} text-[10px] font-black tracking-wider uppercase px-5 py-2.5 rounded-full shadow-md flex items-center gap-1.5`; }}
-    function simulateReload() {{ const viewport = document.getElementById('live-web-viewport'); viewport.style.opacity='0.1'; viewport.style.transform='scale(0.98)'; setTimeout(()=>{{ viewport.style.opacity='1'; viewport.style.transform='scale(1)'; }},300); }}
+    function selectWebDesign(themeKey) {{ 
+        const data = designData[themeKey]; 
+        if(!data) return; 
+        document.querySelectorAll('.design-selector-card').forEach(card => {{ 
+            card.className = "design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/20 border-white/5 shadow-lg hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden"; 
+        }}); 
+        const activeCard = document.getElementById(`card-design-${{themeKey}}`); 
+        if(activeCard) {{ 
+            const borderClass = themeKey==='luxe' ? 'border-brand-gold/40' : (themeKey==='emerald' ? 'border-brand-green/40' : 'border-white/30'); 
+            activeCard.className = `design-selector-card cursor-pointer p-5 rounded-2xl border bg-brand-darkGray/60 ${{borderClass}} shadow-lg transition-all duration-300 relative overflow-hidden`; 
+        }} 
+        const viewport = document.getElementById('live-web-viewport'); 
+        viewport.className = `${{data.viewportBg}} p-6 sm:p-10 rounded-2xl min-h-[420px] flex flex-col justify-between transition-all duration-500 relative overflow-hidden`; 
+        const logoEl = document.getElementById('mockup-logo'); 
+        logoEl.className = `text-xs font-black tracking-tight flex items-center gap-1.5 ${{data.logoClass}}`; 
+        logoEl.innerHTML = `<span class="h-5 w-5 bg-gradient-to-r ${{themeKey==='luxe' ? 'from-brand-gold to-brand-goldDark text-brand-black' : (themeKey==='emerald' ? 'from-brand-green to-brand-greenDark text-white' : 'from-white to-gray-400 text-brand-black')}} rounded-md flex items-center justify-center text-[10px] font-black">${{themeKey.substring(0,1).toUpperCase()}}</span> <span>${{data.logoText}}</span>`; 
+        const badgeEl = document.getElementById('mockup-badge'); 
+        badgeEl.innerText = data.badgeText; 
+        badgeEl.className = `inline-block text-[8px] tracking-widest font-bold uppercase px-2.5 py-1 rounded-full ${{data.badgeClass}}`; 
+        document.getElementById('mockup-title').innerHTML = data.title; 
+        document.getElementById('mockup-desc').innerText = data.desc; 
+        document.getElementById('mockup-time').innerText = data.timeText; 
+        const btnEl = document.getElementById('mockup-btn'); 
+        btnEl.className = `${{data.btnClass}} text-[10px] font-black tracking-wider uppercase px-5 py-2.5 rounded-full shadow-md flex items-center gap-1.5`; 
+    }}
+    
+    function simulateReload() {{ 
+        const viewport = document.getElementById('live-web-viewport'); 
+        viewport.style.opacity='0.1'; 
+        viewport.style.transform='scale(0.98)'; 
+        setTimeout(()=>{{ viewport.style.opacity='1'; viewport.style.transform='scale(1)'; }},300); 
+    }}
 
-    function toggleFaq(btn) {{ const containerBox = btn.nextElementSibling; const indicatorIcon = btn.querySelector('i'); if(containerBox.classList.contains('hidden')) {{ containerBox.classList.remove('hidden'); indicatorIcon.className = "fa-solid fa-chevron-up transition-transform text-brand-gold"; }} else {{ containerBox.classList.add('hidden'); indicatorIcon.className = "fa-solid fa-chevron-down transition-transform"; }} }}
+    function toggleFaq(btn) {{ 
+        const containerBox = btn.nextElementSibling; 
+        const indicatorIcon = btn.querySelector('i'); 
+        if(containerBox.classList.contains('hidden')) {{ 
+            containerBox.classList.remove('hidden'); 
+            indicatorIcon.className = "fa-solid fa-chevron-up transition-transform text-brand-gold"; 
+        }} else {{ 
+            containerBox.classList.add('hidden'); 
+            indicatorIcon.className = "fa-solid fa-chevron-down transition-transform"; 
+        }} 
+    }}
 
     // Checkout modal functions with auth check
     function openCheckoutModal() {{
@@ -1449,7 +1770,7 @@ html_content = f"""
             return;
         }}
         if (cart.length === 0) {{
-            alertModal("Your Shopping Bag is empty. Please add a hosting package or a customized layout portfolio to your cart first!");
+            alertModal("Your Shopping Bag is empty. Please add a product first!");
             return;
         }}
         currentModalStep = 2;
@@ -1461,16 +1782,13 @@ html_content = f"""
             let itemTotal = item.price;
             let addonTexts = [];
             if (item.type === 'host') {{
-                if (item.addons.router) {{ itemTotal += 129; addonTexts.push("Wi-Fi 6 Router Upgrade (+R129)"); }}
-                if (item.addons.ip) {{ itemTotal += 64; addonTexts.push("Static IP Allocation (+R64)"); }}
-            }} else {{
-                if (item.addons.router) {{ itemTotal += 259; addonTexts.push("High-Performance Hosting (+R259)"); }}
-                if (item.addons.ip) {{ itemTotal += 325; addonTexts.push("Custom Domain Acquisition (+R325)"); }}
+                if (item.addons.extra_storage) {{ itemTotal += 129; addonTexts.push("Extra Storage (+R129)"); }}
+                if (item.addons.priority) {{ itemTotal += 64; addonTexts.push("Priority Support (+R64)"); }}
             }}
             totalVal += itemTotal;
             const row = document.createElement('div');
             row.className = "flex justify-between items-start text-xs border-b border-white/5 pb-2 last:border-b-0";
-            row.innerHTML = `<div><span class="font-bold text-white block">${{item.name}}</span><span class="text-[8px] text-gray-500">${{addonTexts.join(' / ') || 'No Addons Selected'}}</span></div><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}.00</span>`;
+            row.innerHTML = `<div><span class="font-bold text-white block">${{item.name}}</span><span class="text-[8px] text-gray-500">${{addonTexts.join(' / ') || 'Standard'}}</span></div><span class="font-extrabold text-brand-gold shrink-0">R${{itemTotal}}.00</span>`;
             summaryContainer.appendChild(row);
         }});
         document.getElementById('modal-footer-price').innerText = `R${{totalVal}}.00`;
@@ -1492,11 +1810,8 @@ html_content = f"""
         cart.forEach(item => {{
             let itemTotal = item.price;
             if (item.type === 'host') {{
-                if (item.addons.router) itemTotal += 129;
-                if (item.addons.ip) itemTotal += 64;
-            }} else {{
-                if (item.addons.router) itemTotal += 259;
-                if (item.addons.ip) itemTotal += 325;
+                if (item.addons.extra_storage) itemTotal += 129;
+                if (item.addons.priority) itemTotal += 64;
             }}
             total += itemTotal;
         }});
@@ -1525,8 +1840,7 @@ html_content = f"""
         let totalVal = 0;
         cart.forEach(item => {{
             let itemTotal = item.price;
-            if (item.type === 'host') {{ if (item.addons.router) itemTotal += 129; if (item.addons.ip) itemTotal += 64; }}
-            else {{ if (item.addons.router) itemTotal += 259; if (item.addons.ip) itemTotal += 325; }}
+            if (item.type === 'host') {{ if (item.addons.extra_storage) itemTotal += 129; if (item.addons.priority) itemTotal += 64; }}
             totalVal += itemTotal;
         }});
         let checkoutLink = `https://sandbox.polar.sh/checkout/new?org=angwa&amount=${{totalVal}}`;
@@ -1580,35 +1894,182 @@ html_content = f"""
         }}
     }}
 
-    function alertModal(msg) {{ const alertBox=document.createElement('div'); alertBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; alertBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div><h4 class="font-bold text-sm tracking-wide">Action Required</h4><p class="text-[11px] text-gray-400 leading-relaxed">${{msg}}</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`; document.body.appendChild(alertBox); }}
-    function triggerLeadershipNotice() {{ const noticeBox=document.createElement('div'); noticeBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; noticeBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-users"></i></div><h4 class="font-bold text-sm tracking-wide">ANGWA Executive Board</h4><p class="text-[11px] text-gray-400 leading-relaxed">Our comprehensive Board bios & investor portfolio records are securely archived on page. Reach out to our direct support desk to get a copy.</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`; document.body.appendChild(noticeBox); }}
-    function showOrderToast() {{ const toast=document.getElementById('order-toast'); toast.classList.remove('hidden'); setTimeout(()=>hideOrderToast(),6500); }}
-    function hideOrderToast() {{ document.getElementById('order-toast').classList.add('hidden'); }}
+    function alertModal(msg) {{ 
+        const alertBox=document.createElement('div'); 
+        alertBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; 
+        alertBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div><h4 class="font-bold text-sm tracking-wide">Action Required</h4><p class="text-[11px] text-gray-400 leading-relaxed">${{msg}}</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`; 
+        document.body.appendChild(alertBox); 
+    }}
+    
+    function triggerLeadershipNotice() {{ 
+        const noticeBox=document.createElement('div'); 
+        noticeBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; 
+        noticeBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-users"></i></div><h4 class="font-bold text-sm tracking-wide">ANGWA Executive Board</h4><p class="text-[11px] text-gray-400 leading-relaxed">Our comprehensive Board bios & investor portfolio records are securely archived on page. Reach out to our direct support desk to get a copy.</p><button onclick="this.parentElement.parentElement.remove()" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Acknowledge</button></div>`; 
+        document.body.appendChild(noticeBox); 
+    }}
+    
+    function showOrderToast() {{ 
+        const toast=document.getElementById('order-toast'); 
+        toast.classList.remove('hidden'); 
+        setTimeout(()=>hideOrderToast(),6500); 
+    }}
+    
+    function hideOrderToast() {{ 
+        document.getElementById('order-toast').classList.add('hidden'); 
+    }}
 
-    function triggerCloudSync(provider) {{ const cloudIcon=document.getElementById('cloud-icon'); const statusText=document.getElementById('cloud-sync-status'); const progress=document.getElementById('cloud-progress-bar'); const timer=document.getElementById('cloud-timer-val'); const panelRate=document.getElementById('panel-sync-rate'); const panelProgress=document.getElementById('panel-progress-bar'); const panelStatus=document.getElementById('panel-sync-status'); const panelTimer=document.getElementById('panel-sync-timer'); if(provider==='dropbox') {{ if(cloudIcon) cloudIcon.className="fa-brands fa-dropbox text-blue-400"; if(statusText) statusText.innerText="Connecting to Dropbox Fibre pipeline..."; panelStatus.innerText="Splicing optical connection to Dropbox central nodes..."; }} else {{ if(cloudIcon) cloudIcon.className="fa-brands fa-google-drive text-green-400"; if(statusText) statusText.innerText="Connecting to Google Drive high-speed backup system..."; panelStatus.innerText="Securing direct cloud handshake with Google clusters..."; }} document.getElementById('cloud-sync-modal').classList.remove('hidden'); panelRate.innerText="1,000 Mbps"; let width=0; if(progress) progress.style.width='0%'; panelProgress.style.width='0%'; if(timer) timer.innerText="6.2 seconds remaining"; panelTimer.innerText="6.2s left"; const interval=setInterval(()=>{{ width+=10; if(progress) progress.style.width=`${{width}}%`; panelProgress.style.width=`${{width}}%`; const timeLeft=Math.max(0,((100-width)/15).toFixed(1)); if(timer) timer.innerText=`${{timeLeft}} seconds remaining`; panelTimer.innerText=`${{timeLeft}}s left`; if(width===40) {{ if(statusText) statusText.innerText="Encrypting file systems with symmetrical light speed..."; panelStatus.innerText="Sending secure multi-threaded file chunks..."; }} else if(width===80) {{ if(statusText) statusText.innerText="Finalizing cloud handshake metrics..."; panelStatus.innerText="Assembling directory structures on destination server..."; }} if(width>=100) {{ clearInterval(interval); if(statusText) statusText.innerText="Sync complete! 50GB file database successfully uploaded in 0.8 seconds."; panelStatus.innerText="Upload complete! 50GB mapped successfully in 0.8s."; if(timer) timer.innerText="Success - 0.0 seconds remaining"; panelTimer.innerText="Success"; panelRate.innerText="0 Mbps (Idle)"; }} }},250); }}
-    function closeCloudModal() {{ document.getElementById('cloud-sync-modal').classList.add('hidden'); }}
+    function triggerCloudSync(provider) {{ 
+        const cloudIcon=document.getElementById('cloud-icon'); 
+        const statusText=document.getElementById('cloud-sync-status'); 
+        const progress=document.getElementById('cloud-progress-bar'); 
+        const timer=document.getElementById('cloud-timer-val'); 
+        const panelRate=document.getElementById('panel-sync-rate'); 
+        const panelProgress=document.getElementById('panel-progress-bar'); 
+        const panelStatus=document.getElementById('panel-sync-status'); 
+        const panelTimer=document.getElementById('panel-sync-timer'); 
+        if(provider==='dropbox') {{ 
+            if(cloudIcon) cloudIcon.className="fa-brands fa-dropbox text-blue-400"; 
+            if(statusText) statusText.innerText="Connecting to Dropbox Fibre pipeline..."; 
+            panelStatus.innerText="Splicing optical connection to Dropbox central nodes..."; 
+        }} else {{ 
+            if(cloudIcon) cloudIcon.className="fa-brands fa-google-drive text-green-400"; 
+            if(statusText) statusText.innerText="Connecting to Google Drive high-speed backup system..."; 
+            panelStatus.innerText="Securing direct cloud handshake with Google clusters..."; 
+        }} 
+        document.getElementById('cloud-sync-modal').classList.remove('hidden'); 
+        panelRate.innerText="1,000 Mbps"; 
+        let width=0; 
+        if(progress) progress.style.width='0%'; 
+        panelProgress.style.width='0%'; 
+        if(timer) timer.innerText="6.2 seconds remaining"; 
+        panelTimer.innerText="6.2s left"; 
+        const interval=setInterval(()=>{{ 
+            width+=10; 
+            if(progress) progress.style.width=`${{width}}%`; 
+            panelProgress.style.width=`${{width}}%`; 
+            const timeLeft=Math.max(0,((100-width)/15).toFixed(1)); 
+            if(timer) timer.innerText=`${{timeLeft}} seconds remaining`; 
+            panelTimer.innerText=`${{timeLeft}}s left`; 
+            if(width===40) {{ 
+                if(statusText) statusText.innerText="Encrypting file systems with symmetrical light speed..."; 
+                panelStatus.innerText="Sending secure multi-threaded file chunks..."; 
+            }} else if(width===80) {{ 
+                if(statusText) statusText.innerText="Finalizing cloud handshake metrics..."; 
+                panelStatus.innerText="Assembling directory structures on destination server..."; 
+            }} 
+            if(width>=100) {{ 
+                clearInterval(interval); 
+                if(statusText) statusText.innerText="Sync complete! 50GB file database successfully uploaded in 0.8 seconds."; 
+                panelStatus.innerText="Upload complete! 50GB mapped successfully in 0.8s."; 
+                if(timer) timer.innerText="Success - 0.0 seconds remaining"; 
+                panelTimer.innerText="Success"; 
+                panelRate.innerText="0 Mbps (Idle)"; 
+            }} 
+        }},250); 
+    }}
+    
+    function closeCloudModal() {{ 
+        document.getElementById('cloud-sync-modal').classList.add('hidden'); 
+    }}
 
-    function triggerBlogsModal() {{ document.getElementById('blogs-modal').classList.remove('hidden'); }}
-    function closeBlogsModal() {{ document.getElementById('blogs-modal').classList.add('hidden'); }}
+    function triggerBlogsModal() {{ 
+        document.getElementById('blogs-modal').classList.remove('hidden'); 
+    }}
+    
+    function closeBlogsModal() {{ 
+        document.getElementById('blogs-modal').classList.add('hidden'); 
+    }}
 
-    function toggleSidebarSubmenu(id) {{ const el=document.getElementById(id); const arrow=document.getElementById(id+'-arrow'); if(el.classList.contains('hidden')) {{ el.classList.remove('hidden'); if(arrow) arrow.classList.add('rotate-180'); }} else {{ el.classList.add('hidden'); if(arrow) arrow.classList.remove('rotate-180'); }} }}
+    function toggleSidebarSubmenu(id) {{ 
+        const el=document.getElementById(id); 
+        const arrow=document.getElementById(id+'-arrow'); 
+        if(el.classList.contains('hidden')) {{ 
+            el.classList.remove('hidden'); 
+            if(arrow) arrow.classList.add('rotate-180'); 
+        }} else {{ 
+            el.classList.add('hidden'); 
+            if(arrow) arrow.classList.remove('rotate-180'); 
+        }} 
+    }}
 
-    function triggerClientPortal(type) {{ toggleSidebar(); const welcomeBox=document.createElement('div'); welcomeBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; welcomeBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div><h4 class="font-bold text-sm tracking-wide capitalize">${{type}} Client Portal</h4><p class="text-[11px] text-gray-400 leading-relaxed">Secure gateway gateway authentication is active for authorized ${{type}} networks. Please authenticate within the ClientZone.</p><button onclick="this.parentElement.parentElement.remove(); triggerClientZone();" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Access ClientZone</button></div>`; document.body.appendChild(welcomeBox); }}
+    function triggerClientPortal(type) {{ 
+        toggleSidebar(); 
+        const welcomeBox=document.createElement('div'); 
+        welcomeBox.className="fixed inset-0 bg-brand-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"; 
+        welcomeBox.innerHTML=`<div class="bg-brand-darkGray p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-white/10 text-white shadow-2xl"><div class="h-12 w-12 bg-brand-gold/15 text-brand-gold rounded-full flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-user-shield"></i></div><h4 class="font-bold text-sm tracking-wide capitalize">${{type}} Client Portal</h4><p class="text-[11px] text-gray-400 leading-relaxed">Secure gateway gateway authentication is active for authorized ${{type}} networks. Please authenticate within the ClientZone.</p><button onclick="this.parentElement.parentElement.remove(); triggerClientZone();" class="w-full glossy-gold text-brand-black py-2.5 rounded-full font-bold text-xs uppercase tracking-wider">Access ClientZone</button></div>`; 
+        document.body.appendChild(welcomeBox); 
+    }}
 
-    function toggleLiveChat() {{ const chatBox=document.getElementById('chat-popup'); if(chatBox.classList.contains('hidden')) chatBox.classList.remove('hidden'); else chatBox.classList.add('hidden'); }}
-    function handleChatSubmit(event) {{ if(event.key==='Enter') sendChatMessage(); }}
-    function sendChatMessage() {{ const inputField=document.getElementById('chat-input'); const userMsg=inputField.value.trim(); if(!userMsg) return; const chatMessagesContainer=document.getElementById('chat-messages'); const divUser=document.createElement('div'); divUser.className="bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-black font-semibold p-3 rounded-2xl text-[11px] max-w-[85%] self-end ml-auto mb-2.5 leading-relaxed shadow-sm"; divUser.innerText=userMsg; chatMessagesContainer.appendChild(divUser); inputField.value=''; chatMessagesContainer.scrollTop=chatMessagesContainer.scrollHeight; setTimeout(()=>{{ const divAgent=document.createElement('div'); divAgent.className="bg-brand-darkGray/60 p-3 rounded-2xl border border-white/5 text-gray-300 max-w-[85%] mb-2.5 leading-relaxed"; const lowerInput=userMsg.toLowerCase(); if(lowerInput.includes('price')||lowerInput.includes('cost')||lowerInput.includes('rand')) divAgent.innerText="All our hosting templates are month-to-month and fully transparent! Symmetrical Openserve setups start at R649/pm and bespoke creative design portfolios start at R5,199 once-off. Which speed or layout is your target?"; else if(lowerInput.includes('vuma')||lowerInput.includes('openserve')||lowerInput.includes('frogfoot')) divAgent.innerText="We provide direct Symmetrical options on those providers. Try running your physical address inside the Coverage search tool above to verify!"; else divAgent.innerText="Understood. The most efficient way is to enter your street location in the Availability Check at the top. It identifies exact active fibre splicing grids and matching layouts instantly."; chatMessagesContainer.appendChild(divAgent); chatMessagesContainer.scrollTop=chatMessagesContainer.scrollHeight; }},1100); }}
+    function toggleLiveChat() {{ 
+        const chatBox=document.getElementById('chat-popup'); 
+        if(chatBox.classList.contains('hidden')) chatBox.classList.remove('hidden'); 
+        else chatBox.classList.add('hidden'); 
+    }}
+    
+    function handleChatSubmit(event) {{ 
+        if(event.key==='Enter') sendChatMessage(); 
+    }}
+    
+    function sendChatMessage() {{ 
+        const inputField=document.getElementById('chat-input'); 
+        const userMsg=inputField.value.trim(); 
+        if(!userMsg) return; 
+        const chatMessagesContainer=document.getElementById('chat-messages'); 
+        const divUser=document.createElement('div'); 
+        divUser.className="bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-black font-semibold p-3 rounded-2xl text-[11px] max-w-[85%] self-end ml-auto mb-2.5 leading-relaxed shadow-sm"; 
+        divUser.innerText=userMsg; 
+        chatMessagesContainer.appendChild(divUser); 
+        inputField.value=''; 
+        chatMessagesContainer.scrollTop=chatMessagesContainer.scrollHeight; 
+        setTimeout(()=>{{ 
+            const divAgent=document.createElement('div'); 
+            divAgent.className="bg-brand-darkGray/60 p-3 rounded-2xl border border-white/5 text-gray-300 max-w-[85%] mb-2.5 leading-relaxed"; 
+            const lowerInput=userMsg.toLowerCase(); 
+            if(lowerInput.includes('price')||lowerInput.includes('cost')||lowerInput.includes('rand')) divAgent.innerText="Our hosting plans start from R99/m for shared hosting. Dedicated servers from R1999/m. Domains from R89/year. Which product are you interested in?"; 
+            else if(lowerInput.includes('domain')) divAgent.innerText="We offer .com, .co.za, .org, .net domains starting from R89/year. Would you like to check availability for a specific domain?"; 
+            else if(lowerInput.includes('email')) divAgent.innerText="Professional email hosting from R29/user/month. Includes webmail, mobile sync, and anti-spam protection."; 
+            else divAgent.innerText="I can help you find the right product. Tell me if you need hosting, a domain, or email services."; 
+            chatMessagesContainer.appendChild(divAgent); 
+            chatMessagesContainer.scrollTop=chatMessagesContainer.scrollHeight; 
+        }},1100); 
+    }}
 
-    function setupScrollSpy() {{ const badgeEl = document.getElementById('dynamic-nav-badge'); const observerOptions = {{ root: null, rootMargin: '-35% 0px -45% 0px', threshold: 0 }}; const observer = new IntersectionObserver((entries) => {{ entries.forEach(entry => {{ if(entry.isIntersecting) {{ const id = entry.target.id; let htmlContent = ''; if(id==='home-hero') htmlContent = `ANGWA<span class="text-brand-gold">.</span>`; else if(id==='packages') htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`; else if(id==='design-suite') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`; else if(id==='cloud-filling') htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`; if(badgeEl) {{ badgeEl.style.opacity='0'; badgeEl.style.transform='translateY(-4px)'; setTimeout(()=>{{ if(htmlContent) badgeEl.innerHTML = htmlContent; badgeEl.style.opacity='1'; badgeEl.style.transform='translateY(0)'; }},150); }} }} }}); }}, observerOptions); document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => observer.observe(section)); }}
+    function setupScrollSpy() {{ 
+        const badgeEl = document.getElementById('dynamic-nav-badge'); 
+        const observerOptions = {{ root: null, rootMargin: '-35% 0px -45% 0px', threshold: 0 }}; 
+        const observer = new IntersectionObserver((entries) => {{ 
+            entries.forEach(entry => {{ 
+                if(entry.isIntersecting) {{ 
+                    const id = entry.target.id; 
+                    let htmlContent = ''; 
+                    if(id==='home-hero') htmlContent = `ANGWA<span class="text-brand-gold">.</span>`; 
+                    else if(id==='packages') htmlContent = `ANGWA HOST<span class="text-brand-gold">.</span>`; 
+                    else if(id==='design-suite') htmlContent = `ANGWA DESIGN<span class="text-brand-gold">.</span>`; 
+                    else if(id==='cloud-filling') htmlContent = `ANGWA CLOUD<span class="text-brand-gold">.</span>`; 
+                    if(badgeEl) {{ 
+                        badgeEl.style.opacity='0'; 
+                        badgeEl.style.transform='translateY(-4px)'; 
+                        setTimeout(()=>{{ 
+                            if(htmlContent) badgeEl.innerHTML = htmlContent; 
+                            badgeEl.style.opacity='1'; 
+                            badgeEl.style.transform='translateY(0)'; 
+                        }},150); 
+                    }} 
+                }} 
+            }}); 
+        }}, observerOptions); 
+        document.querySelectorAll('#home-hero, #packages, #design-suite, #cloud-filling').forEach(section => observer.observe(section)); 
+    }}
 
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {{
         showPage('home');
-        renderPackages();
+        renderProducts();
         renderCloudPlans();
         setupSearchAutocomplete();
         setupScrollSpy();
         selectWebDesign('luxe');
+        setMainCategory('all');
     }});
 </script>
 

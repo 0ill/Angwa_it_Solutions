@@ -104,11 +104,11 @@ class OrderOut(BaseModel):
 app = FastAPI(title="ANGWA Backend API")
 
 # CORS – allow your Streamlit frontend URL (set environment variable or use wildcard for dev)
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set this to your Streamlit app URL in production
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")
 origins = [
     FRONTEND_URL,
-    "http://localhost:8501",  # local Streamlit
-    "https://*.streamlit.app", # Streamlit Cloud default
+    "http://localhost:8501",
+    "https://*.streamlit.app",
 ]
 app.add_middleware(
     CORSMiddleware,
