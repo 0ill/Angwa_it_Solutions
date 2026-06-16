@@ -435,7 +435,7 @@ html_content = f"""
         
         <!-- Responsive Navigation (always visible, wraps on mobile) -->
         <nav class="flex items-center gap-3 lg:gap-5 text-xs text-white font-extrabold uppercase tracking-widest nav-gap">
-            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-house text-brand-gold text-sm"></i><span>HOME</span></button>
+            <button onclick="showPage('home')" id="nav-home" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-house text-brand-gold text-sm"></i><span>Home</span></button>
             <button onclick="showPage('host')" id="nav-host" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-server text-brand-gold text-sm"></i><span>HOST</span></button>
             <button onclick="showPage('design')" id="nav-design" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-pen-nib text-brand-gold text-sm"></i><span>DESIGN</span></button>
             <button onclick="showPage('cloud')" id="nav-cloud" class="nav-page-btn hover:text-brand-gold transition-colors py-2 flex items-center gap-1.5 nav-btn"><i class="fa-solid fa-cloud text-brand-gold text-sm"></i><span>CLOUD</span></button>
