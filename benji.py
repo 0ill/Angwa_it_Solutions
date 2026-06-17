@@ -2,7 +2,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 import libsql_client
 import json
-hi
 # ---------- Turso Connection ----------
 @st.cache_resource
 def get_turso_connection():
