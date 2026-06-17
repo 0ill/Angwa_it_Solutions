@@ -492,7 +492,7 @@ html_content = f"""
                 </div>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-white">Symmetrical test. <br class="hidden sm:block"><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-goldDark">Pure Gloss Finish.</span></h1>
                 <p class="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed">Say goodbye to standard copper lag. ANGWA's fiber lines deliver pure light-based throughput straight to your smart environment. No buffering. No capacity restrictions. No contracts.</p>
-                <div class="grid grid-cols-3 gap-6 pt-6 max-w-lg mx-auto lg:mx-0 border-t border-white/10">
+                <div class="grid grid-cols-3 gap-6 pt-6 max-w-lg mx-auto lg:mx-0 border-t border-white/10">.
                     <div><div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">99.99%</div><div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mt-1">Uptime SLA</div></div>
                     <div><div class="text-2xl sm:text-3xl font-extrabold text-brand-gold">0</div><div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mt-1">Caps or Limits</div></div>
                     <div><div class="text-2xl sm:text-3xl font-extrabold text-brand-green">24/7</div><div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mt-1">Dedicated Care</div></div>
