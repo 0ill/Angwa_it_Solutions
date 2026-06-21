@@ -1,16 +1,37 @@
 services:
   - type: web
-    name: angwa-backend
-    runtime: image
-    repo: https://github.com/0ill/Angwa_it_Solutions
-    plan: free
-    dockerfilePath: ./Dockerfile
+    name: angwa
+    runtime: docker
+    repo: https://github.com/your-username/angwa  # replace with your repo
+    plan: starter
     envVars:
       - key: TURSO_URL
         sync: false
       - key: TURSO_TOKEN
         sync: false
-      - key: SECRET_KEY
+      - key: POLAR_ORG_SLUG
         sync: false
-      - key: FRONTEND_URL
+      - key: POLAR_ACCESS_TOKEN
         sync: false
+      - key: POLAR_WEBHOOK_SECRET
+        sync: false
+      - key: POLAR_SERVER
+        value: production
+      - key: POLAR_CUSTOM_PRODUCT_ID
+        value: custom
+      - key: POLAR_SUCCESS_URL
+        value: https://your-app.onrender.com/thank-you
+      - key: POLAR_CANCEL_URL
+        value: https://your-app.onrender.com
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: API_BASE_URL
+        value: https://your-app.onrender.com
